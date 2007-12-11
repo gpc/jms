@@ -9,10 +9,9 @@ class JmsGrailsPlugin {
     def title = "This plugin adds MDB functionality to services."
     
 	def loadAfter = ['services', 'controllers']
+	def observe = ['services', 'controllers']
     def dependsOn = [services: GrailsUtil.getGrailsVersion(),
                      controllers: GrailsUtil.getGrailsVersion()]
-	
-	def watchedResources = ["**/grails-app/services/*Service.groovy","**/grails-app/controllers/*Controller.groovy"]
 	
 	def doWithSpring = {
 		application.serviceClasses?.each { service ->
