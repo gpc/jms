@@ -1,6 +1,0 @@
-<plugin name='jms' version='0.1'>
-  <author>Justin Edelson</author>
-  <authorEmail>justin@justinedelson.com</authorEmail>
-  <title>This plugin adds MDB functionality to services.</title>
-  <resources />
-</plugin>
