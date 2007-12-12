@@ -29,6 +29,8 @@ class JmsGrailsPlugin {
 				if (!destination)
 					destination = sName
 					
+				def selector = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'messageSelector')
+					
 				def listenerMethod = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'listenerMethod')
 				if (!listenerMethod)
 					listenerMethod = "onMessage"
@@ -45,6 +47,9 @@ class JmsGrailsPlugin {
 					concurrentConsumers = listenerCount
 					destinationName = destination
 					pubSubDomain = pubSub
+					if (selector) {
+					    messageSelector = selector
+					}
 					connectionFactory = ref("connectionFactory")
 					messageListener = ref("${sName}JMSListener")
 				}
