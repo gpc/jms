@@ -3,22 +3,22 @@ import grails.util.GrailsUtil
 import org.springframework.jms.core.JmsTemplate
 
 class JmsGrailsPlugin {
-	def version = 0.2
+	def version = 0.3
     def author = "Justin Edelson"
     def authorEmail = "justin@justinedelson.com"
     def title = "This plugin adds MDB functionality to services."
     
-	def loadAfter = ['services', 'controllers']
+    def loadAfter = ['services', 'domainClass']
 	def observe = ['services', 'controllers']
     def dependsOn = [services: GrailsUtil.getGrailsVersion(),
-                     controllers: GrailsUtil.getGrailsVersion()]
+                     domainClass: GrailsUtil.getGrailsVersion()]
 	
 	def doWithSpring = {
 		application.serviceClasses?.each { service ->
 			def serviceClass = service.getClazz()
 			def exposeList = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'expose')
-			if (exposeList!=null && exposeList.contains('jms')) {
-				println '>>>> exposing ' + service.shortName
+			if (exposeList != null && exposeList.contains('jms')) {
+				println ">>>> adding JMS listener for ${service.shortName} to Spring"
 				def sName = service.propertyName.replaceFirst("Service","")
 					
 				def listenerCount = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'listenerCount')
@@ -38,15 +38,35 @@ class JmsGrailsPlugin {
 				def pubSub = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'pubSub')
 				if (!pubSub)
 					pubSub = false
+					
+				def durable = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'durable')
+				if (!durable)
+					durable = false
+					
+				def id = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'clientId')
+				if (!id) {
+					id = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'id')
+					if (!id) {
+						id = "grailsAppListener"
+					}
+				}
 				
 				"${sName}JMSListener"(org.codehaus.grails.jms.ClosureMessageListenerAdapter, ref("${service.propertyName}")) {
 					defaultListenerMethod = listenerMethod
 				}
 					
 				"${sName}JMSListenerContainer"(org.springframework.jms.listener.DefaultMessageListenerContainer) {
+					autoStartup = false
 					concurrentConsumers = listenerCount
 					destinationName = destination
 					pubSubDomain = pubSub
+					
+					if (pubSub && durable) {
+						subscriptionDurable = durable
+						durableSubscriptionName = id
+						clientId = id						
+					}
+					
 					if (selector) {
 					    messageSelector = selector
 					}
@@ -57,7 +77,15 @@ class JmsGrailsPlugin {
 		}
 	}   
 	def doWithApplicationContext = { applicationContext ->
-		// TODO Implement post initialization spring config (optional)		
+		application.serviceClasses?.each { service ->
+		def serviceClass = service.getClazz()
+		def exposeList = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'expose')
+		if (exposeList!=null && exposeList.contains('jms')) {
+				println ">>>> starting JMS listener for ${service.shortName}"
+				def sName = service.propertyName.replaceFirst("Service","")
+				applicationContext.getBean("${sName}JMSListenerContainer").start()
+			}
+		}		
 	}
 	def doWithWebDescriptor = { xml ->
 		// TODO Implement additions to web.xml (optional)
@@ -91,6 +119,14 @@ class JmsGrailsPlugin {
 	}	
 	def onChange = { event ->
 		if (event.source && event.ctx) {
+			/*def serviceClass = event.source.getClass()
+			def exposeList = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'expose')
+			if (exposeList != null && exposeList.contains('jms')) {
+				def sName = event.source.propertyName.replaceFirst("Service","")
+				println ">>>> resetting delegate of JMS listener for ${event.source.shortName}"
+				event.ctx.getBean("${sName}JMSListener").delegate = event.source
+			}*/
+			
 		    def connectionFactory = event.ctx.getBean("connectionFactory")
 			def queueTemplate = new JmsTemplate(connectionFactory)
 			def topicTemplate = new JmsTemplate(connectionFactory)
