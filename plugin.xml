@@ -1,6 +1,13 @@
-<plugin name='jms' version='0.3'>
-  <author>Justin Edelson</author>
-  <authorEmail>justin@justinedelson.com</authorEmail>
+<plugin name='jms' version='0.4' grailsVersion='1.1-SNAPSHOT &gt; *'>
+  <author>Luke Daley</author>
+  <authorEmail>ld@ldaley.com</authorEmail>
   <title>This plugin adds MDB functionality to services.</title>
-  <resources />
+  <resources>
+    <resource>UrlMappings</resource>
+    <resource>JmsService</resource>
+  </resources>
+  <dependencies>
+    <plugin name='services' version='1.1-SNAPSHOT' />
+    <plugin name='domainClass' version='1.1-SNAPSHOT' />
+  </dependencies>
 </plugin>
