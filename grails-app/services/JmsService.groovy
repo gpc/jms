@@ -60,8 +60,7 @@ class JmsService {
         } else if (destination instanceof Map) {
             if (destination.queue) {
                 [queue: destination.queue]
-            }
-            else if (destination.topic) {
+            } else if (destination.topic) {
                 [topic: destination.topic]
             } else {
                 def parts = []
