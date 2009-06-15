@@ -35,12 +35,12 @@ class JmsService {
             destination = (isTopic) ? destinationMap.topic : destinationMap.queue
         }
         
-        if (true) {
+        if (log.infoEnabled) {
             def topicOrQueue = (isTopic) ? "topic" : "queue"
             def logMsg = "Sending JMS message '$message' to $topicOrQueue '$destination'"
             if (jmsTemplateBeanName != DEFAULT_JMS_TEMPLATE_BEAN_NAME)
                 logMsg += " using template '$jmsTemplateBeanName'"
-            log.error(logMsg)
+            log.info(logMsg)
         }
 
         if (postProcessor) {

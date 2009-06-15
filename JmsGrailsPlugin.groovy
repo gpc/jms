@@ -21,14 +21,14 @@ class JmsGrailsPlugin {
     def listenerConfigFactory = new ListenerConfigFactory()
     
     def getListenerConfigs(serviceClass, application, log) {
-        log.error("inspecting '${serviceClass.name}' for JMS listeners")
+        log.info("inspecting '${serviceClass.name}' for JMS listeners")
         serviceInspector.getListenerConfigs(serviceClass, listenerConfigFactory, application)
     }
     
     def registerListenerConfig(listenerConfig, beanBuilder, log) {
         def methodOrClosure = (listenerConfig.listenerIsClosure) ? "closure" : "method"
         def queueOrTopic = (listenerConfig.topic) ? "TOPIC" : "QUEUE"
-        log.error "registering listener for ${methodOrClosure} '${listenerConfig.listenerMethodOrClosureName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
+        log.info "registering listener for ${methodOrClosure} '${listenerConfig.listenerMethodOrClosureName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
         listenerConfig.register(beanBuilder)
         
     }
@@ -118,7 +118,7 @@ class JmsGrailsPlugin {
                 if (!isNew) {
                     def serviceListenerConfigs = listenerConfigs.remove(serviceClass.name)
                     serviceListenerConfigs.each {
-                        log.error("removing JMS listener beans for ${it.serviceBeanName}.${it.listenerMethodOrClosureName}")
+                        log.info("removing JMS listener beans for ${it.serviceBeanName}.${it.listenerMethodOrClosureName}")
                         it.removeBeansFromContext(event.ctx)
                     }
                 }
