@@ -30,9 +30,9 @@ class JmsService {
             isTopic = destination instanceof Topic
         } else {
             def destinationMap = convertToDestinationMap(destination)
-            isTopic = destination.containsKey("topic")
+            isTopic = destinationMap.containsKey("topic")
             jmsTemplate.pubSubDomain = isTopic
-            destination = (isTopic) ? destination.topic : destination.queue
+            destination = (isTopic) ? destinationMap.topic : destinationMap.queue
         }
         
         if (true) {
