@@ -8,7 +8,7 @@ import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
 
 class JmsGrailsPlugin {
     
-    def version = 0.5
+    def version = "0.5-RC1"
     def author = "Luke Daley"
     def authorEmail = "ld@ldaley.com"
     def title = "This plugin adds MDB functionality to services."
