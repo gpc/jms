@@ -16,6 +16,8 @@ class JmsGrailsPlugin {
     def loadAfter = ['services', 'controllers']
     def observe = ['services', 'controllers']
     
+    static final DEFAULT_CONNECTION_FACTORY_BEAN_NAME = "jmsConnectionFactory"
+
     def listenerConfigs = [:]
     def serviceInspector = new ServiceInspector()
     def listenerConfigFactory = new ListenerConfigFactory()
@@ -43,6 +45,7 @@ class JmsGrailsPlugin {
                 listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
             }
         }
+        defaultJmsTemplate(org.springframework.jms.core.JmsTemplate, ref(DEFAULT_CONNECTION_FACTORY_BEAN_NAME))
     }
     
     def doWithApplicationContext = { applicationContext ->
