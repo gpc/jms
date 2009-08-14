@@ -45,7 +45,7 @@ class JmsGrailsPlugin {
                 listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
             }
         }
-        defaultJmsTemplate(org.springframework.jms.core.JmsTemplate, ref(DEFAULT_CONNECTION_FACTORY_BEAN_NAME))
+        defaultJmsTemplate(org.springframework.jms.core.JmsTemplate, ref(DEFAULT_CONNECTION_FACTORY_BEAN_NAME, true))
     }
     
     def doWithApplicationContext = { applicationContext ->
