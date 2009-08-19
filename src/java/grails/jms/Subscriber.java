@@ -8,4 +8,5 @@ public @interface Subscriber
     String topic() default "";
     String selector() default "";
     boolean durable() default false;
+    String messageConverter() default "";
 }

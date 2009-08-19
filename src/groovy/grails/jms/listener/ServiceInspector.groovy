@@ -38,6 +38,7 @@ class ServiceInspector {
                 messageSelector = GrailsClassUtils.getStaticPropertyValue(service, "messageSelector")
                 durable = GrailsClassUtils.getStaticPropertyValue(service, "durable")
                 explicitClientId = GrailsClassUtils.getStaticPropertyValue(service, "clientId")
+                messageConverter = GrailsClassUtils.getStaticPropertyValue(service, "messageConverter") ?: ""
             }
             listenerConfig
         } else {
@@ -89,6 +90,7 @@ class ServiceInspector {
             explicitDestinationName = annotation.topic()
             messageSelector = annotation.selector()
             durable = annotation.durable()
+            messageConverter = annotation.messageConverter()
         }
         listenerConfig
     }
@@ -100,6 +102,7 @@ class ServiceInspector {
             listenerMethodOrClosureName = method.name
             explicitDestinationName = annotation.name()
             messageSelector = annotation.selector()
+            messageConverter = annotation.messageConverter()
         }
         listenerConfig
     }

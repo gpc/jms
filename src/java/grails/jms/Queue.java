@@ -7,4 +7,5 @@ public @interface Queue
 {
     String name() default "";
     String selector() default "";
+    String messageConverter() default "";
 }

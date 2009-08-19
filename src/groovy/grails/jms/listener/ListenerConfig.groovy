@@ -29,6 +29,7 @@ class ListenerConfig {
     def explicitConnectionFactoryBeanName
     def serviceListener = false
     def serviceBeanName
+    def messageConverter = ""
     
     def getServiceBeanPrefix() {
         serviceBeanName - SERVICE_BEAN_SUFFIX
@@ -91,6 +92,11 @@ class ListenerConfig {
                 delegate.delegate = ref(serviceBeanName)
                 defaultListenerMethod = listenerMethodOrClosureName
                 listenerIsClosure = listenerIsClosure
+                if (this.messageConverter == null) {
+                    messageConverter = null
+                } else if (this.messageConverter != "") {
+                    messageConverter = ref(this.messageConverter)
+                }
             }
         }
     }
