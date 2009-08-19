@@ -8,7 +8,7 @@ import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
 
 class JmsGrailsPlugin {
     
-    def version = "0.5-RC1"
+    def version = "0.5-RC2"
     def author = "Luke Daley"
     def authorEmail = "ld@ldaley.com"
     def title = "This plugin adds MDB functionality to services."
@@ -16,6 +16,8 @@ class JmsGrailsPlugin {
     def loadAfter = ['services', 'controllers']
     def observe = ['services', 'controllers']
     
+    static final DEFAULT_CONNECTION_FACTORY_BEAN_NAME = "jmsConnectionFactory"
+
     def listenerConfigs = [:]
     def serviceInspector = new ServiceInspector()
     def listenerConfigFactory = new ListenerConfigFactory()
@@ -43,6 +45,7 @@ class JmsGrailsPlugin {
                 listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
             }
         }
+        defaultJmsTemplate(org.springframework.jms.core.JmsTemplate, ref(DEFAULT_CONNECTION_FACTORY_BEAN_NAME))
     }
     
     def doWithApplicationContext = { applicationContext ->

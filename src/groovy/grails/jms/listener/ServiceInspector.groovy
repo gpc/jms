@@ -7,6 +7,7 @@ class ServiceInspector {
     final static DEFAULT_SERVICE_LISTENER = "onMessage"
     final static CUSTOM_SERVICE_LISTENER_SPECIFIER = "listenerMethod"
     final static EXPOSES_SPECIFIER = "exposes"
+    final static EXPOSE_SPECIFIER = "expose"
     final static EXPOSES_JMS_SPECIFIER = "jms"
     
     def getListenerConfigs(service, listenerConfigFactory, grailsApplication) {
@@ -37,6 +38,7 @@ class ServiceInspector {
                 messageSelector = GrailsClassUtils.getStaticPropertyValue(service, "messageSelector")
                 durable = GrailsClassUtils.getStaticPropertyValue(service, "durable")
                 explicitClientId = GrailsClassUtils.getStaticPropertyValue(service, "clientId")
+                messageConverter = GrailsClassUtils.getStaticPropertyValue(service, "messageConverter") ?: ""
             }
             listenerConfig
         } else {
@@ -59,7 +61,7 @@ class ServiceInspector {
     }
     
     def exposesJms(service) {
-        GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER) == true
+        GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER) || GrailsClassUtils.getStaticPropertyValue(service, EXPOSE_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER)
     }
     
     def isSingleton(service) {
@@ -88,6 +90,7 @@ class ServiceInspector {
             explicitDestinationName = annotation.topic()
             messageSelector = annotation.selector()
             durable = annotation.durable()
+            messageConverter = annotation.messageConverter()
         }
         listenerConfig
     }
@@ -99,6 +102,7 @@ class ServiceInspector {
             listenerMethodOrClosureName = method.name
             explicitDestinationName = annotation.name()
             messageSelector = annotation.selector()
+            messageConverter = annotation.messageConverter()
         }
         listenerConfig
     }
