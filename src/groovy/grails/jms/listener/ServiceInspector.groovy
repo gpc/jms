@@ -7,6 +7,7 @@ class ServiceInspector {
     final static DEFAULT_SERVICE_LISTENER = "onMessage"
     final static CUSTOM_SERVICE_LISTENER_SPECIFIER = "listenerMethod"
     final static EXPOSES_SPECIFIER = "exposes"
+    final static EXPOSE_SPECIFIER = "expose"
     final static EXPOSES_JMS_SPECIFIER = "jms"
     
     def getListenerConfigs(service, listenerConfigFactory, grailsApplication) {
@@ -59,7 +60,7 @@ class ServiceInspector {
     }
     
     def exposesJms(service) {
-        GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER) == true
+        GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER) || GrailsClassUtils.getStaticPropertyValue(service, EXPOSE_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER)
     }
     
     def isSingleton(service) {
