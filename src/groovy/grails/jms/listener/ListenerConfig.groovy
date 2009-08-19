@@ -122,6 +122,7 @@ class ListenerConfig {
                     messageSelector = messageSelector
                 }
                 
+                transactionManager = ref("transactionManager")
                 connectionFactory = ref(this.connectionFactoryBeanName)
                 messageListener = ref(this.listenerAdapterBeanName)
             }
