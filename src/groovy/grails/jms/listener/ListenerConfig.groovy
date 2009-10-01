@@ -89,6 +89,7 @@ class ListenerConfig {
     def registerListenerAdapter(beanBuilder) {
         beanBuilder.with {
             "${this.listenerAdapterBeanName}"(LISTENER_ADAPTER_CLASS) {
+                persistenceInterceptor = ref('persistenceInterceptor')
                 delegate.delegate = ref(serviceBeanName)
                 defaultListenerMethod = listenerMethodOrClosureName
                 listenerIsClosure = listenerIsClosure
