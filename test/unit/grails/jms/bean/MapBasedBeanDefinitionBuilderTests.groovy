@@ -1,7 +1,7 @@
 package grails.jms.bean
 import grails.spring.BeanBuilder
 
-class JmsBeanDefinitionTests extends GroovyTestCase {
+class MapBasedBeanDefinitionBuilderTests extends GroovyTestCase {
 
     def bb
     
@@ -15,7 +15,7 @@ class JmsBeanDefinitionTests extends GroovyTestCase {
         def s2Value = "s2Value"
         def i1Value = 1
         
-        bb.parent(JmsBeanDefinitionTestsTestBean) { 
+        bb.parent(MapBasedBeanDefinitionBuilderTestsTestBean) { 
             it.'abstract' = true 
             s2 = s2Value
         }
@@ -26,7 +26,7 @@ class JmsBeanDefinitionTests extends GroovyTestCase {
             meta: [
                 parentBean: "parent"
             ],
-            clazz: JmsBeanDefinitionTestsTestBean,
+            clazz: MapBasedBeanDefinitionBuilderTestsTestBean,
             s1Bean: "s1",
             i1: i1Value
         ]
@@ -37,7 +37,7 @@ class JmsBeanDefinitionTests extends GroovyTestCase {
         def bd = bb.getBeanDefinition("test")
         assertNotNull(bd)
         
-        assertEquals(JmsBeanDefinitionTestsTestBean.name, bd.beanClassName)
+        assertEquals(MapBasedBeanDefinitionBuilderTestsTestBean.name, bd.beanClassName)
         assertEquals("parent", bd.parentName)
         
         def ac = bb.createApplicationContext()
@@ -52,7 +52,7 @@ class JmsBeanDefinitionTests extends GroovyTestCase {
 
 }
 
-class JmsBeanDefinitionTestsTestBean {
+class MapBasedBeanDefinitionBuilderTestsTestBean {
 
     String s1
     String s2

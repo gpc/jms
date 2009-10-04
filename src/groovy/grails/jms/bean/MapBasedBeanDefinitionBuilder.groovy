@@ -1,11 +1,11 @@
 package grails.jms.bean
 
-class JmsBeanDefinition {
+class MapBasedBeanDefinitionBuilder {
 
     private name
     private definition
     
-    JmsBeanDefinition(name, Map definition) {
+    MapBasedBeanDefinitionBuilder(name, Map definition) {
         this.name = name
         this.definition = definition
     }
@@ -29,7 +29,7 @@ class JmsBeanDefinition {
         properties
     }
 
-    def register(beanBuilder) {
+    def build(beanBuilder) {
         beanBuilder.with {
             "${this.getName()}"(clazz) { metaBean ->
                 def bean = delegate
