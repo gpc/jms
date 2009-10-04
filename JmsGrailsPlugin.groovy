@@ -19,6 +19,12 @@ class JmsGrailsPlugin {
     def loadAfter = ['services', 'controllers']
     def observe = ['services', 'controllers']
 
+    def pluginExcludes = [
+        "conf/spring/**",
+        "lib/activemq*",
+        "lib/geronimo*"
+    ]
+    
     def listenerConfigs = [:]
     def serviceInspector = new ServiceInspector()
     def listenerConfigFactory = new ListenerConfigFactory()
