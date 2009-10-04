@@ -1,15 +1,10 @@
 package grails.jms.listener
 import org.apache.commons.lang.StringUtils
 import org.springframework.jms.listener.DefaultMessageListenerContainer
+import grails.jms.bean.*
 
 class ListenerConfig {
-
-    static final LISTENER_ADAPTER_BEAN_SUFFIX = "JMSListener"
-    static final LISTENER_CONTAINER_BEAN_SUFFIX = "JMSListenerContainer"
-    
-    static final LISTENER_ADAPTER_CLASS = ServiceListenerAdapter
-    static final LISTENER_CONTAINER_CLASS = DefaultMessageListenerContainer
-    
+        
     static final SERVICE_BEAN_SUFFIX = "Service"
     
     static final DEFAULT_CONNECTION_FACTORY_BEAN_NAME = "jmsConnectionFactory"
@@ -30,6 +25,8 @@ class ListenerConfig {
     def serviceListener = false
     def serviceBeanName
     def messageConverter = ""
+    def containerParent
+    def adapterParent
     
     def getServiceBeanPrefix() {
         serviceBeanName - SERVICE_BEAN_SUFFIX
@@ -44,11 +41,11 @@ class ListenerConfig {
     }
     
     def getListenerAdapterBeanName() {
-        this.beanPrefix + LISTENER_ADAPTER_BEAN_SUFFIX
+        this.beanPrefix + "JmsListenerAdapter"
     }
     
     def getListenerContainerBeanName() {
-        this.beanPrefix + LISTENER_CONTAINER_BEAN_SUFFIX
+        this.beanPrefix + "JmsListenerContainer"
     }
     
     def getDestinationName() {
@@ -88,11 +85,11 @@ class ListenerConfig {
 
     def registerListenerAdapter(beanBuilder) {
         beanBuilder.with {
-            "${this.listenerAdapterBeanName}"(LISTENER_ADAPTER_CLASS) {
-                persistenceInterceptor = ref('persistenceInterceptor')
+            "${this.listenerAdapterBeanName}" {
+                it.parent = ref(adapterParent + JmsListenerAdapterAbstractBeanDefinitionBuilder.nameSuffix)
+                it.'abstract' = false
                 delegate.delegate = ref(serviceBeanName)
                 defaultListenerMethod = listenerMethodOrClosureName
-                listenerIsClosure = listenerIsClosure
                 if (this.messageConverter == null) {
                     messageConverter = null
                 } else if (this.messageConverter != "") {
@@ -104,9 +101,10 @@ class ListenerConfig {
     
     def registerListenerContainer(beanBuilder) {
         beanBuilder.with {
-            "${this.listenerContainerBeanName}"(LISTENER_CONTAINER_CLASS) {
+            "${this.listenerContainerBeanName}"() {
+                it.parent = ref(containerParent + JmsListenerContainerAbstractBeanDefinitionBuilder.nameSuffix)
+                it.'abstract' = false
                 it.destroyMethod = "destroy"
-                autoStartup = false
                 
                 concurrentConsumers = concurrentConsumers
                 destinationName = this.destinationName
@@ -123,8 +121,6 @@ class ListenerConfig {
                     messageSelector = messageSelector
                 }
                 
-                transactionManager = ref("transactionManager")
-                connectionFactory = ref(this.connectionFactoryBeanName)
                 messageListener = ref(this.listenerAdapterBeanName)
             }
         }

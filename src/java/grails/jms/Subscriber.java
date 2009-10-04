@@ -5,6 +5,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Subscriber
 {
+    String container() default "standard";
+    String adapter() default "standard";
     String topic() default "";
     String selector() default "";
     boolean durable() default false;

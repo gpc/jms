@@ -39,6 +39,8 @@ class ServiceInspector {
                 durable = GrailsClassUtils.getStaticPropertyValue(service, "durable")
                 explicitClientId = GrailsClassUtils.getStaticPropertyValue(service, "clientId")
                 messageConverter = GrailsClassUtils.getStaticPropertyValue(service, "messageConverter") ?: ""
+                containerParent = GrailsClassUtils.getStaticPropertyValue(service, "listenerContainer") ?: "standard"
+                adapterParent = GrailsClassUtils.getStaticPropertyValue(service, "listenerAdapter") ?: "standard"
             }
             listenerConfig
         } else {
@@ -91,6 +93,8 @@ class ServiceInspector {
             messageSelector = annotation.selector()
             durable = annotation.durable()
             messageConverter = annotation.messageConverter()
+            containerParent = annotation.container()
+            adapterParent = annotation.adapter()
         }
         listenerConfig
     }
@@ -103,6 +107,8 @@ class ServiceInspector {
             explicitDestinationName = annotation.name()
             messageSelector = annotation.selector()
             messageConverter = annotation.messageConverter()
+            containerParent = annotation.container()
+            adapterParent = annotation.adapter()
         }
         listenerConfig
     }
