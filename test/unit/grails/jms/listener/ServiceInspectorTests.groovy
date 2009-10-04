@@ -27,9 +27,9 @@ class ServiceInspectorTests extends GroovyTestCase {
     }
     
     void testHasServiceListenerClosure() {
-        assertTrue(serviceInspector.hasServiceListenerMethod(HasServiceListenerClosure))
-        assertFalse(serviceInspector.hasServiceListenerMethod(HasServiceListenerMethod))
-        assertFalse(serviceInspector.hasServiceListenerMethod(HasNoServiceListener))
+        assertTrue(serviceInspector.hasServiceListenerClosure(HasServiceListenerClosure))
+        assertFalse(serviceInspector.hasServiceListenerClosure(HasServiceListenerMethod))
+        assertFalse(serviceInspector.hasServiceListenerClosure(HasNoServiceListener))
     }
     
 }

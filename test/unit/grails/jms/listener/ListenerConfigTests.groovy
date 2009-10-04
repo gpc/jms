@@ -12,7 +12,7 @@ class ListenerConfigTests extends GroovyTestCase {
     }
     
     void testGetBeanPrefix() {
-        assertEquals("onMessagePerson", newListenerConfig(
+        assertEquals("personOnMessage", newListenerConfig(
             serviceBeanName: "personService", 
             listenerMethodOrClosureName: "onMessage").beanPrefix
         )
