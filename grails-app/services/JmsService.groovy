@@ -5,7 +5,7 @@ import grails.jms.listener.GrailsMessagePostProcessor
 
 class JmsService {
 
-    static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "defaultJmsTemplate"
+    static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standardJmsTemplate"
     
     def grailsApplication
     
