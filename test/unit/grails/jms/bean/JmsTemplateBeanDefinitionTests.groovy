@@ -13,7 +13,7 @@ class JmsTemplateBeanDefinitionTests extends GroovyTestCase {
         def nameBase = "example"
         
         def jtbd = new JmsTemplateBeanDefinition(nameBase, [meta: ['abstract': true]])
-        jtbd.register(bb)
+        jtbd.build(bb)
         def ajtbd = bb.getBeanDefinition(nameBase + JmsTemplateBeanDefinition.NAME_SUFFIX)
         
         assertNotNull(ajtbd)

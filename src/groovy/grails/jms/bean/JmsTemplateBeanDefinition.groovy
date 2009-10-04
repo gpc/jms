@@ -1,7 +1,7 @@
 package grails.jms.bean
 import org.springframework.jms.core.JmsTemplate
 
-class JmsTemplateBeanDefinition extends JmsBeanDefinition {
+class JmsTemplateBeanDefinition extends MapBasedBeanDefinitionBuilder {
     
     final static NAME_SUFFIX = "JmsTemplate"
     final static DEFAULT_CLASS = JmsTemplate

@@ -31,8 +31,8 @@ class MapBasedBeanDefinitionBuilderTests extends GroovyTestCase {
             i1: i1Value
         ]
         
-        def jbd = new JmsBeanDefinition("test", definition)
-        jbd.register(bb)
+        def jbd = new MapBasedBeanDefinitionBuilder("test", definition)
+        jbd.build(bb)
         
         def bd = bb.getBeanDefinition("test")
         assertNotNull(bd)
