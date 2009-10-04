@@ -10,6 +10,10 @@ class JmsBeanDefinition {
         this.definition = definition
     }
 
+    def getName() {
+        name
+    }
+    
     def getClazz() {
         definition.clazz
     }
@@ -27,7 +31,7 @@ class JmsBeanDefinition {
 
     def register(beanBuilder) {
         beanBuilder.with {
-            "$name"(clazz) { metaBean ->
+            "${this.getName()}"(clazz) { metaBean ->
                 def bean = delegate
                 
                 this.meta.each { k,v ->
@@ -40,7 +44,7 @@ class JmsBeanDefinition {
         }
     }
         
-    private set(name, value, recipient, beanBuilder) {
+    protected set(name, value, recipient, beanBuilder) {
         if (name.endsWith('Bean')) {
             recipient."${name.substring(0, name.size() - 4)}" = beanBuilder.ref(value)
         } else {
