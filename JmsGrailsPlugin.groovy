@@ -6,6 +6,9 @@ import grails.jms.listener.ListenerConfigFactory
 import org.springframework.beans.factory.InitializingBean
 import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
 
+import groovy.util.ConfigSlurper
+import grails.jms.bean.JmsBeanDefinitionsBuilder
+
 class JmsGrailsPlugin {
     
     def version = "0.5-RC2"
@@ -15,12 +18,14 @@ class JmsGrailsPlugin {
     
     def loadAfter = ['services', 'controllers']
     def observe = ['services', 'controllers']
-    
-    static final DEFAULT_CONNECTION_FACTORY_BEAN_NAME = "jmsConnectionFactory"
 
     def listenerConfigs = [:]
     def serviceInspector = new ServiceInspector()
     def listenerConfigFactory = new ListenerConfigFactory()
+    
+    def getDefaultConfig() {
+        new ConfigSlurper(GrailsUtil.environment).parse(DefaultJmsBeans)
+    }
     
     def getListenerConfigs(serviceClass, application, log) {
         log.info("inspecting '${serviceClass.name}' for JMS listeners")
@@ -35,6 +40,9 @@ class JmsGrailsPlugin {
         
     }
     def doWithSpring = {
+        
+        new JmsBeanDefinitionsBuilder(defaultConfig + application.config.jms.flatten()).build(delegate)
+        
         application.serviceClasses?.each { service ->
             def serviceClass = service.getClazz()
             def serviceClassListenerConfigs = getListenerConfigs(serviceClass, application, log)
@@ -45,7 +53,6 @@ class JmsGrailsPlugin {
                 listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
             }
         }
-        defaultJmsTemplate(org.springframework.jms.core.JmsTemplate, ref(DEFAULT_CONNECTION_FACTORY_BEAN_NAME))
     }
     
     def doWithApplicationContext = { applicationContext ->
