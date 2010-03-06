@@ -1,14 +1,22 @@
 package grails.plugin.jms.listener.adapter
 
-import org.springframework.jms.listener.adapter.MessageListenerAdapter
 import javax.jms.JMSException
-import org.apache.commons.logging.LogFactory
+import javax.jms.Message
+import javax.jms.Session
 
-class PersistenceContextAwareListenerAdapter extends MessageListenerAdapter {
-
-    static log = LogFactory.getLog(PersistenceContextAwareListenerAdapter)
+class PersistenceContextAwareListenerAdapter extends LoggingListenerAdapter {
     
     def persistenceInterceptor
+
+    // Needed to workaround groovy bug with call to super in LoggingListenerAdapter
+    void onMessage(Message message) {
+        super.onMessage(message)
+    }
+
+    // Needed to workaround groovy bug with call to super in LoggingListenerAdapter
+    void onMessage(Message message, Session session) {
+        super.onMessage(message, session)
+    }
     
     protected Object invokeListenerMethod(String methodName, Object[] arguments) throws JMSException {
         try {
