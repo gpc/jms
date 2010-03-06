@@ -22,14 +22,7 @@ class ServiceInspectorTests extends GroovyTestCase {
     
     void testHasServiceListenerMethod() {
         assertTrue(serviceInspector.hasServiceListenerMethod(HasServiceListenerMethod))
-        assertFalse(serviceInspector.hasServiceListenerMethod(HasServiceListenerClosure))
         assertFalse(serviceInspector.hasServiceListenerMethod(HasNoServiceListener))
-    }
-    
-    void testHasServiceListenerClosure() {
-        assertTrue(serviceInspector.hasServiceListenerClosure(HasServiceListenerClosure))
-        assertFalse(serviceInspector.hasServiceListenerClosure(HasServiceListenerMethod))
-        assertFalse(serviceInspector.hasServiceListenerClosure(HasNoServiceListener))
     }
     
 }
@@ -54,8 +47,5 @@ class ExplicitServiceListenerName {
 
 class HasServiceListenerMethod {
     def onMessage(msg) {}
-}
-class HasServiceListenerClosure {
-    def onMessage = {}
 }
 class HasNoServiceListener {}

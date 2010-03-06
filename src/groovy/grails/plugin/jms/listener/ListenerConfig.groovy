@@ -13,8 +13,7 @@ class ListenerConfig {
     
     boolean topic = false
     def subscriptionDurable = false
-    def listenerMethodOrClosureName = null
-    def listenerIsClosure = false    
+    def listenerMethodName = null
     def messageSelector = null
     def durable = false
     def explicitClientId = null
@@ -33,7 +32,7 @@ class ListenerConfig {
         if (serviceListener) {
             this.serviceBeanPrefix
         } else {
-            this.serviceBeanPrefix + StringUtils.capitalize(listenerMethodOrClosureName)
+            this.serviceBeanPrefix + StringUtils.capitalize(listenerMethodName)
         }
     }
     
@@ -52,9 +51,9 @@ class ListenerConfig {
             if (serviceListener) {
                 this.appName + "." + this.serviceBeanPrefix
             } else if (topic) {
-                listenerMethodOrClosureName
+                listenerMethodName
             } else {
-                this.appName + "." + this.serviceBeanPrefix + "." + listenerMethodOrClosureName
+                this.appName + "." + this.serviceBeanPrefix + "." + listenerMethodName
             }
         }
     }
@@ -74,7 +73,7 @@ class ListenerConfig {
                 it.parent = ref(adapterParent + JmsListenerAdapterAbstractBeanDefinitionBuilder.nameSuffix)
                 it.'abstract' = false
                 delegate.delegate = ref(serviceBeanName)
-                defaultListenerMethod = listenerMethodOrClosureName
+                defaultListenerMethod = listenerMethodName
             }
         }
     }

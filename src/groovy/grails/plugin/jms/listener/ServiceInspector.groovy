@@ -25,12 +25,11 @@ class ServiceInspector {
     
     def getServiceListenerConfig(service, listenerConfigFactory, grailsApplication) {
         def hasServiceListenerMethod = hasServiceListenerMethod(service)
-        if (hasServiceListenerMethod || hasServiceListenerClosure(service)) {
+        if (hasServiceListenerMethod) {
             def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
             listenerConfig.with {
                 serviceListener = true
-                listenerMethodOrClosureName = getServiceListenerName(service)
-                listenerIsClosure = !hasServiceListenerMethod
+                listenerMethodName = getServiceListenerName(service)
                 
                 explicitDestinationName = GrailsClassUtils.getStaticPropertyValue(service, "destination")
                 topic = GrailsClassUtils.getStaticPropertyValue(service, "pubSub") ?: false
@@ -51,11 +50,6 @@ class ServiceInspector {
     def hasServiceListenerMethod(service) {
         def serviceListenerName = getServiceListenerName(service)
         service.metaClass.methods.find { it.name == serviceListenerName && it.parameterTypes.size() == 1 } != null
-    }
-    
-    def hasServiceListenerClosure(service) {
-        def serviceListenerName = getServiceListenerName(service)
-        service.metaClass.methods.find { it.name == GrailsClassUtils.getGetterName(serviceListenerName) && it.parameterTypes.size() == 0 } != null
     }
     
     def exposesJms(service) {
@@ -84,7 +78,7 @@ class ServiceInspector {
         def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
         listenerConfig.with {
             topic = true
-            listenerMethodOrClosureName = method.name
+            listenerMethodName = method.name
             explicitDestinationName = annotation.topic()
             messageSelector = annotation.selector()
             containerParent = annotation.container()
@@ -97,7 +91,7 @@ class ServiceInspector {
         def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
         listenerConfig.with {
             topic = false
-            listenerMethodOrClosureName = method.name
+            listenerMethodName = method.name
             explicitDestinationName = annotation.name()
             messageSelector = annotation.selector()
             containerParent = annotation.container()

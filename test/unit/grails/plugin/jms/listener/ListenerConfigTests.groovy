@@ -14,12 +14,12 @@ class ListenerConfigTests extends GroovyTestCase {
     void testGetBeanPrefix() {
         assertEquals("personOnMessage", newListenerConfig(
             serviceBeanName: "personService", 
-            listenerMethodOrClosureName: "onMessage").beanPrefix
+            listenerMethodName: "onMessage").beanPrefix
         )
         assertEquals("person", newListenerConfig(
             serviceListener: true,
             serviceBeanName: "personService", 
-            listenerMethodOrClosureName: "onMessage").beanPrefix
+            listenerMethodName: "onMessage").beanPrefix
         )
     }
     
@@ -37,7 +37,7 @@ class ListenerConfigTests extends GroovyTestCase {
         def lc2 = newListenerConfig(
             serviceBeanName: "personService", 
             serviceListener: false,
-            listenerMethodOrClosureName: "doSomething",
+            listenerMethodName: "doSomething",
             topic: true
         )
         assertEquals("doSomething", lc2.destinationName)
@@ -46,7 +46,7 @@ class ListenerConfigTests extends GroovyTestCase {
             grailsApplication: mockGrailsApplication,
             serviceBeanName: "personService", 
             serviceListener: false,
-            listenerMethodOrClosureName: "doSomething",
+            listenerMethodName: "doSomething",
             topic: false
         )
         assertEquals("app.person.doSomething", lc3.destinationName)
