@@ -1,10 +1,10 @@
 package grails.plugin.jms.bean
-import org.springframework.jms.listener.adapter.MessageListenerAdapter
+import grails.plugin.jms.listener.adapter.PersistenceContextAwareListenerAdapter
 
 class JmsListenerAdapterAbstractBeanDefinitionBuilder extends JmsBeanDefinitionBuilder {
 
     final static nameSuffix = "JmsListenerAdapter"
-    final static defaultClazz = MessageListenerAdapter
+    final static defaultClazz = PersistenceContextAwareListenerAdapter
     
     JmsListenerAdapterAbstractBeanDefinitionBuilder(name, definition) {
         super(name, definition)

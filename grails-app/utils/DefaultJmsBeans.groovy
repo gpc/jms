@@ -18,5 +18,6 @@ containers {
 adapters {
     standard {
         messageConverter = new SimpleMessageConverter()
+        persistenceInterceptorBean = 'persistenceInterceptor'
     }
 }
