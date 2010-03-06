@@ -9,7 +9,11 @@ import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
 import groovy.util.ConfigSlurper
 import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
 
+import org.apache.commons.logging.LogFactory
+
 class JmsGrailsPlugin {
+    
+    static LOG = LogFactory.getLog('grails.plugin.jms.JmsGrailsPlugin')
     
     def version = "0.5-RC2"
     def author = "Luke Daley"
@@ -33,15 +37,15 @@ class JmsGrailsPlugin {
         new ConfigSlurper(GrailsUtil.environment).parse(DefaultJmsBeans)
     }
     
-    def getListenerConfigs(serviceClass, application, log) {
-        log.info("inspecting '${serviceClass.name}' for JMS listeners")
+    def getListenerConfigs(serviceClass, application) {
+        LOG.info("inspecting '${serviceClass.name}' for JMS listeners")
         serviceInspector.getListenerConfigs(serviceClass, listenerConfigFactory, application)
     }
     
-    def registerListenerConfig(listenerConfig, beanBuilder, log) {
+    def registerListenerConfig(listenerConfig, beanBuilder) {
         def methodOrClosure = (listenerConfig.listenerIsClosure) ? "closure" : "method"
         def queueOrTopic = (listenerConfig.topic) ? "TOPIC" : "QUEUE"
-        log.info "registering listener for ${methodOrClosure} '${listenerConfig.listenerMethodOrClosureName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
+        LOG.info "registering listener for ${methodOrClosure} '${listenerConfig.listenerMethodOrClosureName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
         listenerConfig.register(beanBuilder)
         
     }
@@ -51,10 +55,10 @@ class JmsGrailsPlugin {
         
         application.serviceClasses?.each { service ->
             def serviceClass = service.getClazz()
-            def serviceClassListenerConfigs = getListenerConfigs(serviceClass, application, log)
+            def serviceClassListenerConfigs = getListenerConfigs(serviceClass, application)
             if (serviceClassListenerConfigs) {
                 serviceClassListenerConfigs.each {
-                    registerListenerConfig(it, delegate, log)
+                    registerListenerConfig(it, delegate)
                 }
                 listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
             }
@@ -134,17 +138,17 @@ class JmsGrailsPlugin {
                 if (!isNew) {
                     def serviceListenerConfigs = listenerConfigs.remove(serviceClass.name)
                     serviceListenerConfigs.each {
-                        log.info("removing JMS listener beans for ${it.serviceBeanName}.${it.listenerMethodOrClosureName}")
+                        LOG.info("removing JMS listener beans for ${it.serviceBeanName}.${it.listenerMethodOrClosureName}")
                         it.removeBeansFromContext(event.ctx)
                     }
                 }
                 
-                def serviceListenerConfigs = getListenerConfigs(serviceClass, application, log)
+                def serviceListenerConfigs = getListenerConfigs(serviceClass, application)
                 if (serviceListenerConfigs) {
                     listenerConfigs[serviceClass.name] = serviceListenerConfigs
                     def newBeans = beans {
                         serviceListenerConfigs.each { listenerConfig ->
-                            registerListenerConfig(listenerConfig, delegate, log)
+                            registerListenerConfig(listenerConfig, delegate)
                         }
                     }
                     newBeans.beanDefinitions.each { n,d ->
