@@ -7,4 +7,10 @@ beans = {
             brokerURL = 'vm://localhost'
         }
     }
+    
+    otherJmsConnectionFactory(SingleConnectionFactory) {
+        targetConnectionFactory = { ActiveMQConnectionFactory cf ->
+            brokerURL = 'vm://localhost'
+        }
+    }
 }

@@ -10,21 +10,17 @@ class JmsService {
 
     static transactional = false
     static final LOG = LogFactory.getLog(JmsService)
-    static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standardJmsTemplate"
+    static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
     
     def grailsApplication
     
-    def send(destination, message) {
-        send(destination, message, null)
-    }
-    
-    def send(destination, message, postProcessor) {
+    def send(destination, message, Closure postProcessor) {
         send(destination, message, null, postProcessor)
     }
     
-    def send(destination, message, jmsTemplateBeanName, postProcessor) {
+    def send(destination, message, String jmsTemplateBeanName = null, Closure postProcessor = null) {
         
-        jmsTemplateBeanName = jmsTemplateBeanName ?: DEFAULT_JMS_TEMPLATE_BEAN_NAME
+        jmsTemplateBeanName = (jmsTemplateBeanName ?: DEFAULT_JMS_TEMPLATE_BEAN_NAME) + "JmsTemplate"
         def jmsTemplate = grailsApplication.mainContext.getBean(jmsTemplateBeanName)
         if (jmsTemplate == null) {
             throw new Error("Could not find bean with name '${jmsTemplateBeanName}' to use as a JmsTemplate")

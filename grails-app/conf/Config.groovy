@@ -29,3 +29,30 @@ environments {
         }
     }
 }
+
+jms {
+    templates {
+        other {
+            meta {
+                parentBean = 'standardJmsTemplate'
+            }
+            connectionFactoryBean = "otherJmsConnectionFactory"
+        }
+    }
+    containers {
+        other {
+            meta {
+                parentBean = 'standardJmsListenerContainer'
+            }
+            connectionFactoryBean = "otherJmsConnectionFactory"
+        }
+    }
+    adapters {
+        other {
+            meta {
+                parentBean = 'standardJmsListenerAdapter'
+            }
+            messageConverter = null
+        }
+    }
+}
