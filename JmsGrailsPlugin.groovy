@@ -26,7 +26,8 @@ class JmsGrailsPlugin {
     def pluginExcludes = [
         "conf/spring/**",
         "lib/activemq*",
-        "lib/geronimo*"
+        "lib/geronimo*",
+        "**/grails/plugin/jms/test/**"
     ]
     
     def listenerConfigs = [:]

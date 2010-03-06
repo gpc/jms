@@ -1,8 +1,10 @@
+package grails.plugin.jms.test.simple
+
 import grails.plugin.jms.*
 
 import java.util.concurrent.LinkedBlockingQueue
 
-class ReceivingService {
+class SimpleReceivingService {
 
     static exposes = ['jms']
     
@@ -16,7 +18,7 @@ class ReceivingService {
     }
     
     @Subscriber
-    def subscriber(msg) {
+    def simpleTopic(msg) {
         log.info "subscriber received: $msg"
         subscriberReceived << msg
     }

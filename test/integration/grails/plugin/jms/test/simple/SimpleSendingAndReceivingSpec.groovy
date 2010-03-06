@@ -1,23 +1,25 @@
+package grails.plugin.jms.test.simple
+
 import grails.plugin.spock.*
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class SimpleSendingSpec extends IntegrationSpec {
+class SimpleSendingAndReceivingSpec extends IntegrationSpec {
 
-    def sendingService
-    def receivingService
+    def simpleSendingService
+    def simpleReceivingService
     
     void testQueue() {
         given:
         def latch = new CountDownLatch(1)
         def msg
         Thread.start {
-            msg = receivingService.queueReceived.take()
+            msg = simpleReceivingService.queueReceived.take()
             latch.countDown()
         }
         when:
-        sendingService.sendToQueue("a")
+        simpleSendingService.sendToQueue("a")
         latch.await(5, TimeUnit.SECONDS)
         then:
         msg == "a"
@@ -28,11 +30,11 @@ class SimpleSendingSpec extends IntegrationSpec {
         def latch = new CountDownLatch(1)
         def msg
         Thread.start {
-            msg = receivingService.subscriberReceived.take()
+            msg = simpleReceivingService.subscriberReceived.take()
             latch.countDown()
         }
         when:
-        sendingService.sendToTopic("a")
+        simpleSendingService.sendToTopic("a")
         latch.await(5, TimeUnit.SECONDS)
         then:
         msg == "a"
