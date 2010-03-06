@@ -4,9 +4,11 @@ import javax.jms.Destination
 import javax.jms.Topic
 
 import grails.plugin.jms.listener.GrailsMessagePostProcessor
+import org.apache.commons.logging.LogFactory
 
 class JmsService {
 
+    static final LOG = LogFactory.getLog(JmsService)
     static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standardJmsTemplate"
     
     def grailsApplication
@@ -37,12 +39,12 @@ class JmsService {
             destination = (isTopic) ? destinationMap.topic : destinationMap.queue
         }
         
-        if (log.infoEnabled) {
+        if (LOG.infoEnabled) {
             def topicOrQueue = (isTopic) ? "topic" : "queue"
             def logMsg = "Sending JMS message '$message' to $topicOrQueue '$destination'"
             if (jmsTemplateBeanName != DEFAULT_JMS_TEMPLATE_BEAN_NAME)
                 logMsg += " using template '$jmsTemplateBeanName'"
-            log.info(logMsg)
+            LOG.info(logMsg)
         }
 
         if (postProcessor) {
