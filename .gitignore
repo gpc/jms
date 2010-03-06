@@ -4,3 +4,4 @@ test/reports
 plugin.xml
 *.zip
 activemq-data
+.DS_Store
