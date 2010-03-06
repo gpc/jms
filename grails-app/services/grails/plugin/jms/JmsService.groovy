@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory
 
 class JmsService {
 
+    static transactional = false
     static final LOG = LogFactory.getLog(JmsService)
     static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standardJmsTemplate"
     
