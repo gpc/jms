@@ -12,16 +12,13 @@ class ListenerConfig {
     def grailsApplication
     
     boolean topic = false
-    def concurrentConsumers = 1
     def subscriptionDurable = false
     def listenerMethodOrClosureName = null
     def listenerIsClosure = false    
     def messageSelector = null
     def durable = false
-    def explicitDurableSubscriptionName = null
     def explicitClientId = null
     def explicitDestinationName = null
-    def explicitConnectionFactoryBeanName
     def serviceListener = false
     def serviceBeanName
     def messageConverter = ""
@@ -62,22 +59,10 @@ class ListenerConfig {
         }
     }
     
-    def getDurableSubscriptionName() {
-        explicitDurableSubscriptionName ?: this.serviceBeanPrefix + StringUtils.capitalize(listenerMethodOrClosureName)
-    }
-
-    def getClientId() {
-        explicitClientId ?: this.appName
-    }
-    
     def getAppName() {
         grailsApplication.metadata['app.name']
     }
-    
-    def getConnectionFactoryBeanName() {
-        explicitConnectionFactoryBeanName ?: DEFAULT_CONNECTION_FACTORY_BEAN_NAME
-    }
-    
+        
     def register(beanBuilder) {
         registerListenerAdapter(beanBuilder)
         registerListenerContainer(beanBuilder)
@@ -90,11 +75,6 @@ class ListenerConfig {
                 it.'abstract' = false
                 delegate.delegate = ref(serviceBeanName)
                 defaultListenerMethod = listenerMethodOrClosureName
-                if (this.messageConverter == null) {
-                    messageConverter = null
-                } else if (this.messageConverter != "") {
-                    messageConverter = ref(this.messageConverter)
-                }
             }
         }
     }
@@ -106,17 +86,9 @@ class ListenerConfig {
                 it.'abstract' = false
                 it.destroyMethod = "destroy"
                 
-                concurrentConsumers = concurrentConsumers
                 destinationName = this.destinationName
                 
                 pubSubDomain = this.topic
-            
-                if (this.topic && durable) {
-                    subscriptionDurable = durable
-                    durableSubscriptionName = this.durableSubscriptionName
-                    clientId = this.clientId
-                }
-            
                 if (messageSelector) {
                     messageSelector = messageSelector
                 }

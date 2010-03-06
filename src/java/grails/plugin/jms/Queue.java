@@ -9,5 +9,4 @@ public @interface Queue
     String adapter() default "standard";
     String name() default "";
     String selector() default "";
-    String messageConverter() default "";
 }

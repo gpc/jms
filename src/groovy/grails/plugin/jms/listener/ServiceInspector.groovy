@@ -32,13 +32,9 @@ class ServiceInspector {
                 listenerMethodOrClosureName = getServiceListenerName(service)
                 listenerIsClosure = !hasServiceListenerMethod
                 
-                concurrentConsumers = GrailsClassUtils.getStaticPropertyValue(service, "listenerCount") ?: 1
                 explicitDestinationName = GrailsClassUtils.getStaticPropertyValue(service, "destination")
                 topic = GrailsClassUtils.getStaticPropertyValue(service, "pubSub") ?: false
                 messageSelector = GrailsClassUtils.getStaticPropertyValue(service, "messageSelector")
-                durable = GrailsClassUtils.getStaticPropertyValue(service, "durable")
-                explicitClientId = GrailsClassUtils.getStaticPropertyValue(service, "clientId")
-                messageConverter = GrailsClassUtils.getStaticPropertyValue(service, "messageConverter") ?: ""
                 containerParent = GrailsClassUtils.getStaticPropertyValue(service, "listenerContainer") ?: "standard"
                 adapterParent = GrailsClassUtils.getStaticPropertyValue(service, "listenerAdapter") ?: "standard"
             }
@@ -91,8 +87,6 @@ class ServiceInspector {
             listenerMethodOrClosureName = method.name
             explicitDestinationName = annotation.topic()
             messageSelector = annotation.selector()
-            durable = annotation.durable()
-            messageConverter = annotation.messageConverter()
             containerParent = annotation.container()
             adapterParent = annotation.adapter()
         }
@@ -106,7 +100,6 @@ class ServiceInspector {
             listenerMethodOrClosureName = method.name
             explicitDestinationName = annotation.name()
             messageSelector = annotation.selector()
-            messageConverter = annotation.messageConverter()
             containerParent = annotation.container()
             adapterParent = annotation.adapter()
         }
