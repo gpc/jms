@@ -38,7 +38,7 @@ class JmsGrailsPlugin {
     }
     
     def getListenerConfigs(serviceClass, application) {
-        LOG.info("inspecting '${serviceClass.name}' for JMS listeners")
+        LOG.debug("inspecting '${serviceClass.name}' for JMS listeners")
         serviceInspector.getListenerConfigs(serviceClass, listenerConfigFactory, application)
     }
     
