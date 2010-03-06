@@ -1,4 +1,5 @@
 import org.springframework.jms.support.converter.SimpleMessageConverter
+import org.springframework.jms.listener.DefaultMessageListenerContainer
 
 templates {
     standard {
@@ -13,6 +14,7 @@ containers {
         autoStartup = false
         connectionFactoryBean = "jmsConnectionFactory"
         messageSelector = null
+        cacheLevel = DefaultMessageListenerContainer.CACHE_SESSION
     }
 }
 adapters {
