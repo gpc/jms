@@ -1,8 +1,8 @@
 package grails.plugin.jms
 
-import org.springframework.jms.core.MessagePostProcessor
 import javax.jms.Destination
 import javax.jms.Topic
+
 import grails.plugin.jms.listener.GrailsMessagePostProcessor
 
 class JmsService {
