@@ -1,26 +1,23 @@
 package grails.plugin.jms.test.simple
 
-import grails.plugin.jms.*
+import grails.plugin.jms.Queue
+import grails.plugin.jms.Subscriber
+import grails.plugin.jms.test.TestListeningServiceSupport
 
-import java.util.concurrent.LinkedBlockingQueue
-
-class SimpleReceivingService {
+class SimpleReceivingService extends TestListeningServiceSupport {
 
     static exposes = ['jms']
-    
-    def queueReceived = new LinkedBlockingQueue()
-    def subscriberReceived = new LinkedBlockingQueue()
     
     @Queue
     def queue(msg) {
         log.info "queue received: $msg"
-        queueReceived << msg
+        putMessage(msg)
     }
     
     @Subscriber
     def simpleTopic(msg) {
         log.info "subscriber received: $msg"
-        subscriberReceived << msg
+        putMessage(msg)
     }
 
 }
