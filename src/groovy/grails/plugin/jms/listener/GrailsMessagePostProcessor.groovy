@@ -1,4 +1,4 @@
-package grails.jms.listener
+package grails.plugin.jms.listener
 import org.springframework.jms.core.MessagePostProcessor
 import javax.jms.Message
 

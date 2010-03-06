@@ -1,4 +1,4 @@
-package grails.jms.listener
+package grails.plugin.jms.listener
 import grails.spring.BeanBuilder
 
 class ListenerConfigTests extends GroovyTestCase {

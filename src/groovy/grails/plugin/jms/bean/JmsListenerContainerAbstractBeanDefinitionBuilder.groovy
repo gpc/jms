@@ -1,4 +1,4 @@
-package grails.jms.bean
+package grails.plugin.jms.bean
 import org.springframework.jms.listener.DefaultMessageListenerContainer
 
 class JmsListenerContainerAbstractBeanDefinitionBuilder extends JmsBeanDefinitionBuilder {

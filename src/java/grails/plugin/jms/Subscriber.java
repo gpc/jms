@@ -1,4 +1,4 @@
-package grails.jms;
+package grails.plugin.jms;
 import java.lang.annotation.*;
 
 @Documented

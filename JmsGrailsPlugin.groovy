@@ -1,13 +1,13 @@
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
 import grails.util.GrailsUtil
 import org.springframework.jms.core.JmsTemplate
-import grails.jms.listener.ServiceInspector
-import grails.jms.listener.ListenerConfigFactory
+import grails.plugin.jms.listener.ServiceInspector
+import grails.plugin.jms.listener.ListenerConfigFactory
 import org.springframework.beans.factory.InitializingBean
 import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
 
 import groovy.util.ConfigSlurper
-import grails.jms.bean.JmsBeanDefinitionsBuilder
+import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
 
 class JmsGrailsPlugin {
     

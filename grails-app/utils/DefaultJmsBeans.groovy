@@ -1,7 +1,7 @@
 import org.springframework.jms.core.JmsTemplate
 import org.springframework.jms.support.converter.SimpleMessageConverter
 import org.springframework.jms.listener.DefaultMessageListenerContainer
-import grails.jms.listener.ServiceListenerAdapter
+import grails.plugin.jms.listener.ServiceListenerAdapter
 
 templates {
     standard {

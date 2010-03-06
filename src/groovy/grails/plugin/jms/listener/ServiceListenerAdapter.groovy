@@ -1,4 +1,4 @@
-package grails.jms.listener
+package grails.plugin.jms.listener
 
 import org.springframework.jms.listener.adapter.MessageListenerAdapter
 import javax.jms.JMSException

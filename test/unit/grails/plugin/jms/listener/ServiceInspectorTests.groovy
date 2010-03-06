@@ -1,4 +1,4 @@
-package grails.jms.listener
+package grails.plugin.jms.listener
 
 class ServiceInspectorTests extends GroovyTestCase {
 

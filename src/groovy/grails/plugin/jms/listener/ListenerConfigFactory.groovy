@@ -1,4 +1,4 @@
-package grails.jms.listener
+package grails.plugin.jms.listener
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
 
 class ListenerConfigFactory {

@@ -1,6 +1,6 @@
-package grails.jms.listener
+package grails.plugin.jms.listener
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
-import grails.jms.*
+import grails.plugin.jms.*
 
 class ServiceInspector {
 

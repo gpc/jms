@@ -1,4 +1,4 @@
-package grails.jms.bean
+package grails.plugin.jms.bean
 import grails.spring.BeanBuilder
 import org.springframework.jms.listener.DefaultMessageListenerContainer
 
