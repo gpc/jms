@@ -2,3 +2,4 @@ target
 stacktrace.log
 test/reports
 plugin.xml
+*.zip
