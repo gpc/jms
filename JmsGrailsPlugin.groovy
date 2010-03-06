@@ -48,8 +48,9 @@ class JmsGrailsPlugin {
         
     }
     def doWithSpring = {
-        
-        new JmsBeanDefinitionsBuilder(defaultConfig + application.config.jms.flatten()).build(delegate)
+        def mergedConfig = defaultConfig.merge(application.config.jms)
+        LOG.debug("merged config: $mergedConfig")
+        new JmsBeanDefinitionsBuilder(mergedConfig).build(delegate)
         
         application.serviceClasses?.each { service ->
             def serviceClass = service.getClazz()
