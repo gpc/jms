@@ -12,7 +12,7 @@ abstract class TestListeningServiceSupport {
 
     synchronized getMessageQueue(queueName = DEFAULT_QUEUE) {
         def messageQueue = messageQueues[queueName]
-        if (!messageQueue) {
+        if (messageQueue == null) {
             messageQueue = new LinkedBlockingQueue()
             messageQueues[queueName] = messageQueue
         }
