@@ -5,7 +5,7 @@
      	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
      </head>
 	<body class="body">
-		This plugin makes it easy to both send and receive JMS messages inside a Grails application.<p class="paragraph"/><h3>Examples</h3><p class="paragraph"/><h4>Service Queue Listeners</h4><p class="paragraph"/><div class="code"><pre>class ListeningService &#123;<p class="paragraph"/>    <span class="java&#45;keyword">static</span> exposes = &#91;'jms'&#93;<p class="paragraph"/>    def onMessage(message) &#123;
+		This plugin makes it easy to both send and receive JMS messages inside a Grails application.<p class="paragraph"/><h3>Examples</h3><p class="paragraph"/>The following are some simple examples to give you a feel for the plugin.<p class="paragraph"/><h4>Service Queue Listeners</h4><p class="paragraph"/><div class="code"><pre>class ListeningService &#123;<p class="paragraph"/>    <span class="java&#45;keyword">static</span> exposes = &#91;'jms'&#93;<p class="paragraph"/>    def onMessage(message) &#123;
         assert message == 1
     &#125;<p class="paragraph"/>&#125;</pre></div><p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>    def jmsService<p class="paragraph"/>    def someAction = &#123;
         jmsService.send(service: 'listening', 1)
