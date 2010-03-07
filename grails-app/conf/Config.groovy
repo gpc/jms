@@ -56,3 +56,10 @@ jms {
         }
     }
 }
+
+grails {
+    doc {
+        authors = "Luke Daley"
+        license = "Apache License 2.0"
+    }
+}
