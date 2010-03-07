@@ -1,0 +1,82 @@
+h3. Service Method Listeners
+
+Another avenue is to expose specific methods as message listeners via annotations. This looks like…
+
+{code:java}
+import grails.plugin.jms.*
+
+class PersonService {
+	static exposes = ["jms"]
+	
+	@Queue
+	def addPerson(msg) {
+		
+	}
+	
+	@Subscriber
+	def somethingHappened(msg) {
+		
+	}
+}
+{code}
+
+The above configuration binds the @personService.addPerson()@ method to a queue named @«app name».person.addPerson@ and binds the method @personService.somethingHappened()@ as a listener to the topic named @somethingHappened@ .
+
+Note that you still need to expose the class via ' @ static exposes = \["jms"] @ .
+
+h4. @Queue Configuration
+
+The following configuration parameters can be set as annotation parameters…
+
+{table}
+Property Name | Type | Default | Description
+*name* | String | «app name».«service name».«method name» | The destination name for the queue
+*selector* | String | null | The message selector to apply (See the “Message Selector” section of http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html)
+*adapter* | String | "standard" | The adapter to use for this listener
+*container* | String | "standard" | The container to use for this listener
+{table}
+
+Example…
+
+{code:java}
+import grails.jms.*
+
+class PersonService {
+	static exposes = ["jms"]
+	
+	@Queue(
+		name = "myQueue",
+		selector = "name IS NOT NULL"
+	)
+	def addPerson(msg) {
+		
+	}
+}
+{code}
+
+h4. @Subscriber Configuration
+
+The following configuration parameters can be set as annotation parameters…
+
+{table}
+Property Name | Type | Default | Description
+*topic* | String | «method name» | The name of the topic to subscribe to
+*selector* | String | null | The message selector to apply (See the “Message Selector” section of [http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html])
+*adapter* | String | "standard" | The adapter to use for this listener
+*container* | String | "standard" | The container to use for this listener
+{table}
+
+Example…
+
+{code:java}
+import grails.jms.*
+
+class PersonService {
+	static exposes = ["jms"]
+	
+	@Subscriber(topic = "aTopic")
+	def somethingHappened(msg) {
+		
+	}
+}
+{code}

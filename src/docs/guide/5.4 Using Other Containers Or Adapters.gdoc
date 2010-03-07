@@ -1,0 +1,74 @@
+Here is an example of using a container and adapter other than standard.
+
+h5. resources.groovy
+
+{code}
+import org.apache.activemq.ActiveMQConnectionFactory
+import org.springframework.jms.connection.SingleConnectionFactory
+
+beans = {
+    // used by the standard template by convention
+    jmsConnectionFactory(SingleConnectionFactory) {
+        targetConnectionFactory = { ActiveMQConnectionFactory cf ->
+            brokerURL = 'vm://localhost'
+        }
+    }
+
+    otherJmsConnectionFactory(SingleConnectionFactory) {
+        targetConnectionFactory = { ActiveMQConnectionFactory cf ->
+            brokerURL = // ... something else
+        }
+    }
+}
+{code}
+
+h5. Config.groovy 
+
+{code}
+jms {
+    containers {
+        other {
+            meta {
+                parentBean = 'standardJmsListenerContainer'
+            }
+            concurrentConsumers = 5
+            connectionFactoryBean = "otherJmsConnectionFactory"
+        }
+    }
+    adapters { 
+        other {
+            meta {
+                parentBean = 'standardJmsListenerAdapter'
+            }
+            messageConverter = null // do no message conversion
+        }
+    }
+}
+{code}
+
+h5. Sending messages
+
+{code}
+class ListeningService {
+    static exposes = ["jms"]
+    static adapter = "other"
+    static container = "other"
+    
+    def onMessage(msg) {
+        // handle message
+    }
+}
+{code}
+
+{code}
+import grails.plugin.jms.*
+
+class ListeningService {
+    static exposes = ["jms"]
+    
+    @Queue(adapter = "other", container = "other")
+    def receive(msg) {
+        // handle message
+    }
+}
+{code}

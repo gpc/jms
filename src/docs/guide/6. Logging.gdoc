@@ -1,0 +1,1 @@
+All logging is done under the namespace 'grails.plugin.jms'.

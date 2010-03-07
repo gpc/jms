@@ -1,0 +1,21 @@
+Message post processors can either augment the passed Message object, or create a new one. Because of this, the post processor must return the message object that is to be sent.
+
+{code}
+import javax.jms.Message
+
+jmsService.send(topic: 'somethingHappened', 1) { Message msg ->
+    msg.JMSCorrelationID = "correlate"
+    msg
+}
+{code}
+
+h4. Setting destinations
+
+Post processors can use the @createDestination()@ method in post processor implementations to create destinations using the same API style as @jmsService.send()@ method 
+
+{code}
+jmsService.send(service: 'initial', 1) {
+    it.JMSReplyTo = createDestination(service: 'reply')
+    it
+}
+{code}

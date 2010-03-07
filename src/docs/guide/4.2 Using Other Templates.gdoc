@@ -1,0 +1,46 @@
+Here is an example of using a custom template that uses a different connection factory.
+
+h5. resources.groovy
+
+{code}
+import org.apache.activemq.ActiveMQConnectionFactory
+import org.springframework.jms.connection.SingleConnectionFactory
+
+beans = {
+    // used by the standard template by convention
+    jmsConnectionFactory(SingleConnectionFactory) {
+        targetConnectionFactory = { ActiveMQConnectionFactory cf ->
+            brokerURL = 'vm://localhost'
+        }
+    }
+
+    otherJmsConnectionFactory(SingleConnectionFactory) {
+        targetConnectionFactory = { ActiveMQConnectionFactory cf ->
+            brokerURL = // ... something else
+        }
+    }
+}
+{code}
+
+h5. Config.groovy 
+
+{code}
+jms {
+    templates {
+        other {
+            meta {
+                parentBean = 'standardJmsTemplate'
+            }
+            connectionFactoryBean = "otherJmsConnectionFactory" // use different connection factory
+        }
+    }
+}
+{code}
+
+h5. Sending messages
+
+{code}
+jmsService.send(topic: "stuffHappened", message, "other")
+{code}
+
+The third argument of "other" to the send() method specifies to use the "other" template.

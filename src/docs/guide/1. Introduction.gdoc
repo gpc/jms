@@ -2,6 +2,8 @@ This plugin makes it easy to both send and receive JMS messages inside a Grails 
 
 h3. Examples
 
+The following are some simple examples to give you a feel for the plugin.
+
 h4. Service Queue Listeners
 
 {code}

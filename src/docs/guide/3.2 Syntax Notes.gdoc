@@ -1,0 +1,50 @@
+There are some noteworthy things about this config syntax.
+
+h4. Bean names
+
+The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.
+
+h4. Setting Beans
+
+To set a property to another Spring bean, simply append @Bean@ to the property name and set the property to the name of the bean.
+
+Here is how the standard template is defined to use the bean named @jmsConnectionFactory@ as it's connection factory...
+
+{code}
+templates {
+    standard {
+        connectionFactoryBean = "jmsConnectionFactory"
+    }
+}
+{code}
+
+h4. Setting Class
+
+To set the class of a bean, you must use the following syntax
+
+{code}
+templates {
+    standard {
+        meta {
+            clazz = my.org.CustomJmsTemplate
+        }
+    }
+}
+{code}
+
+h4. Extending Definitions
+
+Bean definition can inherit from parents and selectively override settings.
+
+{code}
+templates {
+    other {
+        meta {
+            parentBean = 'standardJmsTemplate'
+        }
+        connectionFactoryBean = "someOtherJmsConnectionFactory"
+    }
+}
+{code}
+
+This creates an "other" template, that inherits all of the standard settings but uses a custom connectionFactory.

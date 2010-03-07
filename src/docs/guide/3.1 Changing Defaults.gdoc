@@ -1,0 +1,17 @@
+You can override the configuration defaults very easily.
+
+Let's suppose you do not want any message conversion on listeners. If a listener container has no @messageConverter@ listeners will receive raw messages. So we want to override the standard listener container definition to set the @messageConverter@ property to @null@.
+
+In your application's @Config.groovy@ 
+
+{code}
+jms {
+    containers {
+        standard {
+            messageConverter = null
+        }
+    }
+}
+{code}
+
+This definition will get merged against the plugin provided defaults to produce a standard listener container definition with @messageConverter@ set to @null@.
