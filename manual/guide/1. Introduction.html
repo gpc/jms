@@ -5,6 +5,26 @@
      	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
      </head>
 	<body class="body">
-		<h1><a name="1. Introduction">1. Introduction</a></h1>Testing 123‚Ä¶
+		<h1><a name="1. Introduction">1. Introduction</a></h1>This plugin makes it easy to both send and receive JMS messages inside a Grails application. It is built on top of <a href="http://static.springsource.org/spring/docs/3.0.x/reference/html/jms.html." target="blank">Spring's JMS support</a><p class="paragraph"/>There are some core Spring JMS concepts that you should at least be aware of in order to use grails-jms.<p class="paragraph"/><h2>JmsTemplate</h2><p class="paragraph"/>Spring provides <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/core/JmsTemplate.html" target="blank">JmsTemplate</a> which is what this plugin uses to send messages.<p class="paragraph"/><h2>MessageConverter</h2><p class="paragraph"/>The <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/support/converter/MessageConverter.html" target="blank">MessageConverter</a> abstraction conveniently allows pluggable message conversion. By default, this plugin uses Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/support/converter/SimpleMessageConverter.html" target="blank">SimpleMessageConverter</a> which handles 'standard' message payloads and JMS Message types.<p class="paragraph"/><h2>MessageListenerContainer</h2><p class="paragraph"/>A listener container polls a JMS destination for messages. Each listener (i.e. each service method that receives JMS messages) has it's own listener container.<p class="paragraph"/>This plugin uses the <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/listener/DefaultMessageListenerContainer.html" target="blank">DefaultMessageListenerContainer</a> implementation.<p class="paragraph"/><h2>MessageListenerAdapter</h2><p class="paragraph"/>A listener adapter connects a listener container to the actual destination of the message. It handles message conversion amongst other things.<p class="paragraph"/>By default, this plugin uses a MessageListenerAdapter subclass that is Grails aware and sets up the necessary Grails environment for listener methods (e.g. Hibernate session).<h2><a name="2.1 Plugging in ActiveMQ example">2.1 Plugging in ActiveMQ example</a></h2>First we need the ActiveMQ core jar.<p class="paragraph"/>Our <code>BuildConfig.groovy</code> looks something like...<p class="paragraph"/><div class="code"><pre>grails.project.dependency.resolution = &#123;
+    inherits <span class="java&#45;quote">"global"</span>
+    log <span class="java&#45;quote">"warn"</span>
+    repositories &#123;
+        grailsHome()
+        mavenCentral()
+    &#125;  
+    dependencies &#123;
+        compile 'org.apache.activemq:activemq&#45;core:5.3.0'
+    &#125;
+&#125;</pre></div><p class="paragraph"/>Then in <code>resources.groovy</code>..
+An example <code>resources.groovy</code> configuration for ActiveMQ would look something like…<p class="paragraph"/><div class="code"><pre>jmsConnectionFactory(org.apache.activemq.ActiveMQConnectionFactory) &#123;
+	brokerURL = 'vm://localhost'
+&#125;</pre></div><h2><a name="2.2 Connection Pooling">2.2 Connection Pooling</a></h2>This plugin uses Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/core/JmsTemplate.html" target="blank">JmsTemplate</a> under the covers. It's important that you understand the connection lifecycle behaviour of this class and use appropriate connection pooling.<p class="paragraph"/>Read <a href="http://activemq.apache.org/jmstemplate-gotchas.html." target="blank">ActiveMQ's article about this</a><p class="paragraph"/>One simple solution is to use Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/connection/SingleConnectionFactory.html" target="blank">SingleConnectionFactory</a> to reuse one connection across listening containers.<p class="paragraph"/>Here is an example of using it with ActiveMQ...<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory
+<span class="java&#45;keyword">import</span> org.springframework.jms.connection.SingleConnectionFactory<p class="paragraph"/>beans = &#123;
+    jmsConnectionFactory(SingleConnectionFactory) &#123;
+        targetConnectionFactory = &#123; ActiveMQConnectionFactory cf &#45;&#62;
+            brokerURL = 'vm://localhost'
+        &#125;
+    &#125;
+&#125;</pre></div>
 	</body>
 </html>
