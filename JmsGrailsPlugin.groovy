@@ -1,6 +1,5 @@
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
 import grails.util.GrailsUtil
-import org.springframework.jms.core.JmsTemplate
 import grails.plugin.jms.listener.ServiceInspector
 import grails.plugin.jms.listener.ListenerConfigFactory
 import org.springframework.beans.factory.InitializingBean
@@ -15,7 +14,7 @@ class JmsGrailsPlugin {
     
     static LOG = LogFactory.getLog('grails.plugin.jms.JmsGrailsPlugin')
     
-    def version = "0.5-SNAPSHOT"
+    def version = "0.5"
     def author = "Luke Daley"
     def authorEmail = "ld@ldaley.com"
     def title = "This plugin adds MDB functionality to services."
