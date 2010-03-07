@@ -28,12 +28,12 @@ adapters &#123;
         persistenceInterceptorBean = 'persistenceInterceptor'
     &#125;
 &#125;</pre></div><p class="paragraph"/>It's a BeanBuilder like syntax, but it is actually ConfigSlurper syntax. It creates a map of "bean definitions" that get processed into real bean definitions.<p class="paragraph"/>The default config creates our standard (i.e. default) jms templates for sending, and listener containers and adapters for receiving.<p class="paragraph"/>When sending messages with the <code>jmsService</code> you can specify which template to use to send the message. If none is specified, "standard" is used.<p class="paragraph"/>Likewise, listeners can specify which container and/or adapter bean definition to base themselves on. If none are specified, "standard" is used in both cases.<h2><a name="3.1 Changing Defaults">3.1 Changing Defaults</a></h2>You can override the configuration defaults very easily.<p class="paragraph"/>Let's suppose you do not want any message conversion on listeners. If a listener container has no <code>messageConverter</code> listeners will receive raw messages. So we want to override the standard listener container definition to set the <code>messageConverter</code> property to <code>null</code>.<p class="paragraph"/>In your application's <code>Config.groovy</code><p class="paragraph"/><div class="code"><pre>jms &#123;
-	containers &#123;
-		standard &#123;
-			messageConverter = <span class="java&#45;keyword">null</span>
-		&#125;
-	&#125;
-&#125;</pre></div><p class="paragraph"/>This definition will get merged against the plugin provided defaults to produce a standard listener container definition with <code>messageConverter</code> set to <code>null</code>.<h2><a name="3.2 Syntax Notes">3.2 Syntax Notes</a></h2>There are two noteworthy things about this config syntax.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
+    containers &#123;
+        standard &#123;
+            messageConverter = <span class="java&#45;keyword">null</span>
+        &#125;
+    &#125;
+&#125;</pre></div><p class="paragraph"/>This definition will get merged against the plugin provided defaults to produce a standard listener container definition with <code>messageConverter</code> set to <code>null</code>.<h2><a name="3.2 Syntax Notes">3.2 Syntax Notes</a></h2>There are some noteworthy things about this config syntax.<p class="paragraph"/><h4>Bean names</h4><p class="paragraph"/>The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
     standard &#123;
         connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>
     &#125;
@@ -43,7 +43,13 @@ adapters &#123;
             clazz = my.org.CustomJmsTemplate
         &#125;
     &#125;
-&#125;</pre></div>
-
+&#125;</pre></div><p class="paragraph"/><h4>Extending Definitions</h4><p class="paragraph"/>Bean definition can inherit from parents and selectively override settings.<p class="paragraph"/><div class="code"><pre>templates &#123;
+    other &#123;
+        meta &#123;
+            parentBean = 'standardJmsTemplate'
+        &#125;
+        connectionFactoryBean = <span class="java&#45;quote">"someOtherJmsConnectionFactory"</span>
+    &#125;
+&#125;</pre></div><p class="paragraph"/>This creates an "other" template, that inherits all of the standard settings but uses a custom connectionFactory.
 	</body>
 </html>

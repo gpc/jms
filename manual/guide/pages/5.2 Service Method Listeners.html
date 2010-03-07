@@ -1,0 +1,23 @@
+<html>
+     <head>
+     	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+     	<title>5.2 Service Method Listeners</title>
+     	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
+     </head>
+	<body class="body">
+		<h3>Service Method Listeners</h3><p class="paragraph"/>Another avenue is to expose specific methods as message listeners via annotations. This looks like…<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> grails.plugin.jms.&#42;<p class="paragraph"/>class PersonService &#123;
+	<span class="java&#45;keyword">static</span> exposes = &#91;<span class="java&#45;quote">"jms"</span>&#93;<p class="paragraph"/>	@Queue
+	def addPerson(msg) &#123;<p class="paragraph"/>	&#125;<p class="paragraph"/>	@Subscriber
+	def somethingHappened(msg) &#123;<p class="paragraph"/>	&#125;
+&#125;</pre></div><p class="paragraph"/>The above configuration binds the <code>personService.addPerson()</code> method to a queue named <code>«app name».person.addPerson</code> and binds the method <code>personService.somethingHappened()</code> as a listener to the topic named <code>somethingHappened</code> .<p class="paragraph"/>Note that you still need to expose the class via ' <code> static exposes = &#91;"jms"] </code> .<p class="paragraph"/><h4>@Queue Configuration</h4><p class="paragraph"/>The following configuration parameters can be set as annotation parameters…<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th>Property Name</th><th>Type</th><th>Default</th><th>Description</th></tr><tr class="table-odd"><td><strong class="bold">name</strong></td><td>String</td><td>«app name».«service name».«method name»</td><td>The destination name for the queue</td></tr><tr class="table-even"><td><strong class="bold">selector</strong></td><td>String</td><td>null</td><td>The message selector to apply (See the “Message Selector” section of http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html)</td></tr><tr class="table-odd"><td><strong class="bold">adapter</strong></td><td>String</td><td>"standard"</td><td>The adapter to use for this listener</td></tr><tr class="table-even"><td><strong class="bold">container</strong></td><td>String</td><td>"standard"</td><td>The container to use for this listener</td></tr></table><p class="paragraph"/>Example…<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> grails.jms.&#42;<p class="paragraph"/>class PersonService &#123;
+	<span class="java&#45;keyword">static</span> exposes = &#91;<span class="java&#45;quote">"jms"</span>&#93;<p class="paragraph"/>	@Queue(
+		name = <span class="java&#45;quote">"myQueue"</span>,
+		selector = <span class="java&#45;quote">"name IS NOT NULL"</span>
+	)
+	def addPerson(msg) &#123;<p class="paragraph"/>	&#125;
+&#125;</pre></div><p class="paragraph"/><h4>@Subscriber Configuration</h4><p class="paragraph"/>The following configuration parameters can be set as annotation parameters…<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th>Property Name</th><th>Type</th><th>Default</th><th>Description</th></tr><tr class="table-odd"><td><strong class="bold">topic</strong></td><td>String</td><td>«method name»</td><td>The name of the topic to subscribe to</td></tr><tr class="table-even"><td><strong class="bold">selector</strong></td><td>String</td><td>null</td><td>The message selector to apply (See the “Message Selector” section of <a href="http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html" target="blank"></a>)</td></tr><tr class="table-odd"><td><strong class="bold">adapter</strong></td><td>String</td><td>"standard"</td><td>The adapter to use for this listener</td></tr><tr class="table-even"><td><strong class="bold">container</strong></td><td>String</td><td>"standard"</td><td>The container to use for this listener</td></tr></table><p class="paragraph"/>Example…<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> grails.jms.&#42;<p class="paragraph"/>class PersonService &#123;
+	<span class="java&#45;keyword">static</span> exposes = &#91;<span class="java&#45;quote">"jms"</span>&#93;<p class="paragraph"/>	@Subscriber(topic = <span class="java&#45;quote">"aTopic"</span>)
+	def somethingHappened(msg) &#123;<p class="paragraph"/>	&#125;
+&#125;</pre></div>
+	</body>
+</html>
