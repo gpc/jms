@@ -1,23 +1,100 @@
-This plugin makes it easy to both send and receive JMS messages inside a Grails application. It is built on top of "Spring's JMS support":http://static.springsource.org/spring/docs/3.0.x/reference/html/jms.html.
+This plugin makes it easy to both send and receive JMS messages inside a Grails application. 
 
-There are some core Spring JMS concepts that you should at least be aware of in order to use grails-jms.
+h3. Examples
 
-h2. JmsTemplate
+h4. Service Queue Listeners
 
-Spring provides "JmsTemplate":http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/core/JmsTemplate.html which is what this plugin uses to send messages.
+{code}
+class ListeningService {
+    
+    static exposes = ['jms']
+    
+    def onMessage(message) {
+        assert message == 1
+    }
 
-h2. MessageConverter
+}
+{code}
 
-The "MessageConverter":http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/support/converter/MessageConverter.html abstraction conveniently allows pluggable message conversion. By default, this plugin uses Spring's "SimpleMessageConverter":http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/support/converter/SimpleMessageConverter.html which handles 'standard' message payloads and JMS Message types. 
+{code}
+class SomeController {
+    
+    def jmsService
 
-h2. MessageListenerContainer
+    def someAction = {
+        jmsService.send(service: 'listening', 1)
+    }
+}
+{code}
 
-A listener container polls a JMS destination for messages. Each listener (i.e. each service method that receives JMS messages) has it's own listener container.
+h4. Service Method Queue Listeners
 
-This plugin uses the "DefaultMessageListenerContainer":http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/listener/DefaultMessageListenerContainer.html implementation.
+{code}
+import grails.plugin.jms.Queue
 
-h2. MessageListenerAdapter
+class ListeningService {
+    
+    static exposes = ['jms']
+    
+    @Queue
+    def receive(message) {
+        assert message == 1
+    }
+}
+{code}
 
-A listener adapter connects a listener container to the actual destination of the message. It handles message conversion amongst other things.
+{code}
+class SomeController {
+    
+    def jmsService
 
-By default, this plugin uses a MessageListenerAdapter subclass that is Grails aware and sets up the necessary Grails environment for listener methods (e.g. Hibernate session).
+    def someAction = {
+        jmsService.send(service: 'listening', method: 'receive', 1)
+    }
+}
+{code}
+
+h4. Topic Listeners
+
+{code}
+import grails.plugin.jms.Subscriber
+
+class ListeningService {
+    
+    static exposes = ['jms']
+    
+    @Subscriber
+    def newMessages(message) {
+        assert message == 1
+    }
+}
+{code}
+
+{code}
+class SomeController {
+    
+    def jmsService
+
+    def someAction = {
+        jmsService.send(topic: 'newMessages', 1)
+    }
+}
+{code}
+
+h4. Post Processing Messages
+
+{code}
+import javax.jms.Message
+
+class SomeController {
+    
+    def jmsService
+
+    def someAction = {
+        jmsService.send(service: 'initial', 1) { Message msg ->
+            msg.JMSReplyTo = createDestination(service: 'reply')
+            msg
+        }
+    }
+}
+{code}
