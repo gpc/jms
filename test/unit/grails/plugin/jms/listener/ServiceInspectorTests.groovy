@@ -14,12 +14,7 @@ class ServiceInspectorTests extends GroovyTestCase {
         assertTrue(serviceInspector.isSingleton(ExplicitSingleton))
         assertFalse(serviceInspector.isSingleton(NonSingleton))
     }
-    
-    void testGetServiceListenerName() {
-        assertEquals("onMessage", serviceInspector.getServiceListenerName(DefaultServiceListenerName))
-        assertEquals(ExplicitServiceListenerName.listenerMethod, serviceInspector.getServiceListenerName(ExplicitServiceListenerName))
-    }
-    
+        
     void testHasServiceListenerMethod() {
         assertTrue(serviceInspector.hasServiceListenerMethod(HasServiceListenerMethod))
         assertFalse(serviceInspector.hasServiceListenerMethod(HasNoServiceListener))
@@ -41,9 +36,6 @@ class NonSingleton {
 }
 
 class DefaultServiceListenerName {}
-class ExplicitServiceListenerName {
-    static listenerMethod = "blah"
-}
 
 class HasServiceListenerMethod {
     def onMessage(msg) {}

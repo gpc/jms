@@ -12,15 +12,11 @@ class ListenerConfig {
     def grailsApplication
     
     boolean topic = false
-    def subscriptionDurable = false
     def listenerMethodName = null
     def messageSelector = null
-    def durable = false
-    def explicitClientId = null
     def explicitDestinationName = null
     def serviceListener = false
     def serviceBeanName
-    def messageConverter = ""
     def containerParent
     def adapterParent
     

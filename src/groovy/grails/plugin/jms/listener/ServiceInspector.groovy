@@ -4,8 +4,7 @@ import grails.plugin.jms.*
 
 class ServiceInspector {
 
-    final static DEFAULT_SERVICE_LISTENER = "onMessage"
-    final static CUSTOM_SERVICE_LISTENER_SPECIFIER = "listenerMethod"
+    final static SERVICE_LISTENER_METHOD = "onMessage"
     final static EXPOSES_SPECIFIER = "exposes"
     final static EXPOSE_SPECIFIER = "expose"
     final static EXPOSES_JMS_SPECIFIER = "jms"
@@ -29,27 +28,22 @@ class ServiceInspector {
             def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
             listenerConfig.with {
                 serviceListener = true
-                listenerMethodName = getServiceListenerName(service)
+                listenerMethodName = SERVICE_LISTENER_METHOD
                 
                 explicitDestinationName = GrailsClassUtils.getStaticPropertyValue(service, "destination")
-                topic = GrailsClassUtils.getStaticPropertyValue(service, "pubSub") ?: false
-                messageSelector = GrailsClassUtils.getStaticPropertyValue(service, "messageSelector")
-                containerParent = GrailsClassUtils.getStaticPropertyValue(service, "listenerContainer") ?: "standard"
-                adapterParent = GrailsClassUtils.getStaticPropertyValue(service, "listenerAdapter") ?: "standard"
+                topic = GrailsClassUtils.getStaticPropertyValue(service, "isTopic") ?: false
+                messageSelector = GrailsClassUtils.getStaticPropertyValue(service, "selector")
+                containerParent = GrailsClassUtils.getStaticPropertyValue(service, "container") ?: "standard"
+                adapterParent = GrailsClassUtils.getStaticPropertyValue(service, "adapter") ?: "standard"
             }
             listenerConfig
         } else {
             null
         }
     }
-    
-    def getServiceListenerName(service) {
-        GrailsClassUtils.getStaticPropertyValue(service, CUSTOM_SERVICE_LISTENER_SPECIFIER) ?: DEFAULT_SERVICE_LISTENER
-    }
-    
+        
     def hasServiceListenerMethod(service) {
-        def serviceListenerName = getServiceListenerName(service)
-        service.metaClass.methods.find { it.name == serviceListenerName && it.parameterTypes.size() == 1 } != null
+        service.metaClass.methods.find { it.name == SERVICE_LISTENER_METHOD && it.parameterTypes.size() == 1 } != null
     }
     
     def exposesJms(service) {

@@ -6,8 +6,8 @@ import grails.plugin.jms.test.TestListeningServiceSupport
 class OtherListenerService extends TestListeningServiceSupport {
 
     static exposes = ['jms']
-    static listenerAdapter = "other"
-    static listenerContainer = "other"
+    static adapter = "other"
+    static container = "other"
     
     def onMessage(msg) {
         putMessage(msg instanceof Message)
