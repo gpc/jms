@@ -1,0 +1,20 @@
+This plugin uses Spring's "JmsTemplate":http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/core/JmsTemplate.html under the covers. It's important that you understand the connection lifecycle behaviour of this class and use appropriate connection pooling.
+
+Read "ActiveMQ's article about this":http://activemq.apache.org/jmstemplate-gotchas.html.
+
+One simple solution is to use Spring's "SingleConnectionFactory":http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/connection/SingleConnectionFactory.html to reuse one connection across listening containers.
+
+Here is an example of using it with ActiveMQ...
+
+{code}
+import org.apache.activemq.ActiveMQConnectionFactory
+import org.springframework.jms.connection.SingleConnectionFactory
+
+beans = {
+    jmsConnectionFactory(SingleConnectionFactory) {
+        targetConnectionFactory = { ActiveMQConnectionFactory cf ->
+            brokerURL = 'vm://localhost'
+        }
+    }
+}
+{code}

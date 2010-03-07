@@ -1,0 +1,5 @@
+The plugin does not include a JMS provider so you must install and configure your own.
+
+All you need to provide is one or more [javax.jms.ConnectionFactory|http://java.sun.com/javaee/5/docs/api/javax/jms/ConnectionFactory.html] beans and the plugin takes care of the rest.
+
+By default, the plugin looks for a connection factory bean named @jmsConnectionFactory@ but this is configurable.

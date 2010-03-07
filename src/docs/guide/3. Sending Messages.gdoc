@@ -1,0 +1,74 @@
+h2. Sending Messages
+
+The plugin also provides mechanisms to make sending messages easier. Underneath the hood, messages are sent via an instance of Spring's [JmsTemplate|http://static.springsource.org/spring/docs/2.5.x/api/org/springframework/jms/core/JmsTemplate.html]. The plugin creates one instance of JmsTemplate named @ defaultJmsTemplate @ which uses the connection factory named @ jmsConnectionFactory @ . 
+
+h3. The jmsService
+
+This plugin adds a service called @ jmsService @ to your application that can be used to send JMS messages.
+
+h4. The send(destination, message, jmsTemplateBeanName, postProcessor) method.
+
+*destination*
+
+An instance of @ javax.jms.Destination @ , @ javax.jms.Topic @ , a @ String @ or a @ Map @ .
+
+A @ String @ destination argument will be interpreted as the name of a destination _queue_ .
+
+A @ Map @ destination argument can be used in the following ways:
+
+{code}
+jmsService.send(queue: "aQueue", msg, "defaultJmsTemplate", null) // send to a literal queue
+
+jmsService.send(topic: "aTopic", msg, "defaultJmsTemplate", null) // send to a literal topic
+
+jmsService.send(service: "person", msg, "defaultJmsTemplate", null) // send to the queue '«appname».person'
+
+jmsService.send(service: "person", method: "doIt", msg, "defaultJmsTemplate", null) // send to the queue '«appname».person.doIt'
+
+jmsService.send(app: "remote", service: "person", method: "doIt", msg, "defaultJmsTemplate", null) // send to the queue 'remote.person.doIt'
+{code}
+
+The app/service/method convention makes a lot more sense if you read the section below on service method listener queue subscribers.
+
+*message*
+
+This is the message payload. This can either be a [javax.jms.Message|http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html] or a Groovy/Java object to be _converted_ into a message by the underlying [MessageConverter|http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/support/converter/MessageConverter.html] of the [JmsTemplate|http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/JmsTemplate.html] used to send the message.
+
+*jmsTemplateBeanName*
+
+The name of the bean in the application context that is an instance of [JmsTemplate|http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/JmsTemplate.html] and that should be used to send the message. If this value is @ null @ , the default template that is created by this plugin will be used (called "defaultJmsTemplate").
+
+*postProcessor*
+
+An optional closure that can be used to "post process" the message after it has been converted into a message but before it has been sent. This closure acts as the implementation of the [postProcessMessage()|http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html#postProcessMessage(javax.jms.Message)] method of the [MessagePostProcessor|http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html] class.
+
+h4. send() method variants
+
+There are variations of the send() method for convenience...
+
+{code:java}
+jmsService.send(destination, message) // use the defaultJmsTemplate and no post processor
+jmsService.send(destination, message, postProcessor) // use the defaultJmsTemplate
+{code}
+
+h3. Sending directly from services and controllers
+
+The JMS plugin dynamically adds convenient methods to all your services and controllers to make sending messages easier.
+
+*Note:* each of the methods shares the same semantics as @ jmsService.send() @ with respect to optional arguments.
+
+h4. sendJMSMessage()
+
+This method shares exactly the same signature and semantics as the send() method of the JmsService.
+
+h4. sendQueueJMSMessage()
+
+This method shares exactly the same signature and semantics as the send() method of the JmsService *EXCEPT* that the destination argument must be a string which will be interpreted as a QUEUE name.
+
+h4. sendTopicJMSMessage()
+
+This method shares exactly the same signature and semantics as the send() method of the JmsService *EXCEPT* that the destination argument must be a string which will be interpreted as a TOPIC name.
+
+h4. sendPubSubJMSMessage()
+
+This method shares exactly the same signature and semantics as the send() method of the JmsService *EXCEPT* that the destination argument must be a string which will be interpreted as a TOPIC name.
