@@ -9,7 +9,7 @@ import javax.jms.Session
 
 class LoggingListenerAdapter extends MessageListenerAdapter implements InitializingBean {
 
-    protected final log
+    protected log
     
     void afterPropertiesSet() {
         log = createLog()
