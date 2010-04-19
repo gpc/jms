@@ -18,6 +18,7 @@ class JmsGrailsPlugin {
     def author = "Luke Daley"
     def authorEmail = "ld@ldaley.com"
     def title = "This plugin adds MDB functionality to services."
+    def grailsVersion = "1.2.0 > *"
     
     def loadAfter = ['services', 'controllers']
     def observe = ['services', 'controllers']
