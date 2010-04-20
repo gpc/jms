@@ -1,0 +1,6 @@
+target
+plugin.xml
+*.log
+src
+*.zip
+activemq-data
