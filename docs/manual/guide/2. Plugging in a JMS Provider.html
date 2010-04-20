@@ -1,0 +1,30 @@
+<html>
+     <head>
+     	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+     	<title>2. Plugging in a JMS Provider</title>
+     	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
+     </head>
+	<body class="body">
+		<h1><a name="2. Plugging in a JMS Provider">2. Plugging in a JMS Provider</a></h1>The plugin does not include a JMS provider so you must install and configure your own.<p class="paragraph"/>All you need to provide is one or more <a href="http://java.sun.com/javaee/5/docs/api/javax/jms/ConnectionFactory.html" target="blank">javax.jms.ConnectionFactory</a> beans and the plugin takes care of the rest.<p class="paragraph"/>By default, the plugin looks for a connection factory bean named <code>jmsConnectionFactory</code> but this is configurable.<h2><a name="2.1 ActiveMQ Example">2.1 ActiveMQ Example</a></h2>First we need the ActiveMQ core jar.<p class="paragraph"/>Our <code>BuildConfig.groovy</code> looks something like...<p class="paragraph"/><div class="code"><pre>grails.project.dependency.resolution = &#123;
+    inherits <span class="java&#45;quote">"global"</span>
+    log <span class="java&#45;quote">"warn"</span>
+    repositories &#123;
+        grailsHome()
+        mavenCentral()
+    &#125;  
+    dependencies &#123;
+        compile 'org.apache.activemq:activemq&#45;core:5.3.0'
+    &#125;
+&#125;</pre></div><p class="paragraph"/>Then in <code>resources.groovy</code>..
+An example <code>resources.groovy</code> configuration for ActiveMQ would look something like…<p class="paragraph"/><div class="code"><pre>jmsConnectionFactory(org.apache.activemq.ActiveMQConnectionFactory) &#123;
+	brokerURL = 'vm://localhost'
+&#125;</pre></div><h2><a name="2.2 Connection Pooling">2.2 Connection Pooling</a></h2>This plugin uses Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/core/JmsTemplate.html" target="blank">JmsTemplate</a> under the covers. It's important that you understand the connection lifecycle behaviour of this class and use appropriate connection pooling.<p class="paragraph"/>Read <a href="http://activemq.apache.org/jmstemplate-gotchas.html." target="blank">ActiveMQ's article about this</a><p class="paragraph"/>One simple solution is to use Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/connection/SingleConnectionFactory.html" target="blank">SingleConnectionFactory</a> to reuse one connection across listening containers.<p class="paragraph"/>Here is an example of using it with ActiveMQ...<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory
+<span class="java&#45;keyword">import</span> org.springframework.jms.connection.SingleConnectionFactory<p class="paragraph"/>beans = &#123;
+    jmsConnectionFactory(SingleConnectionFactory) &#123;
+        targetConnectionFactory = &#123; ActiveMQConnectionFactory cf &#45;&#62;
+            brokerURL = 'vm://localhost'
+        &#125;
+    &#125;
+&#125;</pre></div>
+	</body>
+</html>

@@ -1,0 +1,27 @@
+<html>
+     <head>
+     	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+     	<title>3.2 Syntax Notes</title>
+     	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
+     </head>
+	<body class="body">
+		There are some noteworthy things about this config syntax.<p class="paragraph"/><h4>Bean names</h4><p class="paragraph"/>The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
+    standard &#123;
+        connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>
+    &#125;
+&#125;</pre></div><p class="paragraph"/><h4>Setting Class</h4><p class="paragraph"/>To set the class of a bean, you must use the following syntax<p class="paragraph"/><div class="code"><pre>templates &#123;
+    standard &#123;
+        meta &#123;
+            clazz = my.org.CustomJmsTemplate
+        &#125;
+    &#125;
+&#125;</pre></div><p class="paragraph"/><h4>Extending Definitions</h4><p class="paragraph"/>Bean definition can inherit from parents and selectively override settings.<p class="paragraph"/><div class="code"><pre>templates &#123;
+    other &#123;
+        meta &#123;
+            parentBean = 'standardJmsTemplate'
+        &#125;
+        connectionFactoryBean = <span class="java&#45;quote">"someOtherJmsConnectionFactory"</span>
+    &#125;
+&#125;</pre></div><p class="paragraph"/>This creates an "other" template, that inherits all of the standard settings but uses a custom connectionFactory.
+	</body>
+</html>

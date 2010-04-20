@@ -1,0 +1,16 @@
+<html>
+     <head>
+     	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+     	<title>4.1 Post Processing</title>
+     	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
+     </head>
+	<body class="body">
+		Message post processors can either augment the passed Message object, or create a new one. Because of this, the post processor must return the message object that is to be sent.<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> javax.jms.Message<p class="paragraph"/>jmsService.send(topic: 'somethingHappened', 1) &#123; Message msg &#45;&#62;
+    msg.JMSCorrelationID = <span class="java&#45;quote">"correlate"</span>
+    msg
+&#125;</pre></div><p class="paragraph"/><h4>Setting destinations</h4><p class="paragraph"/>Post processors can use the <code>createDestination()</code> method in post processor implementations to create destinations using the same API style as <code>jmsService.send()</code> method<p class="paragraph"/><div class="code"><pre>jmsService.send(service: 'initial', 1) &#123;
+    it.JMSReplyTo = createDestination(service: 'reply')
+    it
+&#125;</pre></div>
+	</body>
+</html>
