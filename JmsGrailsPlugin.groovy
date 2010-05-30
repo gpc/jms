@@ -14,7 +14,7 @@ class JmsGrailsPlugin {
     
     static LOG = LogFactory.getLog('grails.plugin.jms.JmsGrailsPlugin')
     
-    def version = "0.5.2-SNAPSHOT"
+    def version = "0.5.2"
     def author = "Luke Daley"
     def authorEmail = "ld@ldaley.com"
     def title = "This plugin adds MDB functionality to services."
