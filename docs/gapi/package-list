@@ -10,6 +10,7 @@ grails-app.services.grails.plugin.jms.test.reply
 grails-app.services.grails.plugin.jms.test.servicelevel
 grails-app.services.grails.plugin.jms.test.simple
 grails-app.utils
+scripts
 src.groovy.grails.plugin.jms.bean
 src.groovy.grails.plugin.jms.listener
 src.groovy.grails.plugin.jms.listener.adapter
