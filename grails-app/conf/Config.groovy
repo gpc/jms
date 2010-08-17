@@ -38,6 +38,12 @@ jms {
             }
             connectionFactoryBean = "otherJmsConnectionFactory"
         }
+        transacted {
+            meta {
+                parentBean = 'standardJmsTemplate'
+            }
+            sessionTransacted = true
+        }
     }
     containers {
         other {

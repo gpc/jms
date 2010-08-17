@@ -2,8 +2,8 @@ package grails.plugin.jms.test.simple
 
 class SimpleSendingService {
 
-    def sendToQueue(msg) {
-        sendJMSMessage(service: 'simpleReceiving', method: 'queue', msg)
+    def sendToQueue(msg, template = null) {
+        sendJMSMessage(service: 'simpleReceiving', method: 'queue', msg, template)
     }
     
     def sendToTopic(msg) {
