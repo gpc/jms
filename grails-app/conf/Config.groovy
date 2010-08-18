@@ -52,6 +52,19 @@ jms {
             }
             connectionFactoryBean = "otherJmsConnectionFactory"
         }
+        other {
+            meta {
+                parentBean = 'standardJmsListenerContainer'
+            }
+            connectionFactoryBean = "otherJmsConnectionFactory"
+        }
+        transacted {
+            meta {
+                parentBean = 'standardJmsListenerContainer'
+            }
+            transactionManagerBean = "transactionManager"
+            sessionTransacted = true
+        }
     }
     adapters {
         other {
