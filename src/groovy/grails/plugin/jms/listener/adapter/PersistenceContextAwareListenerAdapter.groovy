@@ -30,6 +30,7 @@ class PersistenceContextAwareListenerAdapter extends LoggingListenerAdapter {
         } finally {
             if (persistenceInterceptor) {
                 log.debug("destroying persistence context for listener $methodName of $delegate")
+                persistenceInterceptor.flush()
                 persistenceInterceptor.destroy()
             }
         }
