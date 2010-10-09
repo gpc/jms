@@ -19,7 +19,11 @@ class JmsService {
     }
     
     def send(destination, message, String jmsTemplateBeanName = null, Closure postProcessor = null) {
-        
+        if (grailsApplication.config.jms.disabled) {
+            log.warn "not sending message [$message] to [$destination] because JMS is disabled in config"
+            return
+        }
+
         jmsTemplateBeanName = (jmsTemplateBeanName ?: DEFAULT_JMS_TEMPLATE_BEAN_NAME) + "JmsTemplate"
         def jmsTemplate = grailsApplication.mainContext.getBean(jmsTemplateBeanName)
         if (jmsTemplate == null) {

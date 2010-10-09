@@ -22,5 +22,13 @@ class JmsBeanDefinitionsBuilder {
             }
         }
     }
+    
+    def removeFrom(context) {
+        mappings.each { key, builderClazz ->
+            beans[key].each { name, definition ->
+                builderClazz.newInstance(name, definition).removeFrom(context)
+            }
+        }
+    }
 
 }

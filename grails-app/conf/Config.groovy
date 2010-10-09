@@ -1,6 +1,7 @@
 log4j = {
     error ''
     debug 'grails.plugin.jms'
+    debug 'grails.app.service'
 }
 
 dataSource {
@@ -31,6 +32,8 @@ environments {
 }
 
 jms {
+    disabled = false
+     
     templates {
         other {
             meta {

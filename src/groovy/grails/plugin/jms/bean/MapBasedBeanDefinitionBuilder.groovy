@@ -43,7 +43,12 @@ class MapBasedBeanDefinitionBuilder {
             }
         }
     }
-        
+    
+    def removeFrom(context) {
+        def beanName = getName()
+        context.containsBean(beanName) && context.removeBeanDefinition(beanName)
+    }
+    
     protected set(name, value, recipient, beanBuilder) {
         if (name.endsWith('Bean')) {
             recipient."${name.substring(0, name.size() - 4)}" = beanBuilder.ref(value)

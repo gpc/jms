@@ -1,0 +1,33 @@
+h3. Disabling
+
+You can globally disable all JMS functionality by setting @jms.disabled@ to true in your application config.
+
+For example you could turn JMS for testing with…
+
+{code}
+environments {
+    test {
+        jms.disabled = true
+    }
+}
+{code}
+
+If JMS is disabled then no listeners are registered (so no messages will be received). 
+
+If an attempt is made to send a message while JMS is disabled you will only get a log message alerting you that the message will not be sent because JMS is disabled. This allows you to still use the @sendMessage()@ methods or @jmsService@ even if JMS is disabled.
+
+h3. Reloading
+
+The JMS plugin has good support for hot reloading during development.
+
+h4. Listeners
+
+If you make a change to a service class that is a listener during development, all existing listeners for that service will be shutdown. The service is then re-inspected for listeners that are then registered. This means you can change listener config and have it take effect without restarting your application.
+
+h4. Config
+
+If any change to the JMS config is detected, all JMS functionality is torn down and then re-established with the new config. This allows you to change bean definitions (such as container or template options) and have them take effect without restarting your application.
+
+h4. Disabled/Enabled
+
+You can also temporarily disable or enable JMS functionality by changing the @jms.disabled@ config option during development and have it take effect without restarting your application.
