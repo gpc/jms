@@ -17,22 +17,22 @@ class LoggingListenerAdapter extends MessageListenerAdapter implements Initializ
     
     void onMessage(Message message) {
         if (log.debugEnabled) {
-            log.debug("receiving message $message.JMSMessageID ($message.destination)")
+            log.debug("receiving message $message.JMSMessageID ($message.JMSDestination)")
         }
         super.onMessage(message)
         if (log.debugEnabled) {
-            log.debug("received message $message.JMSMessageID ($message.destination)")
+            log.debug("received message $message.JMSMessageID ($message.JMSDestination)")
         }
     }
 
     void onMessage(Message message, Session session) {
         if (log.debugEnabled) {
-            log.debug("receiving message (in session) $message.JMSMessageID ($message.destination)")
+            log.debug("receiving message (in session) $message.JMSMessageID ($message.JMSDestination)")
         }
         try {
             super.onMessage(message, session)
             if (log.debugEnabled) {
-                log.debug("received message (in session) $message.JMSMessageID ($message.destination)")
+                log.debug("received message (in session) $message.JMSMessageID ($message.JMSDestination)")
             }
         } catch (Throwable e) {
             handleListenerException(e)
