@@ -164,9 +164,6 @@ class JmsGrailsPlugin {
         }
     }
 
-    def onApplicationChange = { event ->
-    }
-    
     def startListenerContainer(listenerConfig, applicationContext) {
         applicationContext.getBean(listenerConfig.listenerContainerBeanName).start()
     }
