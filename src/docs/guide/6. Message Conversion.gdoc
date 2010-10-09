@@ -1,0 +1,41 @@
+Both templates and adapters use a "MessageConverter":http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html to convert objects into messages. By default, this plugin configures templates and adapters to use a "SimpleMessageConverter":http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html.
+
+This can be changed via the config mechanism…
+
+{code}
+jms {
+    converters {
+        other {
+            meta {
+                clazz = my.custom.MessageConverter
+            }
+        }
+    }
+    adapters { 
+        other {
+            meta {
+                parentBean = 'standardJmsListenerAdapter'
+            }
+            messageConverterBean = "otherJmsMessageConverter"
+        }
+    }
+}
+{code}
+
+This would configure the “other” listener adapter to use our special message converter.
+
+To globally use a custom message converter, you can augment the standard definition…
+
+{code}
+jms {
+    converters {
+        standard {
+            meta {
+                clazz = my.custom.MessageConverter
+            }
+        }
+    }
+}
+{code}
+
+This would cause all templates and adapters to use your custom converter.

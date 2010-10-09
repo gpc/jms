@@ -1,10 +1,12 @@
-import org.springframework.jms.support.converter.SimpleMessageConverter
 import org.springframework.jms.listener.DefaultMessageListenerContainer
 
+converters {
+    standard {}
+}
 templates {
     standard {
         connectionFactoryBean = "jmsConnectionFactory"
-        messageConverter = new SimpleMessageConverter()
+        messageConverterBean = "standardJmsMessageConverter"
     }
 }
 containers {
@@ -19,7 +21,7 @@ containers {
 }
 adapters {
     standard {
-        messageConverter = new SimpleMessageConverter()
+        messageConverterBean = "standardJmsMessageConverter"
         persistenceInterceptorBean = 'persistenceInterceptor'
     }
 }

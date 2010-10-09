@@ -6,6 +6,7 @@ class JmsBeanDefinitionsBuilder {
         templates: JmsTemplateBeanDefinitionBuilder,
         containers: JmsListenerContainerAbstractBeanDefinitionBuilder,
         adapters: JmsListenerAdapterAbstractBeanDefinitionBuilder,
+        converters: JmsMessageConverterBeanDefinitionBuilder
     ]
     
     final beans

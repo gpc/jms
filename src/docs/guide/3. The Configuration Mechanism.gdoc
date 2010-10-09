@@ -9,13 +9,15 @@ The configuration is controlled by the Grails application configuration under th
 Here is what the defaults look like...
 
 {code}
-import org.springframework.jms.support.converter.SimpleMessageConverter
 import org.springframework.jms.listener.DefaultMessageListenerContainer
 
+converters {
+    standard {}
+}
 templates {
     standard {
         connectionFactoryBean = "jmsConnectionFactory"
-        messageConverter = new SimpleMessageConverter()
+        messageConverterBean = "standardJmsMessageConverter"
     }
 }
 containers {
@@ -30,7 +32,7 @@ containers {
 }
 adapters {
     standard {
-        messageConverter = new SimpleMessageConverter()
+        messageConverterBean = "standardJmsMessageConverter"
         persistenceInterceptorBean = 'persistenceInterceptor'
     }
 }
@@ -38,7 +40,7 @@ adapters {
 
 It's a BeanBuilder like syntax, but it is actually ConfigSlurper syntax. It creates a map of "bean definitions" that get processed into real bean definitions.
 
-The default config creates our standard (i.e. default) jms templates for sending, and listener containers and adapters for receiving.
+The default config creates our standard (i.e. default) converters, jms templates for sending, and listener containers and adapters for receiving.
 
 When sending messages with the @jmsService@ you can specify which template to use to send the message. If none is specified, "standard" is used.
 

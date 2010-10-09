@@ -8,6 +8,7 @@ class JmsBeanDefinitionsBuilderTests extends GroovyTestCase {
         def bb = new BeanBuilder(this.class.classLoader)
             
         def beans = [
+            converters: [standard: [:]],
             templates: [
                 standard: [
                     meta: ['abstract': true]
