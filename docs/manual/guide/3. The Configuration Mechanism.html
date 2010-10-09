@@ -5,11 +5,13 @@
      	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
      </head>
 	<body class="body">
-		<h1><a name="3. The Configuration Mechanism">3. The Configuration Mechanism</a></h1>JMS is a complicated topic. There are different consumption and configuration patterns. While this plugin does set some reasonable defaults, it's very likely that you are going to need to customise these settings either globally or for specific senders or listeners.<p class="paragraph"/>To support this, the plugin makes <em class="italic">every</em> configuration option available to you should you need to set it. This is achieved through the use of Spring's abstract beans and Grails' configuration mechanism.<p class="paragraph"/><h3>How it works</h3><p class="paragraph"/>The configuration is controlled by the Grails application configuration under the key <code>jms</code>. This is merged against plugin provided defaults.<p class="paragraph"/>Here is what the defaults look like...<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.springframework.jms.support.converter.SimpleMessageConverter
-<span class="java&#45;keyword">import</span> org.springframework.jms.listener.DefaultMessageListenerContainer<p class="paragraph"/>templates &#123;
+		<h1><a name="3. The Configuration Mechanism">3. The Configuration Mechanism</a></h1>JMS is a complicated topic. There are different consumption and configuration patterns. While this plugin does set some reasonable defaults, it's very likely that you are going to need to customise these settings either globally or for specific senders or listeners.<p class="paragraph"/>To support this, the plugin makes <em class="italic">every</em> configuration option available to you should you need to set it. This is achieved through the use of Spring's abstract beans and Grails' configuration mechanism.<p class="paragraph"/><h3>How it works</h3><p class="paragraph"/>The configuration is controlled by the Grails application configuration under the key <code>jms</code>. This is merged against plugin provided defaults.<p class="paragraph"/>Here is what the defaults look like...<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.springframework.jms.listener.DefaultMessageListenerContainer<p class="paragraph"/>converters &#123;
+    standard &#123;&#125;
+&#125;
+templates &#123;
     standard &#123;
         connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>
-        messageConverter = <span class="java&#45;keyword">new</span> SimpleMessageConverter()
+        messageConverterBean = <span class="java&#45;quote">"standardJmsMessageConverter"</span>
     &#125;
 &#125;
 containers &#123;
@@ -24,10 +26,10 @@ containers &#123;
 &#125;
 adapters &#123;
     standard &#123;
-        messageConverter = <span class="java&#45;keyword">new</span> SimpleMessageConverter()
+        messageConverterBean = <span class="java&#45;quote">"standardJmsMessageConverter"</span>
         persistenceInterceptorBean = 'persistenceInterceptor'
     &#125;
-&#125;</pre></div><p class="paragraph"/>It's a BeanBuilder like syntax, but it is actually ConfigSlurper syntax. It creates a map of "bean definitions" that get processed into real bean definitions.<p class="paragraph"/>The default config creates our standard (i.e. default) jms templates for sending, and listener containers and adapters for receiving.<p class="paragraph"/>When sending messages with the <code>jmsService</code> you can specify which template to use to send the message. If none is specified, "standard" is used.<p class="paragraph"/>Likewise, listeners can specify which container and/or adapter bean definition to base themselves on. If none are specified, "standard" is used in both cases.<h2><a name="3.1 Changing Defaults">3.1 Changing Defaults</a></h2>You can override the configuration defaults very easily.<p class="paragraph"/>Let's suppose you do not want any message conversion on listeners. If a listener container has no <code>messageConverter</code> listeners will receive raw messages. So we want to override the standard listener container definition to set the <code>messageConverter</code> property to <code>null</code>.<p class="paragraph"/>In your application's <code>Config.groovy</code><p class="paragraph"/><div class="code"><pre>jms &#123;
+&#125;</pre></div><p class="paragraph"/>It's a BeanBuilder like syntax, but it is actually ConfigSlurper syntax. It creates a map of "bean definitions" that get processed into real bean definitions.<p class="paragraph"/>The default config creates our standard (i.e. default) converters, jms templates for sending, and listener containers and adapters for receiving.<p class="paragraph"/>When sending messages with the <code>jmsService</code> you can specify which template to use to send the message. If none is specified, "standard" is used.<p class="paragraph"/>Likewise, listeners can specify which container and/or adapter bean definition to base themselves on. If none are specified, "standard" is used in both cases.<h2><a name="3.1 Changing Defaults">3.1 Changing Defaults</a></h2>You can override the configuration defaults very easily.<p class="paragraph"/>Let's suppose you do not want any message conversion on listeners. If a listener container has no <code>messageConverter</code> listeners will receive raw messages. So we want to override the standard listener container definition to set the <code>messageConverter</code> property to <code>null</code>.<p class="paragraph"/>In your application's <code>Config.groovy</code><p class="paragraph"/><div class="code"><pre>jms &#123;
     containers &#123;
         standard &#123;
             messageConverter = <span class="java&#45;keyword">null</span>

@@ -1,6 +1,6 @@
 <html>
 	<head>
-		  <title>Grails JMS Plugin 0.5.2 - Reference Documentation</title>
+		  <title>Grails JMS Plugin 1.0-rc-1 - Reference Documentation</title>
 		  <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Style" charset="utf-8">	
 	</head>
     <body class="body">
@@ -15,13 +15,13 @@
 				<div class="message">JMS integration for Grails</div>
 				<h1>Grails JMS Plugin - Reference Documentation</h1>
 				<p><strong>Authors:</strong> Grails Plugin Collective</p>
-				<p><strong>Version:</strong> 0.5.2</p>				
+				<p><strong>Version:</strong> 1.0-rc-1</p>				
 				<em>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</em>
 		</div>                       
 		
 		<div id="toc">  
 			<h2>Table of Contents</h2>
-			<div class="tocItem" style="margin-left:0px"><a href="#1. Introduction">1. Introduction</a></div><div class="tocItem" style="margin-left:10px"><a href="#1.1 Spring JMS">1.1 Spring JMS</a></div><div class="tocItem" style="margin-left:0px"><a href="#2. Plugging in a JMS Provider">2. Plugging in a JMS Provider</a></div><div class="tocItem" style="margin-left:10px"><a href="#2.1 ActiveMQ Example">2.1 ActiveMQ Example</a></div><div class="tocItem" style="margin-left:10px"><a href="#2.2 Connection Pooling">2.2 Connection Pooling</a></div><div class="tocItem" style="margin-left:0px"><a href="#3. The Configuration Mechanism">3. The Configuration Mechanism</a></div><div class="tocItem" style="margin-left:10px"><a href="#3.1 Changing Defaults">3.1 Changing Defaults</a></div><div class="tocItem" style="margin-left:10px"><a href="#3.2 Syntax Notes">3.2 Syntax Notes</a></div><div class="tocItem" style="margin-left:0px"><a href="#4. Sending Messages">4. Sending Messages</a></div><div class="tocItem" style="margin-left:10px"><a href="#4.1 Post Processing">4.1 Post Processing</a></div><div class="tocItem" style="margin-left:10px"><a href="#4.2 Using Other Templates">4.2 Using Other Templates</a></div><div class="tocItem" style="margin-left:0px"><a href="#5. Receiving Messages">5. Receiving Messages</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.1 Service Listeners">5.1 Service Listeners</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.2 Service Method Listeners">5.2 Service Method Listeners</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.3 Listener Return Values">5.3 Listener Return Values</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.4 Using Other Containers Or Adapters">5.4 Using Other Containers Or Adapters</a></div><div class="tocItem" style="margin-left:0px"><a href="#6. Logging">6. Logging</a></div>
+			<div class="tocItem" style="margin-left:0px"><a href="#1. Introduction">1. Introduction</a></div><div class="tocItem" style="margin-left:10px"><a href="#1.1 Spring JMS">1.1 Spring JMS</a></div><div class="tocItem" style="margin-left:0px"><a href="#2. Plugging in a JMS Provider">2. Plugging in a JMS Provider</a></div><div class="tocItem" style="margin-left:10px"><a href="#2.1 ActiveMQ Example">2.1 ActiveMQ Example</a></div><div class="tocItem" style="margin-left:10px"><a href="#2.2 Connection Pooling">2.2 Connection Pooling</a></div><div class="tocItem" style="margin-left:0px"><a href="#3. The Configuration Mechanism">3. The Configuration Mechanism</a></div><div class="tocItem" style="margin-left:10px"><a href="#3.1 Changing Defaults">3.1 Changing Defaults</a></div><div class="tocItem" style="margin-left:10px"><a href="#3.2 Syntax Notes">3.2 Syntax Notes</a></div><div class="tocItem" style="margin-left:0px"><a href="#4. Sending Messages">4. Sending Messages</a></div><div class="tocItem" style="margin-left:10px"><a href="#4.1 Post Processing">4.1 Post Processing</a></div><div class="tocItem" style="margin-left:10px"><a href="#4.2 Using Other Templates">4.2 Using Other Templates</a></div><div class="tocItem" style="margin-left:0px"><a href="#5. Receiving Messages">5. Receiving Messages</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.1 Service Listeners">5.1 Service Listeners</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.2 Service Method Listeners">5.2 Service Method Listeners</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.3 Listener Return Values">5.3 Listener Return Values</a></div><div class="tocItem" style="margin-left:10px"><a href="#5.4 Using Other Containers Or Adapters">5.4 Using Other Containers Or Adapters</a></div><div class="tocItem" style="margin-left:0px"><a href="#6. Message Conversion">6. Message Conversion</a></div><div class="tocItem" style="margin-left:0px"><a href="#7. Logging">7. Logging</a></div><div class="tocItem" style="margin-left:0px"><a href="#8. Disabling and Reloading">8. Disabling and Reloading</a></div>
 		</div>     
 		<div id="content">
 			<h1><a name="1. Introduction">1. Introduction</a></h1>This plugin makes it easy to both send and receive JMS messages inside a Grails application.<p class="paragraph"/><h3>Examples</h3><p class="paragraph"/>The following are some simple examples to give you a feel for the plugin.<p class="paragraph"/><h4>Service Queue Listeners</h4><p class="paragraph"/><div class="code"><pre>class ListeningService &#123;<p class="paragraph"/>    <span class="java&#45;keyword">static</span> exposes = &#91;'jms'&#93;<p class="paragraph"/>    def onMessage(message) &#123;
@@ -69,11 +69,13 @@ An example <code>resources.groovy</code> configuration for ActiveMQ would look s
             brokerURL = 'vm://localhost'
         &#125;
     &#125;
-&#125;</pre></div><h1><a name="3. The Configuration Mechanism">3. The Configuration Mechanism</a></h1>JMS is a complicated topic. There are different consumption and configuration patterns. While this plugin does set some reasonable defaults, it's very likely that you are going to need to customise these settings either globally or for specific senders or listeners.<p class="paragraph"/>To support this, the plugin makes <em class="italic">every</em> configuration option available to you should you need to set it. This is achieved through the use of Spring's abstract beans and Grails' configuration mechanism.<p class="paragraph"/><h3>How it works</h3><p class="paragraph"/>The configuration is controlled by the Grails application configuration under the key <code>jms</code>. This is merged against plugin provided defaults.<p class="paragraph"/>Here is what the defaults look like...<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.springframework.jms.support.converter.SimpleMessageConverter
-<span class="java&#45;keyword">import</span> org.springframework.jms.listener.DefaultMessageListenerContainer<p class="paragraph"/>templates &#123;
+&#125;</pre></div><h1><a name="3. The Configuration Mechanism">3. The Configuration Mechanism</a></h1>JMS is a complicated topic. There are different consumption and configuration patterns. While this plugin does set some reasonable defaults, it's very likely that you are going to need to customise these settings either globally or for specific senders or listeners.<p class="paragraph"/>To support this, the plugin makes <em class="italic">every</em> configuration option available to you should you need to set it. This is achieved through the use of Spring's abstract beans and Grails' configuration mechanism.<p class="paragraph"/><h3>How it works</h3><p class="paragraph"/>The configuration is controlled by the Grails application configuration under the key <code>jms</code>. This is merged against plugin provided defaults.<p class="paragraph"/>Here is what the defaults look like...<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.springframework.jms.listener.DefaultMessageListenerContainer<p class="paragraph"/>converters &#123;
+    standard &#123;&#125;
+&#125;
+templates &#123;
     standard &#123;
         connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>
-        messageConverter = <span class="java&#45;keyword">new</span> SimpleMessageConverter()
+        messageConverterBean = <span class="java&#45;quote">"standardJmsMessageConverter"</span>
     &#125;
 &#125;
 containers &#123;
@@ -88,10 +90,10 @@ containers &#123;
 &#125;
 adapters &#123;
     standard &#123;
-        messageConverter = <span class="java&#45;keyword">new</span> SimpleMessageConverter()
+        messageConverterBean = <span class="java&#45;quote">"standardJmsMessageConverter"</span>
         persistenceInterceptorBean = 'persistenceInterceptor'
     &#125;
-&#125;</pre></div><p class="paragraph"/>It's a BeanBuilder like syntax, but it is actually ConfigSlurper syntax. It creates a map of "bean definitions" that get processed into real bean definitions.<p class="paragraph"/>The default config creates our standard (i.e. default) jms templates for sending, and listener containers and adapters for receiving.<p class="paragraph"/>When sending messages with the <code>jmsService</code> you can specify which template to use to send the message. If none is specified, "standard" is used.<p class="paragraph"/>Likewise, listeners can specify which container and/or adapter bean definition to base themselves on. If none are specified, "standard" is used in both cases.<h2><a name="3.1 Changing Defaults">3.1 Changing Defaults</a></h2>You can override the configuration defaults very easily.<p class="paragraph"/>Let's suppose you do not want any message conversion on listeners. If a listener container has no <code>messageConverter</code> listeners will receive raw messages. So we want to override the standard listener container definition to set the <code>messageConverter</code> property to <code>null</code>.<p class="paragraph"/>In your application's <code>Config.groovy</code><p class="paragraph"/><div class="code"><pre>jms &#123;
+&#125;</pre></div><p class="paragraph"/>It's a BeanBuilder like syntax, but it is actually ConfigSlurper syntax. It creates a map of "bean definitions" that get processed into real bean definitions.<p class="paragraph"/>The default config creates our standard (i.e. default) converters, jms templates for sending, and listener containers and adapters for receiving.<p class="paragraph"/>When sending messages with the <code>jmsService</code> you can specify which template to use to send the message. If none is specified, "standard" is used.<p class="paragraph"/>Likewise, listeners can specify which container and/or adapter bean definition to base themselves on. If none are specified, "standard" is used in both cases.<h2><a name="3.1 Changing Defaults">3.1 Changing Defaults</a></h2>You can override the configuration defaults very easily.<p class="paragraph"/>Let's suppose you do not want any message conversion on listeners. If a listener container has no <code>messageConverter</code> listeners will receive raw messages. So we want to override the standard listener container definition to set the <code>messageConverter</code> property to <code>null</code>.<p class="paragraph"/>In your application's <code>Config.groovy</code><p class="paragraph"/><div class="code"><pre>jms &#123;
     containers &#123;
         standard &#123;
             messageConverter = <span class="java&#45;keyword">null</span>
@@ -211,7 +213,35 @@ jmsService.send(destination, message, postProcessor) // use the standard templat
         // handle message
     &#125;
 &#125;</pre></div>
-<h1><a name="6. Logging">6. Logging</a></h1>All logging is done under the namespace 'grails.plugin.jms'.         			
+<h1><a name="6. Message Conversion">6. Message Conversion</a></h1>Both templates and adapters use a <a href="http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html" target="blank">MessageConverter</a> to convert objects into messages. By default, this plugin configures templates and adapters to use a <a href="http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html." target="blank">SimpleMessageConverter</a><p class="paragraph"/>This can be changed via the config mechanism…<p class="paragraph"/><div class="code"><pre>jms &#123;
+    converters &#123;
+        other &#123;
+            meta &#123;
+                clazz = my.custom.MessageConverter
+            &#125;
+        &#125;
+    &#125;
+    adapters &#123; 
+        other &#123;
+            meta &#123;
+                parentBean = 'standardJmsListenerAdapter'
+            &#125;
+            messageConverterBean = <span class="java&#45;quote">"otherJmsMessageConverter"</span>
+        &#125;
+    &#125;
+&#125;</pre></div><p class="paragraph"/>This would configure the “other” listener adapter to use our special message converter.<p class="paragraph"/>To globally use a custom message converter, you can augment the standard definition…<p class="paragraph"/><div class="code"><pre>jms &#123;
+    converters &#123;
+        standard &#123;
+            meta &#123;
+                clazz = my.custom.MessageConverter
+            &#125;
+        &#125;
+    &#125;
+&#125;</pre></div><p class="paragraph"/>This would cause all templates and adapters to use your custom converter.<h1><a name="7. Logging">7. Logging</a></h1>All logging is done under the namespace 'grails.plugin.jms'.<h1><a name="8. Disabling and Reloading">8. Disabling and Reloading</a></h1><h3>Disabling</h3><p class="paragraph"/>You can globally disable all JMS functionality by setting <code>jms.disabled</code> to true in your application config.<p class="paragraph"/>For example you could turn JMS for testing with…<p class="paragraph"/><div class="code"><pre>environments &#123;
+    test &#123;
+        jms.disabled = <span class="java&#45;keyword">true</span>
+    &#125;
+&#125;</pre></div><p class="paragraph"/>If JMS is disabled then no listeners are registered (so no messages will be received).<p class="paragraph"/>If an attempt is made to send a message while JMS is disabled you will only get a log message alerting you that the message will not be sent because JMS is disabled. This allows you to still use the <code>sendMessage()</code> methods or <code>jmsService</code> even if JMS is disabled.<p class="paragraph"/><h3>Reloading</h3><p class="paragraph"/>The JMS plugin has good support for hot reloading during development.<p class="paragraph"/><h4>Listeners</h4><p class="paragraph"/>If you make a change to a service class that is a listener during development, all existing listeners for that service will be shutdown. The service is then re-inspected for listeners that are then registered. This means you can change listener config and have it take effect without restarting your application.<p class="paragraph"/><h4>Config</h4><p class="paragraph"/>If any change to the JMS config is detected, all JMS functionality is torn down and then re-established with the new config. This allows you to change bean definitions (such as container or template options) and have them take effect without restarting your application.<p class="paragraph"/><h4>Disabled/Enabled</h4><p class="paragraph"/>You can also temporarily disable or enable JMS functionality by changing the <code>jms.disabled</code> config option during development and have it take effect without restarting your application.         			
 		</div>
 		<div id="footer">
 			  Developed by the <a href='http://gpc.github.com'>Grails Plugin Collective</a>
