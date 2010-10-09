@@ -31,7 +31,7 @@ containers {
         autoStartup = false
         connectionFactoryBean = "jmsConnectionFactory"
         messageSelector = null
-        cacheLevel = DefaultMessageListenerContainer.CACHE_SESSION
+        cacheLevel = DefaultMessageListenerContainer.CACHE_CONSUMER
     }
 }
 adapters {
