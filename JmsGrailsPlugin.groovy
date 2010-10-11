@@ -29,7 +29,7 @@ class JmsGrailsPlugin {
     
     static LOG = LogFactory.getLog('grails.plugin.jms.JmsGrailsPlugin')
     
-    def version = "1.0-rc-1"
+    def version = "1.0"
     def author = "Grails Plugin Collective"
     def authorEmail = "grails.plugin.collective@gmail.com"
     def title = "JMS integration for Grails"
