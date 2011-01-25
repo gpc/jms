@@ -5,4 +5,7 @@ plugin.xml
 *.zip
 activemq-data
 .DS_Store
-docs
+docs.idea
+grails-jms-grailsPlugins.iml
+grails-jms.iml
+.idea

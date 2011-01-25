@@ -99,7 +99,7 @@ class JmsGrailsPlugin {
             }
         }
     }
-    
+    //Send*
     def sendJMSMessage2 = { jmsService, destination, message ->
         jmsService.send(destination, message)
     }
@@ -140,9 +140,52 @@ class JmsGrailsPlugin {
             } 
         }
     }
+    //ReceiveSelected*
+    def receiveSelectedJMSMessage1 = { jmsService, destination, selector ->
+        jmsService.receiveSelected( destination, selector )
+    }
+    def receiveSelectedJMSMessage2 = { jmsService, destination, selector, long timeout ->
+        jmsService.receiveSelected( destination, selector, timeout )
+    }
+    def receiveSelectedJMSMessage3 = { jmsService, destination, selector, jmsTemplateBeanName ->
+        jmsService.receiveSelected( destination, selector, jmsTemplateBeanName)
+    }
+    def receiveSelectedJMSMessage4 = { jmsService, destination, selector, long timeout, jmsTemplateBeanName ->
+        jmsService.receiveSelected( destination, selector, timeout, jmsTemplateBeanName)
+    }
+
+    def receiveSelectedAsyncJMSMessage1 = { jmsService, destination, selector ->
+        jmsService.receiveSelectedAsync( destination, selector )
+    }
+    def receiveSelectedAsyncJMSMessage2 = { jmsService, destination, selector, long timeout ->
+        jmsService.receiveSelectedAsync( destination, selector, timeout)
+    }
+    def receiveSelectedAsyncJMSMessage3 = { jmsService, destination, selector, jmsTemplateBeanName  ->
+        jmsService.receiveSelectedAsync( destination, selector, jmsTemplateBeanName )
+    }
+    def receiveSelectedAsyncJMSMessage4 = { jmsService, destination, selector, timeout, jmsTemplateBeanName ->
+        jmsService.receiveSelectedAsync( destination, selector, timeout, jmsTemplateBeanName )
+    }
+
+    def addReceiveSelectedToClass(jmsService, clazz) {
+        [
+            receiveSelectedJMSMessage       : "receiveSelectedJMSMessage",
+            receiveSelectedAsyncJMSMessage  : "receiveSelectedAsyncJMSMessage"
+        ].each { m, i ->
+            1.upto(4) { n ->
+                clazz.metaClass."$m" << this."$i$n".curry(jmsService)
+            }
+        }
+    }
+    //---
+    def addServiceMethodsToClass(jmsService, clazz) {
+        addSendMethodsToClass(jmsService, clazz)
+        addReceiveSelectedToClass(jmsService, clazz)
+    }
+
 
     def doWithDynamicMethods = { ctx ->
-        addSendMethods(application)
+        addServiceMethods(application)
     }
 
     def onChange = { event ->
@@ -150,7 +193,7 @@ class JmsGrailsPlugin {
             def jmsService = event.ctx.getBean('jmsService')
             
             if (application.isControllerClass(event.source)) {
-                addSendMethodsToClass(jmsService, event.source)
+                addServiceMethodsToClass(jmsService, event.source)
             } else if (application.isServiceClass(event.source)) {
                 if (event.source.name.endsWith(".JmsService")) {
                     return
@@ -182,7 +225,7 @@ class JmsGrailsPlugin {
                     }
                 }
                 
-                addSendMethodsToClass(jmsService, event.source)
+                addServiceMethodsToClass(jmsService, event.source)
             }
             
         }
@@ -248,16 +291,16 @@ class JmsGrailsPlugin {
             application.mainContext.pluginManager.informOfClassChange(jmsServiceClass)
             
             // This also means we need to add new versions of the send methods
-            addSendMethods(application)
+            addServiceMethods(application)
         }
     }
     
-    def addSendMethods(application) {
+    def addServiceMethods(application) {
         def jmsService = application.mainContext.jmsService
         [application.controllerClasses, application.serviceClasses].each {
             it.each {
                 if (it.clazz.name != "JmsService") {
-                    addSendMethodsToClass(jmsService, it.clazz)
+                    addServiceMethodsToClass(jmsService, it.clazz)
                 }
             }
         }
