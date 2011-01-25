@@ -30,7 +30,7 @@ class JmsService {
     static transactional = false
     static final LOG = LogFactory.getLog(JmsService)
     static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
-    static final long DEFAULT_RECEIVER_TIMEOUT_MILLIS = 500
+    public static final long DEFAULT_RECEIVER_TIMEOUT_MILLIS = 500l
 
     def grailsApplication
 
@@ -59,9 +59,27 @@ class JmsService {
         receiveSelected(destination, selector, null, jmsTemplateBeanName)
     }
     /**
+     * <blockquote>
+     * Receive and converts a message synchronously from the default destination, but only wait up to a specified time for delivery.
+     * This method should be used carefully, since it will block the thread until the message becomes available or until the timeout value is exceeded.
+     * </blockquote>
+     * <b>description copied from interface <i>org.springframework.jms.core.JmsOperations</i></b>.
+     *
+     *  The big difference between the   {@code receiveSelected}   methods provided by the <i>org.springframework.jms.core.JmsOperations</i> is that we to a
+     * message conversion and we try to enforce a <b>timeout</b>. Such timeout is defined by the following rules
+     * described in the method.   {@code JmsService # calculatedReceiverTimeout}  .
+     *
+     * <ol>
+     *  <li><i>argument</i> <b>timeout</b>: Selected if the value directly sent as argument is not null.</li>
+     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the   {@code template.receiverTimeout}   is different
+     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}   (or zero).</li>
+     *  <li>If the value provided by  {@code config.jms.receiveTimeout}   is not null and different
+     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}  .</li>
+     *  <li>A default value of   {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS}   is used if none of the above are selected.</li>
+     * </ol>
      *
      * @param destination
-     * @param messageSelector
+     * @param messageSelector A Jms Message selector 
      * @param timeout
      * @param jmsTemplateBeanName
      * @return
@@ -99,38 +117,44 @@ class JmsService {
     /**
      * Calculates the Receiver Timeout according to the following precedence.
      * <ol>
-     *  <li>callReceiveTimeout: Selected if the value directly sent as argument during the invocation of a receive* method is not null.</li>
-     *  <li>jmsTemplate: Selected if the value of the             {@code template.receiverTimeout}             is different from             {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}            (or zero).</li>
-     *  <li>configReceiveTimeout: Selected if the value provided by            {@code config.jms.receiveTimeout}            is not null
-     *      and different than            {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}           .</li>
-     *  <li>defaultValue: Assigned if none of the above.</li>
+     *  <li><i>argument</i> <b>callReceiveTimeout</b>: Selected if the value directly sent as argument is not null.</li>
+     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the   {@code template.receiverTimeout}   is different
+     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}   (or zero).</li>
+     *  <li>Thre Grails Configuration mechanism provides a <b>jms.receiveTimeout</b> which value is not null and different
+     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}  .</li>
+     *  <li>A default value of   {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS}   is used if none of the above are selected.</li>
      * </ol>
      * @param jmsTeplate
      * @param callReceiveTmeout
      * @param configReceiveTmeout
      * @return
      */
-    private long calculatedReceiverTimeout(callReceiveTimeout, jmsTemplate) {
+    long calculatedReceiverTimeout(callReceiveTimeout, jmsTemplate) {
 
-        if (callReceiveTimeout != null)
+        if (callReceiveTimeout != null) {
             return callReceiveTimeout
+        }
 
-        if (jmsTemplate.receiveTimeout != JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT)
+        if (jmsTemplate.receiveTimeout != JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT) {
             return jmsTemplate.receiveTimeout
+        }
 
         def configReceiveTimeout = grailsApplication.config?.jms?.receiveTimeout
-        if (configReceiveTimeout != null && configReceiveTimeout instanceof Number)
+        if (configReceiveTimeout != null
+                && configReceiveTimeout instanceof Number
+                && configReceiveTimeout != JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT) {
             return configReceiveTimeout
+        }
 
 
         return DEFAULT_RECEIVER_TIMEOUT_MILLIS
     }
 
     /**
-     * Provides the executor that handles Async. Receiving requests. By default it will use a          {@code Cached Thread Pool}
-     * as provided by         {@link java.util.concurrent.Executors#newCachedThreadPool()}        , but if through configuration a number
-     * of <i>Async. Receiver Threads</i> is specified through         {@code config.jms.asyncReceiverThreads}         a thread limit
-     * will be imposed through a         {@code Fixed Thread Pool}         where the given number is the limit.
+     * Provides the executor that handles Async. Receiving requests. By default it will use a {@code Cached Thread Pool}
+     * as provided by   {@link java.util.concurrent.Executors#newCachedThreadPool()}, but if through configuration a number
+     * of <i>Async. Receiver Threads</i> is specified through {@code config.jms.asyncReceiverThreads}  a thread limit
+     * will be imposed through a  {@code Fixed Thread Pool} where the given number is the limit.
      * @return
      */
     private getAsyncReceiverExecutor() {
@@ -152,12 +176,14 @@ class JmsService {
         receiveSelectedAsync(destination, messageSelector, null, postProcessor)
     }
     /**
+     * Submits a {@code #receiveSelected} call through an {@link java.util.concurrent.Executor} and returns a future
+     * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService#getAsyncReceiverExecutor()}.
      *
      * @param destination
-     * @param messageSelector
+     * @param messageSelector A Jms Message selector
      * @param timeout
-     * @param postProcessor
-     * @return
+     * @param jmsTemplateBeanName
+     * @return  Future that wraps execution of the <i>receiveSelected</i> task.
      */
     java.util.concurrent.Future receiveSelectedAsync(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
         if (this.disabled) {
@@ -254,18 +280,18 @@ class JmsService {
         }
 
         [
-                jmsTemplate: jmsTemplate                    /** org.springframework.jms.core.JmsTemplate  */,
-                ndestination: destination                   /** Normalized Destination  */,
-                type: isTopic ? 'topic' : 'queue'           /** Type of Destination [topic|queue]   */,
-                jmsTemplateBeanName: _jmsTemplateBeanName   /** Name of the bean used to retrieve the JmsTemplate.  */,
-                defaultTemplate: defaultTemplate            /** Boolean value that tells us if the JmsTemplate is the Default Template.   */
+                jmsTemplate: jmsTemplate                    /** org.springframework.jms.core.JmsTemplate    */,
+                ndestination: destination                   /** Normalized Destination    */,
+                type: isTopic ? 'topic' : 'queue'           /** Type of Destination [topic|queue]     */,
+                jmsTemplateBeanName: _jmsTemplateBeanName   /** Name of the bean used to retrieve the JmsTemplate.    */,
+                defaultTemplate: defaultTemplate            /** Boolean value that tells us if the JmsTemplate is the Default Template.     */
         ]
     }
 
     /**
      * Single point of entry to log an action.
      * @param action Description of the Action.
-     * @param ctx Context of the action as provided by the         {@link JmsService#normalizeServiceCtx(Object, String)}         method.
+     * @param ctx Context of the action as provided by the           {@link JmsService#normalizeServiceCtx(Object, String)}           method.
      */
     private void logAction(final String action, final def ctx) {
         if (LOG.infoEnabled) {
