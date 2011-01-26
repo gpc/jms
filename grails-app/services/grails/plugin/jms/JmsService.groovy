@@ -119,10 +119,10 @@ class JmsService {
      * <ol>
      *  <li><i>argument</i> <b>callReceiveTimeout</b>: Selected if the value directly sent as argument is not null.</li>
      *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the   {@code template.receiverTimeout}   is different
-     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}   (or zero).</li>
+     * from   {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT}   (or zero).</li>
      *  <li>Thre Grails Configuration mechanism provides a <b>jms.receiveTimeout</b> which value is not null and different
-     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}  .</li>
-     *  <li>A default value of   {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS}   is used if none of the above are selected.</li>
+     * from   {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT} (or zero) .</li>
+     *  <li>A default value of   {@link JmsService#DEFAULT_RECEIVER_TIMEOUT_MILLIS}   is used if none of the above are selected.</li>
      * </ol>
      * @param jmsTeplate
      * @param callReceiveTmeout
@@ -153,7 +153,7 @@ class JmsService {
     /**
      * Provides the executor that handles Async. Receiving requests. By default it will use a {@code Cached Thread Pool}
      * as provided by   {@link java.util.concurrent.Executors#newCachedThreadPool()}, but if through configuration a number
-     * of <i>Async. Receiver Threads</i> is specified through {@code config.jms.asyncReceiverThreads}  a thread limit
+     * of <i>Async. Receiver Threads</i> is specified ({@code config.jms.asyncReceiverThreads})  a thread limit
      * will be imposed through a  {@code Fixed Thread Pool} where the given number is the limit.
      * @return
      */
@@ -172,15 +172,15 @@ class JmsService {
         return this.asyncReceiverExecutor
     }
 
-    java.util.concurrent.Future receiveSelectedAsync(destination, messageSelector, String jmsTemplateBeanName) {
-        receiveSelectedAsync(destination, messageSelector, null, postProcessor)
+    java.util.concurrent.Future receiveSelectedAsync(destination, selector, String jmsTemplateBeanName) {
+        receiveSelectedAsync(destination, selector, null, postProcessor)
     }
     /**
-     * Submits a {@code #receiveSelected} call through an {@link java.util.concurrent.Executor} and returns a future
-     * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService#getAsyncReceiverExecutor()}.
+     * Submits a {@code receiveSelected} call through an {@link java.util.concurrent.Executor} and returns a future
+     * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService.getAsyncReceiverExecutor()}.
      *
      * @param destination
-     * @param messageSelector A Jms Message selector
+     * @param selector A Jms Message selector
      * @param timeout
      * @param jmsTemplateBeanName
      * @return  Future that wraps execution of the <i>receiveSelected</i> task.
