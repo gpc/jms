@@ -58,6 +58,7 @@ class JmsService {
     def receiveSelected(destination, selector, String jmsTemplateBeanName) {
         receiveSelected(destination, selector, null, jmsTemplateBeanName)
     }
+
     /**
      * <blockquote>
      * Receive and converts a message synchronously from the default destination, but only wait up to a specified time for delivery.
@@ -65,21 +66,21 @@ class JmsService {
      * </blockquote>
      * <b>description copied from interface <i>org.springframework.jms.core.JmsOperations</i></b>.
      *
-     *  The big difference between the   {@code receiveSelected}   methods provided by the <i>org.springframework.jms.core.JmsOperations</i> is that we to a
+     *  The big difference between the       {@code receiveSelected}       methods provided by the <i>org.springframework.jms.core.JmsOperations</i> is that we to a
      * message conversion and we try to enforce a <b>timeout</b>. Such timeout is defined by the following rules
-     * described in the method.   {@code JmsService # calculatedReceiverTimeout}  .
+     * described in the method.       {@code JmsService # calculatedReceiverTimeout}                .
      *
      * <ol>
      *  <li><i>argument</i> <b>timeout</b>: Selected if the value directly sent as argument is not null.</li>
-     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the   {@code template.receiverTimeout}   is different
-     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}   (or zero).</li>
-     *  <li>If the value provided by  {@code config.jms.receiveTimeout}   is not null and different
-     * from   {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}  .</li>
-     *  <li>A default value of   {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS}   is used if none of the above are selected.</li>
+     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the       {@code template.receiverTimeout}        is different
+     * from       {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}        (or zero).</li>
+     *  <li>If the value provided by        {@code config.jms.receiveTimeout}       is not null and different
+     * from       {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}       .</li>
+     *  <li>A default value of       {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS}        is used if none of the above are selected.</li>
      * </ol>
      *
      * @param destination
-     * @param messageSelector A Jms Message selector 
+     * @param messageSelector A Jms Message selector
      * @param timeout
      * @param jmsTemplateBeanName
      * @return
@@ -114,76 +115,18 @@ class JmsService {
 
     }
 
-    /**
-     * Calculates the Receiver Timeout according to the following precedence.
-     * <ol>
-     *  <li><i>argument</i> <b>callReceiveTimeout</b>: Selected if the value directly sent as argument is not null.</li>
-     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the   {@code template.receiverTimeout}   is different
-     * from   {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT}   (or zero).</li>
-     *  <li>Thre Grails Configuration mechanism provides a <b>jms.receiveTimeout</b> which value is not null and different
-     * from   {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT} (or zero) .</li>
-     *  <li>A default value of   {@link JmsService#DEFAULT_RECEIVER_TIMEOUT_MILLIS}   is used if none of the above are selected.</li>
-     * </ol>
-     * @param jmsTeplate
-     * @param callReceiveTmeout
-     * @param configReceiveTmeout
-     * @return
-     */
-    long calculatedReceiverTimeout(callReceiveTimeout, jmsTemplate) {
-
-        if (callReceiveTimeout != null) {
-            return callReceiveTimeout
-        }
-
-        if (jmsTemplate.receiveTimeout != JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT) {
-            return jmsTemplate.receiveTimeout
-        }
-
-        def configReceiveTimeout = grailsApplication.config?.jms?.receiveTimeout
-        if (configReceiveTimeout != null
-                && configReceiveTimeout instanceof Number
-                && configReceiveTimeout != JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT) {
-            return configReceiveTimeout
-        }
-
-
-        return DEFAULT_RECEIVER_TIMEOUT_MILLIS
-    }
-
-    /**
-     * Provides the executor that handles Async. Receiving requests. By default it will use a {@code Cached Thread Pool}
-     * as provided by   {@link java.util.concurrent.Executors#newCachedThreadPool()}, but if through configuration a number
-     * of <i>Async. Receiver Threads</i> is specified ({@code config.jms.asyncReceiverThreads})  a thread limit
-     * will be imposed through a  {@code Fixed Thread Pool} where the given number is the limit.
-     * @return
-     */
-    private getAsyncReceiverExecutor() {
-
-        if (!this.asyncReceiverExecutor) {
-            if (grailsApplication.config?.jms?.asyncReceiverThreads) {
-                LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${grailsApplication.config?.jms?.asyncReceiverThreads}."
-                this.asyncReceiverExecutor = java.util.concurrent.Executors.newFixedThreadPool(
-                        Integer.valueOf(grailsApplication.config?.jms?.asyncReceiverThreads))
-            } else {
-                LOG.debug "Establishing a Cached Thread Pool for Async Selected Receivers."
-                this.asyncReceiverExecutor = java.util.concurrent.Executors.newCachedThreadPool()
-            }
-        }
-        return this.asyncReceiverExecutor
-    }
-
     java.util.concurrent.Future receiveSelectedAsync(destination, selector, String jmsTemplateBeanName) {
         receiveSelectedAsync(destination, selector, null, postProcessor)
     }
     /**
-     * Submits a {@code receiveSelected} call through an {@link java.util.concurrent.Executor} and returns a future
-     * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService.getAsyncReceiverExecutor()}.
+     * Submits a       {@code receiveSelected}       call through an       {@link java.util.concurrent.Executor}        and returns a future
+     * that reflects the execution of the task. The       {@code Executor}       is provided by        {@code JmsService.getAsyncReceiverExecutor ( )}              .
      *
      * @param destination
      * @param selector A Jms Message selector
      * @param timeout
      * @param jmsTemplateBeanName
-     * @return  Future that wraps execution of the <i>receiveSelected</i> task.
+     * @return Future that wraps execution of the <i>receiveSelected</i> task.
      */
     java.util.concurrent.Future receiveSelectedAsync(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
         if (this.disabled) {
@@ -241,8 +184,209 @@ class JmsService {
 
     }
 
+    //-- Browsers ---------------
+    /**
+     * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
+     * Messages will be converted using the <i>Jms Template</i> before being added to the list.
+     * @param destination
+     * @param jmsTemplateBeanName
+     * @param browserCallback 
+     * @return
+     */
+    def browseNotConvert(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
+        return doBrowseSelected(queue, null, jmsTemplateBeanName, false, browserCallback)
+    }
+
+    def browseNotConvert(queue, Closure browserCallback) {
+        return doBrowseSelected(queue, null, null, false, browserCallback)
+    }
+
+    /**
+     * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
+     * The list will contain <i>javax.jms.Message</i> instances since no conversion will be attempted.
+     * @param destination
+     * @param jmsTemplateBeanName
+     * @param browserCallback 
+     * @return
+     */
+    def browse(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
+        return doBrowseSelected(queue, null, jmsTemplateBeanName, true, browserCallback)
+    }
+
+    def browse(queue, Closure browserCallback) {
+        return doBrowseSelected(queue, null, null, true, browserCallback)
+    }
+
+    /**
+     * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b> that match the given <b>selector</b>.
+     * Messages will be converted using the <i>Jms Template</i> before being added to the list.
+     * @param queue
+     * @param selector
+     * @param jmsTemplateBeanName
+     * @param browserCallback 
+     * @return
+     */
+    def browseSelected(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
+        return doBrowseSelected(queue, selector, jmsTemplateBeanName, true, browserCallback)
+    }
+
+    def browseSelected(queue, selector, Closure browserCallback) {
+        return doBrowseSelected(queue, selector, null, true, browserCallback)
+    }
+
+    /**
+     * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b> that match the given <b>selector</b>.
+     * The list will contain <i>javax.jms.Message</i> instances since no conversion will be attempted.
+     * @param queue
+     * @param selector
+     * @param jmsTemplateBeanName
+     * @param browserCallback 
+     * @return
+     */
+    def browseSelectedNotConvert(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
+        return doBrowseSelected(queue, selector, jmsTemplateBeanName, false, browserCallback)
+    }
+
+    def browseSelectedNotConvert(queue, selector, Closure browserCallback) {
+        return doBrowseSelected(queue, selector, null, false, browserCallback)
+    }
+
+    /**
+     * Delegate to all browse actions. It leverages the   {@code org.springframework.jms.core.JmsTemplate.browseSelected}   method.
+     * This method accepts a <i>JMS selector</i> to filter the messages. You can also define a
+     * <i>browserCallback</i> closure which will receive all messages, if defined its return value will be the one
+     * added to the <i>list</i> of messages. If no <i>browserCallback</i> closure is specified the <i>list</i>
+     * will contain the <i>messages</i> inside the given <b>queue</b> filtered only by the <i>JMS selector</i> if available.
+     *
+     * By default it will try to convert the messages according to the given <i>Jms Template</i>.
+     *
+     * <b>Note:</b>This method will throw an        {@code IllegalArgumentException}        if the <i>destination</i> is not a <b>queue</b>.
+     * @param queue
+     * @param selector
+     * @param jmsTemplateBeanName
+     * @param convert {@code true}   if you want to convert the   {@code javax.jms.Message}  ;   {@code false}   to receive the raw    {@code javax.jms.Message}
+     * @param browserCallback Closure that gets executed per message. If specified its return value will be the one added to the <i>list</i> that this method returns.
+     * @return
+     */
+    private def doBrowseSelected(queue, selector, String jmsTemplateBeanName = null, boolean convert = true, Closure browserCallback = null) {
+        if (this.disabled) {
+            if (selector) {
+                LOG.warn "not browsing [$queue] with selector [$selector] because JMS is disabled in config"
+            } else {
+                LOG.warn "not browsing [$queue] because JMS is disabled in config"
+            }
+            return
+        }
+
+        def ctx = normalizeServiceCtx(queue, jmsTemplateBeanName)
+        if (ctx.type != 'queue') {
+            new IllegalArgumentException("The destination [$queue] must be a queue.")
+        }
+
+        if (selector) {
+            logAction "Browsing messages with selector [$selector] ", ctx
+        } else {
+            logAction "Browsing messages ", ctx
+        }
+
+        final def messages = [] as ArrayList
+
+        ctx.with {
+            jmsTemplate.browseSelected(
+                    ndestination,
+                    selector,
+                    { javax.jms.Session session,
+                      javax.jms.QueueBrowser browser ->
+                        for (javax.jms.Message m in browser.enumeration) {
+                            if (browserCallback) {
+                                messages <<
+                                        browserCallback.call(
+                                                (convert ? convertMessageWithTemplate(jmsTemplate, m) : m)
+                                        )
+                            } else {
+                                messages << (convert ? convertMessageWithTemplate(jmsTemplate, m) : m)
+                            }
+                        }
+                    } as org.springframework.jms.core.BrowserCallback
+            )
+        }
+        return messages
+    }
+
+    //-- Util ---------------
+
     boolean isDisabled() {
         return grailsApplication.config.jms.disabled
+    }
+
+    private def convertMessageWithTemplate(template, javax.jms.Message message) {
+        if (message) {
+            def converter = template?.messageConverter
+            try {
+                return converter?.fromMessage(message)
+            }
+            catch (javax.jms.JMSException ex) {
+                throw org.springframework.jms.support.JmsUtils.convertJmsAccessException(ex)
+            }
+        }
+    }
+
+    /**
+     * Calculates the Receiver Timeout according to the following precedence.
+     * <ol>
+     *  <li><i>argument</i> <b>callReceiveTimeout</b>: Selected if the value directly sent as argument is not null.</li>
+     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the.      {@code template.receiverTimeout}        is different
+     * from.      {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT}        (or zero).</li>
+     *  <li>Thre Grails Configuration mechanism provides a <b>jms.receiveTimeout</b> which value is not null and different
+     * from.      {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT}               (or zero) .</li>
+     *  <li>A default value of.      {@link JmsService#DEFAULT_RECEIVER_TIMEOUT_MILLIS}        is used if none of the above are selected.</li>
+     * </ol>
+     * @param jmsTeplate
+     * @param callReceiveTmeout
+     * @param configReceiveTmeout
+     * @return
+     */
+    long calculatedReceiverTimeout(callReceiveTimeout, jmsTemplate) {
+
+        if (callReceiveTimeout != null) {
+            return callReceiveTimeout
+        }
+
+        if (jmsTemplate.receiveTimeout != JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT) {
+            return jmsTemplate.receiveTimeout
+        }
+
+        def configReceiveTimeout = grailsApplication.config?.jms?.receiveTimeout
+        if (configReceiveTimeout != null
+                && configReceiveTimeout instanceof Number
+                && configReceiveTimeout != JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT) {
+            return configReceiveTimeout
+        }
+
+
+        return DEFAULT_RECEIVER_TIMEOUT_MILLIS
+    }
+
+    /**
+     * Provides the executor that handles Async. Receiving requests. By default it will use a               {@code Cached Thread Pool}
+     * as provided by.      {@link java.util.concurrent.Executors#newCachedThreadPool()}              , but if through configuration a number
+     * of <i>Async. Receiver Threads</i> is specified (              {@code config.jms.asyncReceiverThreads}              )  a thread limit
+     * will be imposed through a                {@code Fixed Thread Pool}               where the given number is the limit.
+     * @return
+     */
+    private getAsyncReceiverExecutor() {
+
+        if (!this.asyncReceiverExecutor) {
+            if (grailsApplication.config?.jms?.asyncReceiverThreads) {
+                LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${grailsApplication.config?.jms?.asyncReceiverThreads}."
+                this.asyncReceiverExecutor = java.util.concurrent.Executors.newFixedThreadPool(
+                        Integer.valueOf(grailsApplication.config?.jms?.asyncReceiverThreads))
+            } else {
+                LOG.debug "Establishing a Cached Thread Pool for Async Selected Receivers."
+                this.asyncReceiverExecutor = java.util.concurrent.Executors.newCachedThreadPool()
+            }
+        }
+        return this.asyncReceiverExecutor
     }
 
     /**
@@ -280,11 +424,11 @@ class JmsService {
         }
 
         [
-                jmsTemplate: jmsTemplate                    /** org.springframework.jms.core.JmsTemplate    */,
-                ndestination: destination                   /** Normalized Destination    */,
-                type: isTopic ? 'topic' : 'queue'           /** Type of Destination [topic|queue]     */,
-                jmsTemplateBeanName: _jmsTemplateBeanName   /** Name of the bean used to retrieve the JmsTemplate.    */,
-                defaultTemplate: defaultTemplate            /** Boolean value that tells us if the JmsTemplate is the Default Template.     */
+                jmsTemplate: jmsTemplate                    /** org.springframework.jms.core.JmsTemplate                  */,
+                ndestination: destination                   /** Normalized Destination                  */,
+                type: isTopic ? 'topic' : 'queue'           /** Type of Destination [topic|queue]                   */,
+                jmsTemplateBeanName: _jmsTemplateBeanName   /** Name of the bean used to retrieve the JmsTemplate.                  */,
+                defaultTemplate: defaultTemplate            /** Boolean value that tells us if the JmsTemplate is the Default Template.                   */
         ]
     }
 
