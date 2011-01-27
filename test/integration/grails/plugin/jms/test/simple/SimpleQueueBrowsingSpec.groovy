@@ -92,11 +92,14 @@ class SimpleQueueBrowsingSpec extends IntegrationSpec {
     def "Should be able to browse the contents of a Queue, define a callback and receive the raw javax#jms#Message"() {
         when:
         send()
+        int cx = 0
         simpleQueueBrowserService.browseNotConvert() { msg ->
+            cx++
             ['fromCallback' : msg.getStringProperty('aproperty') ]
         }
 
         then:
+        cx == 3
         simpleQueueBrowserService.message.fromCallback == '1'
         simpleQueueBrowserService.message.fromCallback == '2'
         simpleQueueBrowserService.message.fromCallback == '3'

@@ -10,3 +10,4 @@ grails-jms-grailsPlugins.iml
 grails-jms.iml
 .idea
 docs
+*~

@@ -190,7 +190,7 @@ class JmsService {
      * Messages will be converted using the <i>Jms Template</i> before being added to the list.
      * @param destination
      * @param jmsTemplateBeanName
-     * @param browserCallback 
+     * @param browserCallback
      * @return
      */
     def browseNotConvert(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
@@ -206,7 +206,7 @@ class JmsService {
      * The list will contain <i>javax.jms.Message</i> instances since no conversion will be attempted.
      * @param destination
      * @param jmsTemplateBeanName
-     * @param browserCallback 
+     * @param browserCallback
      * @return
      */
     def browse(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
@@ -223,7 +223,7 @@ class JmsService {
      * @param queue
      * @param selector
      * @param jmsTemplateBeanName
-     * @param browserCallback 
+     * @param browserCallback
      * @return
      */
     def browseSelected(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
@@ -240,7 +240,7 @@ class JmsService {
      * @param queue
      * @param selector
      * @param jmsTemplateBeanName
-     * @param browserCallback 
+     * @param browserCallback
      * @return
      */
     def browseSelectedNotConvert(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
@@ -260,7 +260,7 @@ class JmsService {
      *
      * By default it will try to convert the messages according to the given <i>Jms Template</i>.
      *
-     * <b>Note:</b>This method will throw an        {@code IllegalArgumentException}        if the <i>destination</i> is not a <b>queue</b>.
+     * <b>Note:</b>This method will throw an {@code IllegalArgumentException} if the <i>destination</i> is not a <b>queue</b>.
      * @param queue
      * @param selector
      * @param jmsTemplateBeanName
@@ -299,10 +299,14 @@ class JmsService {
                       javax.jms.QueueBrowser browser ->
                         for (javax.jms.Message m in browser.enumeration) {
                             if (browserCallback) {
-                                messages <<
-                                        browserCallback.call(
+                                def val =
+                                browserCallback.call(
                                                 (convert ? convertMessageWithTemplate(jmsTemplate, m) : m)
-                                        )
+                                )
+                                //only add if its not null.
+                                if (val != null){
+                                    messages << val
+                                }
                             } else {
                                 messages << (convert ? convertMessageWithTemplate(jmsTemplate, m) : m)
                             }
@@ -335,11 +339,11 @@ class JmsService {
      * Calculates the Receiver Timeout according to the following precedence.
      * <ol>
      *  <li><i>argument</i> <b>callReceiveTimeout</b>: Selected if the value directly sent as argument is not null.</li>
-     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the.      {@code template.receiverTimeout}        is different
-     * from.      {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT}        (or zero).</li>
+     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the {@code template.receiverTimeout} is different
+     * from {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT} (or zero).</li>
      *  <li>Thre Grails Configuration mechanism provides a <b>jms.receiveTimeout</b> which value is not null and different
-     * from.      {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT}               (or zero) .</li>
-     *  <li>A default value of.      {@link JmsService#DEFAULT_RECEIVER_TIMEOUT_MILLIS}        is used if none of the above are selected.</li>
+     * from {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT} (or zero) .</li>
+     *  <li>A default value of {@link JmsService#DEFAULT_RECEIVER_TIMEOUT_MILLIS} is used if none of the above are selected.</li>
      * </ol>
      * @param jmsTeplate
      * @param callReceiveTmeout
@@ -368,10 +372,10 @@ class JmsService {
     }
 
     /**
-     * Provides the executor that handles Async. Receiving requests. By default it will use a               {@code Cached Thread Pool}
-     * as provided by.      {@link java.util.concurrent.Executors#newCachedThreadPool()}              , but if through configuration a number
-     * of <i>Async. Receiver Threads</i> is specified (              {@code config.jms.asyncReceiverThreads}              )  a thread limit
-     * will be imposed through a                {@code Fixed Thread Pool}               where the given number is the limit.
+     * Provides the executor that handles Async. Receiving requests. By default it will use a {@code Cached Thread Pool}
+     * as provided by {@link java.util.concurrent.Executors#newCachedThreadPool()}, but if through configuration a number
+     * of <i>Async. Receiver Threads</i> is specified ( {@code config.jms.asyncReceiverThreads} )  a thread limit
+     * will be imposed through a {@code Fixed Thread Pool} where the given number is the limit.
      * @return
      */
     private getAsyncReceiverExecutor() {

@@ -40,9 +40,9 @@ jmsService.receiveSelected(app: "remote", service: "person", method: "doIt", sel
 *selector*
 
 This is the message selector as described by the JMS Specification. In a nutshell a *message selector* lets a client
-specify a statement, which is similar to an SQL92 statement, that will be used to filters messages through the values
+specify a statement, which is similar to an SQL92 statement, that will be used to filter messages through the values
 of their *message headers* and *message properties*.
-**Only messages whose header and property values match the selector are delivered**. As specified in the *JMS*
+"Only messages whose header and property values match the selector are delivered". As described in the *JMS*
 Specification what it means for a message not to be delivered depends on the MessageConsumer being used.
 It is important to mention that the selectors can only access *header* or *properties* but will *not be able to access any message body values*.
 
@@ -76,7 +76,7 @@ jmsService.receiveSelected(destination, selector, timeout) // use the standard t
 h4.  Specifying a timeout through configuration or the template.
 
 If no *timeout* is specified the JmsService uses a **500** millisecond timeout. You can also specify a timeout through the @ Config.groovy @ file.
-{code:title=Config.groovy|borderStyle=solid }
+{code::java}
 //Specifying a 100 milliseconds timeout
 jms.receiveTimeout=100l
 {code}
@@ -85,23 +85,18 @@ Or if you are providing a custom @ JmsTemplate @ through its @ receiveTimeout @ 
 
 **Note: Both timeouts will be ignored if set to zero, the only way of setting a zero timeout would be by passing such timeout as an argument to the call.
 
-
-
 h4. The receiveSelectedAsync(destination, selector, timeout, jmsTemplateBeanName)
 
 This methods provides a variant to the @ receiveSelected @ method, the difference is that this method will execute the request asynchronously by wrapping a call to the
 @ receiveSelected @ within an *Executor Service* (see @ java.util.concurrent.ExecutorService @ in your JDK API 1.5+ ). 
 
 Some examples..
-{code}
+{code:java}
 // Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
 // Will return a java.util.concurrent.Future that holds the result of the asynchronous execution.
 java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(queue: "aQueue", selector, timeout, "standard") 
-
 
 // Expect/Receive a message with a *selector* on a literal topic waiting up to the given *timeout*.
 // Will return a java.util.concurrent.Future that holds the result of the asynchronous execution.
 java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(topic: "aTopic", selector, timeout, "standard")
 {code}
-
-
