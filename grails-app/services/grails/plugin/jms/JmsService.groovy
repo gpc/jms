@@ -91,7 +91,7 @@ class JmsService {
                         String jmsTemplateBeanName = null) {
 
         if (this.disabled) {
-            LOG.warn "will not receiving over [$destination] because JMS is disabled in config"
+            LOG.warn "will not receive over [$destination] because JMS is disabled in config"
             return
         }
 
