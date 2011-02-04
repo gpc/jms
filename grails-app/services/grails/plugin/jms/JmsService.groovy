@@ -17,10 +17,24 @@ package grails.plugin.jms
 
 import javax.jms.Destination
 import javax.jms.Topic
+import javax.jms.Session
+import javax.jms.QueueBrowser
+import javax.jms.Message
+import javax.jms.JMSException
 
 import grails.plugin.jms.listener.GrailsMessagePostProcessor
 import org.apache.commons.logging.LogFactory
+
 import org.springframework.jms.core.JmsTemplate
+import org.springframework.jms.core.BrowserCallback
+import org.springframework.jms.support.JmsUtils
+
+import javax.annotation.PreDestroy
+
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.Callable
 
 /**
  * @todo Enable TTL for the Template.
@@ -34,11 +48,11 @@ class JmsService {
 
     def grailsApplication
 
-    private java.util.concurrent.ExecutorService asyncReceiverExecutor
+    private ExecutorService asyncReceiverExecutor
 
     //-- Life Cycle --------------
 
-    @javax.annotation.PreDestroy
+    @PreDestroy
     void destroy() {
         //Shutting down Async. Executor. 
         if (this.asyncReceiverExecutor) {
@@ -115,7 +129,7 @@ class JmsService {
 
     }
 
-    java.util.concurrent.Future receiveSelectedAsync(destination, selector, String jmsTemplateBeanName) {
+    Future receiveSelectedAsync(destination, selector, String jmsTemplateBeanName) {
         receiveSelectedAsync(destination, selector, null, postProcessor)
     }
     /**
@@ -128,14 +142,14 @@ class JmsService {
      * @param jmsTemplateBeanName
      * @return Future that wraps execution of the <i>receiveSelected</i> task.
      */
-    java.util.concurrent.Future receiveSelectedAsync(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
+    Future receiveSelectedAsync(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
         if (this.disabled) {
             LOG.warn "will not receive from [$destination] with selector [$selector] because JMS is disabled in config"
             return
         }
         LOG.debug "Submitting Async Selected Receiver for [$destination] with selector [$selector].."
         return this.getAsyncReceiverExecutor().submit(
-                { receiveSelected(destination, selector, timeout) } as java.util.concurrent.Callable
+                { receiveSelected(destination, selector, timeout) } as Callable
         )
     }
 
@@ -295,9 +309,9 @@ class JmsService {
             jmsTemplate.browseSelected(
                     ndestination,
                     selector,
-                    { javax.jms.Session session,
-                      javax.jms.QueueBrowser browser ->
-                        for (javax.jms.Message m in browser.enumeration) {
+                    { Session session,
+                      QueueBrowser browser ->
+                        for (Message m in browser.enumeration) {
                             if (browserCallback) {
                                 def val =
                                 browserCallback.call(
@@ -311,7 +325,7 @@ class JmsService {
                                 messages << (convert ? convertMessageWithTemplate(jmsTemplate, m) : m)
                             }
                         }
-                    } as org.springframework.jms.core.BrowserCallback
+                    } as BrowserCallback
             )
         }
         return messages
@@ -323,14 +337,14 @@ class JmsService {
         return grailsApplication.config.jms.disabled
     }
 
-    private def convertMessageWithTemplate(template, javax.jms.Message message) {
+    private def convertMessageWithTemplate(template, Message message) {
         if (message) {
             def converter = template?.messageConverter
             try {
                 return converter?.fromMessage(message)
             }
-            catch (javax.jms.JMSException ex) {
-                throw org.springframework.jms.support.JmsUtils.convertJmsAccessException(ex)
+            catch (JMSException ex) {
+                throw JmsUtils.convertJmsAccessException(ex)
             }
         }
     }
@@ -383,11 +397,11 @@ class JmsService {
         if (!this.asyncReceiverExecutor) {
             if (grailsApplication.config?.jms?.asyncReceiverThreads) {
                 LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${grailsApplication.config?.jms?.asyncReceiverThreads}."
-                this.asyncReceiverExecutor = java.util.concurrent.Executors.newFixedThreadPool(
+                this.asyncReceiverExecutor = Executors.newFixedThreadPool(
                         Integer.valueOf(grailsApplication.config?.jms?.asyncReceiverThreads))
             } else {
                 LOG.debug "Establishing a Cached Thread Pool for Async Selected Receivers."
-                this.asyncReceiverExecutor = java.util.concurrent.Executors.newCachedThreadPool()
+                this.asyncReceiverExecutor = Executors.newCachedThreadPool()
             }
         }
         return this.asyncReceiverExecutor
@@ -418,8 +432,8 @@ class JmsService {
         }
 
         def isTopic
-        if (destination instanceof javax.jms.Destination) {
-            isTopic = destination instanceof javax.jms.Topic
+        if (destination instanceof Destination) {
+            isTopic = destination instanceof Topic
         } else {
             def destinationMap = convertToDestinationMap(destination)
             isTopic = destinationMap.containsKey("topic")
