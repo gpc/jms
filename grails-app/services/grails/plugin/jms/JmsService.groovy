@@ -60,7 +60,6 @@ class JmsService {
 
     @PreDestroy
     void destroy() {
-        //Shutting down Async. Executor. 
         if (this.asyncReceiverExecutor) {
             try {
                 def runnables = this.asyncReceiverExecutor.shutdownNow()
@@ -99,11 +98,7 @@ class JmsService {
      *  <li>A default value of {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS} is used if none of the above are selected.</li>
      * </ol>
      */
-    def receiveSelected(destination,
-                        selector,
-                        Long timeout = null,
-                        String jmsTemplateBeanName = null) {
-
+    def receiveSelected(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
         if (this.disabled) {
             LOG.warn "will not receive over [$destination] because JMS is disabled in config"
             return
@@ -113,20 +108,16 @@ class JmsService {
 
         logAction "Awaiting for JMS message with selector '$selector' from ", ctx
 
-        def msg = null
         ctx.with {
             jmsTemplate.receiveTimeout = calculatedReceiverTimeout(timeout, jmsTemplate)
             JmsService.LOG.debug "JMS Template receiver timeout set to ${jmsTemplate.receiveTimeout}"
 
             logAction "Receivng JMS message with selector '$selector' from ", ctx
-            msg = jmsTemplate.receiveSelectedAndConvert(ndestination, selector)
+            def msg = jmsTemplate.receiveSelectedAndConvert(ndestination, selector)
 
             JmsService.LOG.debug "Received JMS message with selector '$selector': $msg"
-
+            msg
         }
-
-        return msg
-
     }
 
     Future receiveSelectedAsync(destination, selector, String jmsTemplateBeanName) {
@@ -142,10 +133,9 @@ class JmsService {
             LOG.warn "will not receive from [$destination] with selector [$selector] because JMS is disabled in config"
             return
         }
+        
         LOG.debug "Submitting Async Selected Receiver for [$destination] with selector [$selector].."
-        return this.getAsyncReceiverExecutor().submit(
-                { receiveSelected(destination, selector, timeout) } as Callable
-        )
+        this.getAsyncReceiverExecutor().submit({ receiveSelected(destination, selector, timeout) } as Callable)
     }
 
     //-- Senders ---------------
@@ -159,18 +149,14 @@ class JmsService {
             LOG.warn "not sending message [$message] to [$destination] because JMS is disabled in config"
             return
         }
+        
         def ctx = normalizeServiceCtx(destination, jmsTemplateBeanName)
         logAction "Sending JMS message '$message' to ", ctx
 
         ctx.with {
             if (postProcessor) {
-                jmsTemplate.convertAndSend(
-                        ndestination,
-                        message,
-                        new GrailsMessagePostProcessor(
-                                jmsService: this,
-                                jmsTemplate: jmsTemplate,
-                                processor: postProcessor))
+                def postProcessorImpl = new GrailsMessagePostProcessor(jmsService: this, jmsTemplate: jmsTemplate, processor: postProcessor)
+                jmsTemplate.convertAndSend(ndestination, message, postProcessorImpl)
             } else {
                 jmsTemplate.convertAndSend(ndestination, message)
             }
@@ -184,11 +170,11 @@ class JmsService {
      * Messages will be converted using the <i>JmsTemplate</i> before being added to the list.
      */
     def browseNotConvert(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
-        return doBrowseSelected(queue, null, jmsTemplateBeanName, false, browserCallback)
+        doBrowseSelected(queue, null, jmsTemplateBeanName, false, browserCallback)
     }
 
     def browseNotConvert(queue, Closure browserCallback) {
-        return doBrowseSelected(queue, null, null, false, browserCallback)
+        doBrowseSelected(queue, null, null, false, browserCallback)
     }
 
     /**
@@ -196,11 +182,11 @@ class JmsService {
      * The list will contain <i>javax.jms.Message</i> instances since no conversion will be attempted.
      */
     def browse(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
-        return doBrowseSelected(queue, null, jmsTemplateBeanName, true, browserCallback)
+        doBrowseSelected(queue, null, jmsTemplateBeanName, true, browserCallback)
     }
 
     def browse(queue, Closure browserCallback) {
-        return doBrowseSelected(queue, null, null, true, browserCallback)
+        doBrowseSelected(queue, null, null, true, browserCallback)
     }
 
     /**
@@ -208,11 +194,11 @@ class JmsService {
      * Messages will be converted using the <i>Jms Template</i> before being added to the list.
      */
     def browseSelected(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
-        return doBrowseSelected(queue, selector, jmsTemplateBeanName, true, browserCallback)
+        doBrowseSelected(queue, selector, jmsTemplateBeanName, true, browserCallback)
     }
 
     def browseSelected(queue, selector, Closure browserCallback) {
-        return doBrowseSelected(queue, selector, null, true, browserCallback)
+        doBrowseSelected(queue, selector, null, true, browserCallback)
     }
 
     /**
@@ -220,11 +206,11 @@ class JmsService {
      * The list will contain <i>javax.jms.Message</i> instances since no conversion will be attempted.
      */
     def browseSelectedNotConvert(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
-        return doBrowseSelected(queue, selector, jmsTemplateBeanName, false, browserCallback)
+        doBrowseSelected(queue, selector, jmsTemplateBeanName, false, browserCallback)
     }
 
     def browseSelectedNotConvert(queue, selector, Closure browserCallback) {
-        return doBrowseSelected(queue, selector, null, false, browserCallback)
+        doBrowseSelected(queue, selector, null, false, browserCallback)
     }
 
     /**
@@ -267,44 +253,38 @@ class JmsService {
         final messages = [] as ArrayList
 
         ctx.with {
-            jmsTemplate.browseSelected(
-                    ndestination,
-                    selector,
-                    { Session session,
-                      QueueBrowser browser ->
-                        for (Message m in browser.enumeration) {
-                            if (browserCallback) {
-                                def val =
-                                browserCallback.call(
-                                                (convert ? convertMessageWithTemplate(jmsTemplate, m) : m)
-                                )
-                                //only add if its not null.
-                                if (val != null){
-                                    messages << val
-                                }
-                            } else {
-                                messages << (convert ? convertMessageWithTemplate(jmsTemplate, m) : m)
-                            }
+            def callback = { Session session, QueueBrowser browser ->
+                for (Message m in browser.enumeration) {
+                    def processedMessage = convert ? convertMessageWithTemplate(jmsTemplate, m) : m
+                    if (browserCallback) {
+                        def val = browserCallback.call(processedMessage)
+                        if (val != null) {
+                            messages << val
                         }
-                    } as BrowserCallback
-            )
+                    } else {
+                        messages << (processedMessage)
+                    }
+                }
+            } as BrowserCallback
+            
+            jmsTemplate.browseSelected(ndestination, selector, callback)
         }
-        return messages
+        
+        messages
     }
 
     //-- Util ---------------
 
     boolean isDisabled() {
-        return grailsApplication.config.jms.disabled
+        grailsApplication.config.jms.disabled
     }
 
     private convertMessageWithTemplate(template, Message message) {
         if (message) {
             def converter = template?.messageConverter
             try {
-                return converter?.fromMessage(message)
-            }
-            catch (JMSException ex) {
+                converter?.fromMessage(message)
+            } catch (JMSException ex) {
                 throw JmsUtils.convertJmsAccessException(ex)
             }
         }
@@ -322,7 +302,6 @@ class JmsService {
      * </ol>
      */
     long calculatedReceiverTimeout(callReceiveTimeout, jmsTemplate) {
-
         if (callReceiveTimeout != null) {
             return callReceiveTimeout
         }
@@ -338,8 +317,7 @@ class JmsService {
             return configReceiveTimeout
         }
 
-
-        return DEFAULT_RECEIVER_TIMEOUT_MILLIS
+        DEFAULT_RECEIVER_TIMEOUT_MILLIS
     }
 
     /**
@@ -384,10 +362,8 @@ class JmsService {
      * </ul>
      */
     private normalizeServiceCtx(destination, final String jmsTemplateBeanName) {
-
         final String _jmsTemplateBeanName = "${ jmsTemplateBeanName ?: DEFAULT_JMS_TEMPLATE_BEAN_NAME }JmsTemplate"
         boolean defaultTemplate = _jmsTemplateBeanName == "${DEFAULT_JMS_TEMPLATE_BEAN_NAME}JmsTemplate"
-
 
         def jmsTemplate = grailsApplication.mainContext.getBean(_jmsTemplateBeanName)
         if (jmsTemplate == null) {
@@ -432,7 +408,6 @@ class JmsService {
     }
 
     def convertToDestinationMap(destination) {
-
         if (destination == null) {
             [queue: null]
         } else if (destination instanceof String) {
