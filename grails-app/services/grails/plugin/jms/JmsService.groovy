@@ -80,17 +80,17 @@ class JmsService {
      * </blockquote>
      * <b>description copied from interface <i>org.springframework.jms.core.JmsOperations</i></b>.
      *
-     *  The big difference between the       {@code receiveSelected}       methods provided by the <i>org.springframework.jms.core.JmsOperations</i> is that we to a
+     * The big difference between the {@code receiveSelected} methods provided by the <i>org.springframework.jms.core.JmsOperations</i> is that we to a
      * message conversion and we try to enforce a <b>timeout</b>. Such timeout is defined by the following rules
-     * described in the method.       {@code JmsService # calculatedReceiverTimeout}                .
+     * described in the method. {@code JmsService # calculatedReceiverTimeout}.
      *
      * <ol>
      *  <li><i>argument</i> <b>timeout</b>: Selected if the value directly sent as argument is not null.</li>
-     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the       {@code template.receiverTimeout}        is different
-     * from       {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}        (or zero).</li>
-     *  <li>If the value provided by        {@code config.jms.receiveTimeout}       is not null and different
-     * from       {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}       .</li>
-     *  <li>A default value of       {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS}        is used if none of the above are selected.</li>
+     *  <li><i>jmsTemplate.receiverTimeout: Selected if the value of the {@code template.receiverTimeout} is different
+     * from {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT} (or zero).</li>
+     *  <li>If the value provided by  {@code config.jms.receiveTimeout} is not null and different
+     * from {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}.</li>
+     *  <li>A default value of {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS} is used if none of the above are selected.</li>
      * </ol>
      *
      * @param destination
@@ -132,9 +132,10 @@ class JmsService {
     Future receiveSelectedAsync(destination, selector, String jmsTemplateBeanName) {
         receiveSelectedAsync(destination, selector, null, postProcessor)
     }
+
     /**
-     * Submits a       {@code receiveSelected}       call through an       {@link java.util.concurrent.Executor}        and returns a future
-     * that reflects the execution of the task. The       {@code Executor}       is provided by        {@code JmsService.getAsyncReceiverExecutor ( )}              .
+     * Submits a {@code receiveSelected} call through an {@link java.util.concurrent.Executor} and returns a future
+     * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService.getAsyncReceiverExecutor()}.
      *
      * @param destination
      * @param selector A Jms Message selector
@@ -201,7 +202,7 @@ class JmsService {
     //-- Browsers ---------------
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
-     * Messages will be converted using the <i>Jms Template</i> before being added to the list.
+     * Messages will be converted using the <i>JmsTemplate</i> before being added to the list.
      * @param destination
      * @param jmsTemplateBeanName
      * @param browserCallback
@@ -266,19 +267,19 @@ class JmsService {
     }
 
     /**
-     * Delegate to all browse actions. It leverages the   {@code org.springframework.jms.core.JmsTemplate.browseSelected}   method.
+     * Delegate to all browse actions. It leverages the {@code org.springframework.jms.core.JmsTemplate.browseSelected} method.
      * This method accepts a <i>JMS selector</i> to filter the messages. You can also define a
      * <i>browserCallback</i> closure which will receive all messages, if defined its return value will be the one
      * added to the <i>list</i> of messages. If no <i>browserCallback</i> closure is specified the <i>list</i>
      * will contain the <i>messages</i> inside the given <b>queue</b> filtered only by the <i>JMS selector</i> if available.
      *
-     * By default it will try to convert the messages according to the given <i>Jms Template</i>.
+     * By default it will try to convert the messages according to the given <i>JmsTemplate</i>.
      *
      * <b>Note:</b>This method will throw an {@code IllegalArgumentException} if the <i>destination</i> is not a <b>queue</b>.
      * @param queue
      * @param selector
      * @param jmsTemplateBeanName
-     * @param convert {@code true}   if you want to convert the   {@code javax.jms.Message}  ;   {@code false}   to receive the raw    {@code javax.jms.Message}
+     * @param convert {@code true} if you want to convert the {@code javax.jms.Message}; {@code false} to receive the raw {@code javax.jms.Message}
      * @param browserCallback Closure that gets executed per message. If specified its return value will be the one added to the <i>list</i> that this method returns.
      * @return
      */
@@ -388,7 +389,7 @@ class JmsService {
     /**
      * Provides the executor that handles Async. Receiving requests. By default it will use a {@code Cached Thread Pool}
      * as provided by {@link java.util.concurrent.Executors#newCachedThreadPool()}, but if through configuration a number
-     * of <i>Async. Receiver Threads</i> is specified ( {@code config.jms.asyncReceiverThreads} )  a thread limit
+     * of <i>Async. Receiver Threads</i> is specified ({@code config.jms.asyncReceiverThreads}) a thread limit
      * will be imposed through a {@code Fixed Thread Pool} where the given number is the limit.
      * @return
      */
@@ -453,7 +454,7 @@ class JmsService {
     /**
      * Single point of entry to log an action.
      * @param action Description of the Action.
-     * @param ctx Context of the action as provided by the           {@link JmsService#normalizeServiceCtx(Object, String)}           method.
+     * @param ctx Context of the action as provided by the {@link JmsService#normalizeServiceCtx(Object, String)} method.
      */
     private void logAction(final String action, final def ctx) {
         if (LOG.infoEnabled) {
