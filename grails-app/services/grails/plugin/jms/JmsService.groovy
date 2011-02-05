@@ -405,11 +405,11 @@ class JmsService {
         }
 
         [
-                jmsTemplate: jmsTemplate                    /** org.springframework.jms.core.JmsTemplate                  */,
-                ndestination: destination                   /** Normalized Destination                  */,
-                type: isTopic ? 'topic' : 'queue'           /** Type of Destination [topic|queue]                   */,
-                jmsTemplateBeanName: _jmsTemplateBeanName   /** Name of the bean used to retrieve the JmsTemplate.                  */,
-                defaultTemplate: defaultTemplate            /** Boolean value that tells us if the JmsTemplate is the Default Template.                   */
+            jmsTemplate: jmsTemplate,                    // org.springframework.jms.core.JmsTemplate
+            ndestination: destination,                   // Normalized Destination
+            type: (isTopic ? 'topic' : 'queue'),         // Type of Destination [topic|queue]
+            jmsTemplateBeanName: _jmsTemplateBeanName,   // Name of the bean used to retrieve the JmsTemplate.
+            defaultTemplate: defaultTemplate             // Boolean value that tells us if the JmsTemplate is the Default Template.
         ]
     }
 
