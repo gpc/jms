@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory
 
 import org.springframework.jms.core.JmsTemplate
 import org.springframework.jms.core.BrowserCallback
+import org.springframework.jms.core.MessagePostProcessor
 import org.springframework.jms.support.JmsUtils
 
 import javax.annotation.PreDestroy
@@ -140,11 +141,11 @@ class JmsService {
 
     //-- Senders ---------------
 
-    def send(destination, message, Closure postProcessor) {
-        send(destination, message, null, postProcessor)
+    def send(destination, message, Closure callback) {
+        send(destination, message, null, callback)
     }
 
-    def send(destination, message, String jmsTemplateBeanName = null, Closure postProcessor = null) {
+    def send(destination, message, String jmsTemplateBeanName = null, Closure callback = null) {
         if (this.disabled) {
             LOG.warn "not sending message [$message] to [$destination] because JMS is disabled in config"
             return
@@ -154,9 +155,8 @@ class JmsService {
         logAction "Sending JMS message '$message' to ", ctx
 
         ctx.with {
-            if (postProcessor) {
-                def postProcessorImpl = new GrailsMessagePostProcessor(jmsService: this, jmsTemplate: jmsTemplate, processor: postProcessor)
-                jmsTemplate.convertAndSend(ndestination, message, postProcessorImpl)
+            if (callback) {
+                jmsTemplate.convertAndSend(ndestination, message, toMessagePostProcessor(jmsTemplate, callback))
             } else {
                 jmsTemplate.convertAndSend(ndestination, message)
             }
@@ -164,6 +164,10 @@ class JmsService {
 
     }
 
+    protected MessagePostProcessor toMessagePostProcessor(JmsTemplate template, Closure callback) {
+        new GrailsMessagePostProcessor(jmsService: this, jmsTemplate: template, processor: callback)
+    }
+    
     //-- Browsers ---------------
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
