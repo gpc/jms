@@ -42,8 +42,10 @@ import java.util.concurrent.Callable
 class JmsService {
 
     static transactional = false
-    static final LOG = LogFactory.getLog(JmsService)
-    static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
+
+    private static final LOG = LogFactory.getLog(JmsService)
+
+    public static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
     public static final long DEFAULT_RECEIVER_TIMEOUT_MILLIS = 500l
 
     def grailsApplication
