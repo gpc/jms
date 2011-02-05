@@ -171,7 +171,6 @@ class JmsService {
     //-- Browsers ---------------
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
-     * Messages will be converted using the <i>JmsTemplate</i> before being added to the list.
      */
     def browseNotConvert(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
         doBrowseSelected(queue, null, jmsTemplateBeanName, false, browserCallback)
