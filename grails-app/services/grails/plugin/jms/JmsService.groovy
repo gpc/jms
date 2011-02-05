@@ -94,12 +94,6 @@ class JmsService {
      * from {@link JmsTemplate#RECEIVE_TIMEOUT_INDEFINITE_WAIT}.</li>
      *  <li>A default value of {@link #DEFAULT_RECEIVER_TIMEOUT_MILLIS} is used if none of the above are selected.</li>
      * </ol>
-     *
-     * @param destination
-     * @param messageSelector A Jms Message selector
-     * @param timeout
-     * @param jmsTemplateBeanName
-     * @return
      */
     def receiveSelected(destination,
                         selector,
@@ -138,12 +132,6 @@ class JmsService {
     /**
      * Submits a {@code receiveSelected} call through an {@link java.util.concurrent.Executor} and returns a future
      * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService.getAsyncReceiverExecutor()}.
-     *
-     * @param destination
-     * @param selector A Jms Message selector
-     * @param timeout
-     * @param jmsTemplateBeanName
-     * @return Future that wraps execution of the <i>receiveSelected</i> task.
      */
     Future receiveSelectedAsync(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
         if (this.disabled) {
@@ -190,10 +178,6 @@ class JmsService {
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
      * Messages will be converted using the <i>JmsTemplate</i> before being added to the list.
-     * @param destination
-     * @param jmsTemplateBeanName
-     * @param browserCallback
-     * @return
      */
     def browseNotConvert(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
         return doBrowseSelected(queue, null, jmsTemplateBeanName, false, browserCallback)
@@ -206,10 +190,6 @@ class JmsService {
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
      * The list will contain <i>javax.jms.Message</i> instances since no conversion will be attempted.
-     * @param destination
-     * @param jmsTemplateBeanName
-     * @param browserCallback
-     * @return
      */
     def browse(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
         return doBrowseSelected(queue, null, jmsTemplateBeanName, true, browserCallback)
@@ -222,11 +202,6 @@ class JmsService {
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b> that match the given <b>selector</b>.
      * Messages will be converted using the <i>Jms Template</i> before being added to the list.
-     * @param queue
-     * @param selector
-     * @param jmsTemplateBeanName
-     * @param browserCallback
-     * @return
      */
     def browseSelected(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
         return doBrowseSelected(queue, selector, jmsTemplateBeanName, true, browserCallback)
@@ -239,11 +214,6 @@ class JmsService {
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b> that match the given <b>selector</b>.
      * The list will contain <i>javax.jms.Message</i> instances since no conversion will be attempted.
-     * @param queue
-     * @param selector
-     * @param jmsTemplateBeanName
-     * @param browserCallback
-     * @return
      */
     def browseSelectedNotConvert(queue, selector, String jmsTemplateBeanName = null, Closure browserCallback = null) {
         return doBrowseSelected(queue, selector, jmsTemplateBeanName, false, browserCallback)
@@ -268,7 +238,6 @@ class JmsService {
      * @param jmsTemplateBeanName
      * @param convert {@code true} if you want to convert the {@code javax.jms.Message}; {@code false} to receive the raw {@code javax.jms.Message}
      * @param browserCallback Closure that gets executed per message. If specified its return value will be the one added to the <i>list</i> that this method returns.
-     * @return
      */
     private doBrowseSelected(queue, selector, String jmsTemplateBeanName = null, boolean convert = true, Closure browserCallback = null) {
         if (this.disabled) {
@@ -347,10 +316,6 @@ class JmsService {
      * from {@code JmsTemplate.RECEIVE_TIMEOUT_INDEFINITE_WAIT} (or zero) .</li>
      *  <li>A default value of {@link JmsService#DEFAULT_RECEIVER_TIMEOUT_MILLIS} is used if none of the above are selected.</li>
      * </ol>
-     * @param jmsTeplate
-     * @param callReceiveTmeout
-     * @param configReceiveTmeout
-     * @return
      */
     long calculatedReceiverTimeout(callReceiveTimeout, jmsTemplate) {
 
@@ -378,7 +343,6 @@ class JmsService {
      * as provided by {@link java.util.concurrent.Executors#newCachedThreadPool()}, but if through configuration a number
      * of <i>Async. Receiver Threads</i> is specified ({@code config.jms.asyncReceiverThreads}) a thread limit
      * will be imposed through a {@code Fixed Thread Pool} where the given number is the limit.
-     * @return
      */
     private getAsyncReceiverExecutor() {
         if (!this.asyncReceiverExecutor) {
@@ -404,9 +368,6 @@ class JmsService {
      * <li><b>jmsTemplateBeanName</b>   : Name of the bean used to retrieve the JmsTemplate.
      * <li><b>defaultTemplate</b>       : Boolean value that tells us if the JmsTemplate is the Default Template.
      * </ul>
-     * @param destination
-     * @param jmsTemplateBeanName
-     * @return
      */
     private normalizeServiceCtx(destination, final String jmsTemplateBeanName) {
 
