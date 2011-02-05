@@ -111,7 +111,7 @@ class JmsService {
             return
         }
 
-        final def ctx = normalizeServiceCtx(destination, jmsTemplateBeanName)
+        final ctx = normalizeServiceCtx(destination, jmsTemplateBeanName)
 
         logAction "Awaiting for JMS message with selector '$selector' from ", ctx
 
@@ -285,7 +285,7 @@ class JmsService {
      * @param browserCallback Closure that gets executed per message. If specified its return value will be the one added to the <i>list</i> that this method returns.
      * @return
      */
-    private def doBrowseSelected(queue, selector, String jmsTemplateBeanName = null, boolean convert = true, Closure browserCallback = null) {
+    private doBrowseSelected(queue, selector, String jmsTemplateBeanName = null, boolean convert = true, Closure browserCallback = null) {
         if (this.disabled) {
             if (selector) {
                 LOG.warn "not browsing [$queue] with selector [$selector] because JMS is disabled in config"
@@ -306,7 +306,7 @@ class JmsService {
             logAction "Browsing messages ", ctx
         }
 
-        final def messages = [] as ArrayList
+        final messages = [] as ArrayList
 
         ctx.with {
             jmsTemplate.browseSelected(
@@ -340,7 +340,7 @@ class JmsService {
         return grailsApplication.config.jms.disabled
     }
 
-    private def convertMessageWithTemplate(template, Message message) {
+    private convertMessageWithTemplate(template, Message message) {
         if (message) {
             def converter = template?.messageConverter
             try {
@@ -423,7 +423,7 @@ class JmsService {
      * @param jmsTemplateBeanName
      * @return
      */
-    private def normalizeServiceCtx(def destination, final String jmsTemplateBeanName) {
+    private normalizeServiceCtx(destination, final String jmsTemplateBeanName) {
 
         final String _jmsTemplateBeanName = "${ jmsTemplateBeanName ?: DEFAULT_JMS_TEMPLATE_BEAN_NAME }JmsTemplate"
         boolean defaultTemplate = _jmsTemplateBeanName == "${DEFAULT_JMS_TEMPLATE_BEAN_NAME}JmsTemplate"
@@ -458,7 +458,7 @@ class JmsService {
      * @param action Description of the Action.
      * @param ctx Context of the action as provided by the {@link JmsService#normalizeServiceCtx(Object, String)} method.
      */
-    private void logAction(final String action, final def ctx) {
+    private void logAction(final String action, final ctx) {
         if (LOG.infoEnabled) {
             def logMsg = ''
             ctx.with {
