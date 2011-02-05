@@ -381,18 +381,18 @@ class JmsService {
      * @return
      */
     private getAsyncReceiverExecutor() {
-
         if (!this.asyncReceiverExecutor) {
-            if (grailsApplication.config?.jms?.asyncReceiverThreads) {
-                LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${grailsApplication.config?.jms?.asyncReceiverThreads}."
-                this.asyncReceiverExecutor = Executors.newFixedThreadPool(
-                        Integer.valueOf(grailsApplication.config?.jms?.asyncReceiverThreads))
+            def numThreads = grailsApplication.config.jms.asyncReceiverThreads
+            if (numThreads) {
+                LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${numThreads}."
+                this.asyncReceiverExecutor = Executors.newFixedThreadPool(Integer.valueOf(numThreads))
             } else {
                 LOG.debug "Establishing a Cached Thread Pool for Async Selected Receivers."
                 this.asyncReceiverExecutor = Executors.newCachedThreadPool()
             }
         }
-        return this.asyncReceiverExecutor
+
+        this.asyncReceiverExecutor
     }
 
     /**
