@@ -35,6 +35,9 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.Callable
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * @todo Enable TTL for the Template.
@@ -51,6 +54,7 @@ class JmsService {
     def grailsApplication
 
     private ExecutorService asyncReceiverExecutor
+    private Lock asyncReceiverExecutorCreateLock = new ReentrantLock()
 
     //-- Life Cycle --------------
 
@@ -346,13 +350,23 @@ class JmsService {
      */
     private getAsyncReceiverExecutor() {
         if (!this.asyncReceiverExecutor) {
-            def numThreads = grailsApplication.config.jms.asyncReceiverThreads
-            if (numThreads) {
-                LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${numThreads}."
-                this.asyncReceiverExecutor = Executors.newFixedThreadPool(Integer.valueOf(numThreads))
+            if (asyncReceiverExecutorCreateLock.tryLock(180, TimeUnit.SECONDS)) {
+                try {
+                    if (this.asyncReceiverExecutor == null) {
+                        def numThreads = grailsApplication.config.jms.asyncReceiverThreads
+                        if (numThreads) {
+                            LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${numThreads}."
+                            this.asyncReceiverExecutor = Executors.newFixedThreadPool(Integer.valueOf(numThreads))
+                        } else {
+                            LOG.debug "Establishing a Cached Thread Pool for Async Selected Receivers."
+                            this.asyncReceiverExecutor = Executors.newCachedThreadPool()
+                        }
+                    }
+                } finally {
+                    asyncReceiverExecutorCreateLock.unlock()
+                }
             } else {
-                LOG.debug "Establishing a Cached Thread Pool for Async Selected Receivers."
-                this.asyncReceiverExecutor = Executors.newCachedThreadPool()
+                throw new IllegalStateException("failed to acquire lock to create asyncReceiverExecutor")
             }
         }
 
