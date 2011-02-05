@@ -158,25 +158,10 @@ class JmsService {
 
     //-- Senders ---------------
 
-    /**
-     *
-     * @param destination
-     * @param message
-     * @param postProcessor
-     * @return
-     */
     def send(destination, message, Closure postProcessor) {
         send(destination, message, null, postProcessor)
     }
 
-    /**
-     *
-     * @param destination
-     * @param message
-     * @param jmsTemplateBeanName
-     * @param postProcessor
-     * @return
-     */
     def send(destination, message, String jmsTemplateBeanName = null, Closure postProcessor = null) {
         if (this.disabled) {
             LOG.warn "not sending message [$message] to [$destination] because JMS is disabled in config"
@@ -471,11 +456,6 @@ class JmsService {
         }
     }
 
-    /**
-     *
-     * @param destination
-     * @return
-     */
     def convertToDestinationMap(destination) {
 
         if (destination == null) {
