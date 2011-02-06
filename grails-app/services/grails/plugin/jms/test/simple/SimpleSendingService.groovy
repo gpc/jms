@@ -30,11 +30,11 @@ class SimpleSendingService {
     }
 
     def sendToGivenQueue(queue, msg, template = null, postProcessor = null) {
-        sendJMSMessage( queue: queue, msg, template, postProcessor)
+        sendJMSMessage(queue: queue, msg, template, postProcessor)
     }
 
     def sendToGivenTopic(topic, msg, template = null, postProcessor = null) {
-        sendJMSMessage( topic: topic, msg, template, postProcessor)
+        sendJMSMessage(topic: topic, msg, template, postProcessor)
     }
 
 }
