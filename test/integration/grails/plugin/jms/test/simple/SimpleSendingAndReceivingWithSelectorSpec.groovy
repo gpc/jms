@@ -47,14 +47,15 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         }
     }
     
-    def "only messages matching selector are returned from queue"() {
+    @Unroll("only messages matching selector are returned from #destination")
+    def "sync"() {
         given:
-        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedFromQueue("aproperty='$propertyValueToMatch'", TIMEOUT) }
+        def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT) }
         
         when:
-        sendToQueue(3, null) // no value for property
-        sendToQueue(2, propertyValueNotToMatch) // doesn't match
-        sendToQueue(1, propertyValueToMatch) // matches
+        "sendTo${destination}"(3, null) // no value for property
+        "sendTo${destination}"(2, propertyValueNotToMatch) // doesn't match
+        "sendTo${destination}"(1, propertyValueToMatch) // matches
         
         and:
         receiver.get() // wait for messages to be received
@@ -62,39 +63,26 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         then:
         simpleReceivingSelectedService.message == 1
         simpleReceivingSelectedService.message == null // only 1 message received
+        
+        where:
+        destination << ["Topic", "Queue"]
     }
 
-    def "only messages matching selector are returned from topic"() {
-        given:
-        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedFromTopic("aproperty='$propertyValueToMatch'", TIMEOUT) }
-        
-        when:
-        sendToTopic(3, null) // no value for property
-        sendToTopic(2, propertyValueNotToMatch) // doesn't match
-        sendToTopic(1, propertyValueToMatch) // matches
-        
-        and:
-        receiver.get() // wait for messages to be received
-
-        then:
-        simpleReceivingSelectedService.message == 1
-        simpleReceivingSelectedService.message == null // only 1 message received
-    }
-
-    def "only messages matching selector are returned from queue aysnchronously"() {
+    @Unroll("only messages matching selector are returned from #destination asynchronously")
+    def "async"() {
         given:
         def barrier = new CyclicBarrier(1)
         
         and:
-        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedAsyncFromQueue(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
+        def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedAsyncFrom${destination}"(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
         
         when:
         barrier.await() // what for receiving thread to obtain future
         
         and:
-        sendToQueue(3, null) // no value for property
-        sendToQueue(2, propertyValueNotToMatch) // doesn't match
-        sendToQueue(1, propertyValueToMatch) // matches
+        "sendTo${destination}"(3, null) // no value for property
+        "sendTo${destination}"(2, propertyValueNotToMatch) // doesn't match
+        "sendTo${destination}"(1, propertyValueToMatch) // matches
         
         and:
         receiver.get() // wait for messages to be received
@@ -102,29 +90,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         then:
         simpleReceivingSelectedService.message == 1
         simpleReceivingSelectedService.message == null // only 1 message received
-    }
-
-    def "only messages matching selector are returned from topic aysnchronously"() {
-        given:
-        def barrier = new CyclicBarrier(1)
         
-        and:
-        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedAsyncFromTopic(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
-        
-        when:
-        barrier.await() // what for receiving thread to obtain future
-        
-        and:
-        sendToTopic(3, null) // no value for property
-        sendToTopic(2, propertyValueNotToMatch) // doesn't match
-        sendToTopic(1, propertyValueToMatch) // matches
-        
-        and:
-        receiver.get() // wait for messages to be received
-
-        then:
-        simpleReceivingSelectedService.message == 1
-        simpleReceivingSelectedService.message == null // only 1 message received
+        where:
+        destination << ["Topic", "Queue"]
     }
 
 }
