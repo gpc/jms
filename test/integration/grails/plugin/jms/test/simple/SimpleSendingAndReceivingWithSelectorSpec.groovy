@@ -1,5 +1,7 @@
 package grails.plugin.jms.test.simple
 
+import spock.lang.*
+
 import grails.plugin.spock.IntegrationSpec
 import java.util.concurrent.Executors
 import java.util.concurrent.Callable
@@ -16,12 +18,12 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
     def simpleReceivingSelectedService
     def simpleSendingService
-
+    
+    @AutoCleanup("shutdown")
+    def executor = Executors.newCachedThreadPool()
+    
     void "Queue Receivers with Selector"() {
         when:
-
-        Executor executor = Executors.newCachedThreadPool()
-
         def tester = { qualifier, m ->
             Future receiver = executor.submit({
                 simpleReceivingSelectedService.receiveSelectedFromQueue "aproperty='$qualifier'", TIMEOUT
@@ -40,8 +42,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         tester 'A', 'a'
         tester 'B', 'b'
 
-        executor.shutdown()
-
         then:
         simpleReceivingSelectedService.message == 'a'
         simpleReceivingSelectedService.message == 'b'
@@ -49,8 +49,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
     void "Suscriber with Selector"() {
         when:
-        Executor executor = Executors.newCachedThreadPool()
-
         def tester = { qualifier, m ->
             Future receiver = executor.submit({
                 simpleReceivingSelectedService.receiveSelectedFromTopic "aproperty='$qualifier'", TIMEOUT
@@ -69,9 +67,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         tester 'A', 'a'
         tester 'B', 'b'
 
-
-        executor.shutdown()
-
         then:
         simpleReceivingSelectedService.message == 'a'
         simpleReceivingSelectedService.message == 'b'
@@ -79,10 +74,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
     void "Queue Receivers with Async Selector"() {
         when:
-
-        Executor executor = Executors.newCachedThreadPool()
-
-
         def tester = { qualifier, m ->
 
             def barrier = new java.util.concurrent.CyclicBarrier(2)
@@ -108,20 +99,14 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         tester 'Aasync', 'a async'
         tester 'Basync', 'b async'
 
-        executor.shutdown()
-
         then:
         simpleReceivingSelectedService.message == 'a async'
         simpleReceivingSelectedService.message == 'b async'
     }
 
-
     void "Suscriber with Async Selector"() {
         when:
-        Executor executor = Executors.newCachedThreadPool()
-
         def tester = { qualifier, m ->
-
 
             def barrier = new java.util.concurrent.CyclicBarrier(2)
 
@@ -142,9 +127,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
         tester 'Aasync', 'a async'
         tester 'Basync', 'b async'
-
-
-        executor.shutdown()
 
         then:
         simpleReceivingSelectedService.message == 'a async'
