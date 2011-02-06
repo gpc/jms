@@ -4,7 +4,7 @@ If you are looking on ways to obtain the contents of a given @ javax.jms.Queue @
 h4. The browse(destination, jmsTemplateName, browserCallback) method.
 Will retrieve all messages inside the given _queue_ at that time without changing its state i.e messages will not be consumed.
 This method will convert the @ javax.jms.Message @ using the @ JmsTemplate @. If you need the  @ javax.jms.Message @
-you should use the @ browseNotConvert() @ method and its variants as described further on.
+you should use the @ browseNoConvert() @ method and its variants as described further on.
 
 
 *destination*
@@ -53,21 +53,21 @@ List messages = jmsService.browse(queue, jmsTemplateBeanName)
 {code}
 
 
-h4. The browseNotConvert(destination, jmsTemplateName, browserCallback) method.
+h4. The browseNoConvert(destination, jmsTemplateName, browserCallback) method.
 This method will not convert the @ javax.jms.Message @. In other words the @ browserCallback:Closure @ will receive a
  @ javax.jms.Message @ or if no _callback_ is defined a _list_ containing @ javax.jms.Message @ instances will be returned.
  *You can't* update the returned @ javax.jms.Message @ objects, they are *read-only* instances.
 
 {code:java}
 
-List messages = jmsService.browseNotConvert(queue)
+List messages = jmsService.browseNoConvert(queue)
 
 //You can do the following to filter messages or use a selector through the browseSelected* methods
-List messages = jmsService.browseNotConvert(queue){ javax.jms.Message msg ->
+List messages = jmsService.browseNoConvert(queue){ javax.jms.Message msg ->
     ( msg.getStringProperty('aproperty') ? msg : null ) 
 }
 
-List messages = jmsService.browseNotConvert(queue, jmsTemplateBeanName)
+List messages = jmsService.browseNoConvert(queue, jmsTemplateBeanName)
 messages.each {
     assert it instanceof javax.jms.Message
 }

@@ -172,11 +172,11 @@ class JmsService {
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
      */
-    def browseNotConvert(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
+    def browseNoConvert(queue, String jmsTemplateBeanName = null, Closure browserCallback = null) {
         doBrowseSelected(queue, null, jmsTemplateBeanName, false, browserCallback)
     }
 
-    def browseNotConvert(queue, Closure browserCallback) {
+    def browseNoConvert(queue, Closure browserCallback) {
         doBrowseSelected(queue, null, null, false, browserCallback)
     }
 

@@ -34,8 +34,8 @@ class SimpleQueueBrowserService extends TestListeningServiceSupport {
         }
     }
 
-    def browseNotConvert( callback = null ) {
-        def messages = jmsService.browseNotConvert(BROWSER_QUEUE, callback)
+    def browseNoConvert( callback = null ) {
+        def messages = jmsService.browseNoConvert(BROWSER_QUEUE, callback)
         log.info "queue messages received : $messages"
         messages.each {
             putMessage(it)
