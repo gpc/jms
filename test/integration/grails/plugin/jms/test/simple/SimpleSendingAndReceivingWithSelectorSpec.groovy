@@ -15,7 +15,7 @@ import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEI
 
 class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
-    static final long TIMEOUT = 1000l
+    static final long TIMEOUT = 3000l
 
     def simpleReceivingSelectedService
     def simpleSendingService
