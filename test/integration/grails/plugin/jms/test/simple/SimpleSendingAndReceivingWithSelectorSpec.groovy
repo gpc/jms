@@ -8,6 +8,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Callable
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
+import java.util.concurrent.CyclicBarrier
 
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_QUEUE
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_TOPIC
@@ -76,7 +77,7 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         when:
         def tester = { qualifier, m ->
 
-            def barrier = new java.util.concurrent.CyclicBarrier(2)
+            def barrier = new CyclicBarrier(2)
 
             Future receiver = executor.submit({
                 simpleReceivingSelectedService.receiveSelectedAsyncFromQueue barrier, "aproperty='$qualifier'", TIMEOUT
@@ -108,7 +109,7 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         when:
         def tester = { qualifier, m ->
 
-            def barrier = new java.util.concurrent.CyclicBarrier(2)
+            def barrier = new CyclicBarrier(2)
 
             Future receiver = executor.submit({
                 simpleReceivingSelectedService.receiveSelectedAsyncFromTopic barrier, "aproperty='$qualifier'", TIMEOUT

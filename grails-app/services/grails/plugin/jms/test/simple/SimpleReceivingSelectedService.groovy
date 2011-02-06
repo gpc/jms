@@ -16,6 +16,7 @@
 package grails.plugin.jms.test.simple
 
 import grails.plugin.jms.test.TestListeningServiceSupport
+import java.util.concurrent.CyclicBarrier
 
 class SimpleReceivingSelectedService extends TestListeningServiceSupport {
 
@@ -41,7 +42,7 @@ class SimpleReceivingSelectedService extends TestListeningServiceSupport {
         callback?.call(msg)
     }
 
-    def receiveSelectedAsyncFromQueue(java.util.concurrent.CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
+    def receiveSelectedAsyncFromQueue(CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
         def future = receiveSelectedAsyncJMSMessage(queue: RECEIVING_QUEUE, selector, timeout, template)
         log.info "future obtained from queue with selector ${selector} : $future"
         log.debug "awaiting for barrier..."
@@ -54,7 +55,7 @@ class SimpleReceivingSelectedService extends TestListeningServiceSupport {
 
     }
 
-    def receiveSelectedAsyncFromTopic(java.util.concurrent.CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
+    def receiveSelectedAsyncFromTopic(CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
         def future = receiveSelectedAsyncJMSMessage(topic: RECEIVING_TOPIC, selector, timeout, template)
         log.info "future obtained from topic with selector ${selector} : $future"
         log.debug "awaiting for barrier..."
