@@ -27,116 +27,117 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         executor.submit(task as Callable)
     }
     
-    void "Queue Receivers with Selector"() {
-        when:
-        def tester = { qualifier, m ->
-            def receiver = execAsync {
-                simpleReceivingSelectedService.receiveSelectedFromQueue "aproperty='$qualifier'", TIMEOUT
+    void sendToQueue(message, propertyValue) {
+        simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, message, null, createPropertySettingPostProcessor(propertyValue)) 
+    }
+    
+    void sendToTopic(message, propertyValue) {
+        simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, message, null, createPropertySettingPostProcessor(propertyValue))
+    }
+    
+    Closure createPropertySettingPostProcessor(propertyValue) {
+        return {
+            if (propertyValue) {
+                it.setStringProperty 'aproperty', propertyValue
             }
-
-            //Starting senders ...
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'nosie')
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, m, null) {
-                it.setStringProperty 'aproperty', qualifier
-                it
-            }
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'noise')
-            receiver.get()
+            it
         }
-
-        tester 'A', 'a'
-        tester 'B', 'b'
+    }
+    
+    def "only messages matching selector are returned from queue"() {
+        given:
+        def propertyValueToMatch = "a"
+        def propertyValueNotToMatch = "b"
+        
+        and:
+        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedFromQueue("aproperty='$propertyValueToMatch'", TIMEOUT) }
+        
+        when:
+        sendToQueue(3, null) // no value for property
+        sendToQueue(2, propertyValueNotToMatch) // doesn't match
+        sendToQueue(1, propertyValueToMatch) // matches
+        
+        and:
+        receiver.get() // wait for messages to be received
 
         then:
-        simpleReceivingSelectedService.message == 'a'
-        simpleReceivingSelectedService.message == 'b'
+        simpleReceivingSelectedService.message == 1
+        simpleReceivingSelectedService.message == null // only 1 message received
     }
 
-    void "Suscriber with Selector"() {
+    def "only messages matching selector are returned from topic"() {
+        given:
+        def propertyValueToMatch = "a"
+        def propertyValueNotToMatch = "b"
+        
+        and:
+        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedFromTopic("aproperty='$propertyValueToMatch'", TIMEOUT) }
+        
         when:
-        def tester = { qualifier, m ->
-            def receiver = execAsync {
-                simpleReceivingSelectedService.receiveSelectedFromTopic "aproperty='$qualifier'", TIMEOUT
-            }
-
-            //Starting senders ... 
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'nosie')
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, m, null) {
-                it.setStringProperty 'aproperty', qualifier
-                it
-            }
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'noise')
-            receiver.get()
-        }
-
-        tester 'A', 'a'
-        tester 'B', 'b'
+        sendToTopic(3, null) // no value for property
+        sendToTopic(2, propertyValueNotToMatch) // doesn't match
+        sendToTopic(1, propertyValueToMatch) // matches
+        
+        and:
+        receiver.get() // wait for messages to be received
 
         then:
-        simpleReceivingSelectedService.message == 'a'
-        simpleReceivingSelectedService.message == 'b'
+        simpleReceivingSelectedService.message == 1
+        simpleReceivingSelectedService.message == null // only 1 message received
     }
 
-    void "Queue Receivers with Async Selector"() {
+    def "only messages matching selector are returned from queue aysnchronously"() {
+        given:
+        def propertyValueToMatch = "a"
+        def propertyValueNotToMatch = "b"
+        
+        and:
+        def barrier = new CyclicBarrier(1)
+        
+        and:
+        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedAsyncFromQueue(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
+        
         when:
-        def tester = { qualifier, m ->
-
-            def barrier = new CyclicBarrier(2)
-
-            def receiver = execAsync {
-                simpleReceivingSelectedService.receiveSelectedAsyncFromQueue barrier, "aproperty='$qualifier'", TIMEOUT
-            }
-            
-            //Wait for receivers.
-            barrier.await()
-            //Starting senders ...
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'nosie')
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, m, null) {
-                it.setStringProperty 'aproperty', qualifier
-                it
-            }
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'noise')
-
-
-
-            receiver.get()
-        }
-
-        tester 'Aasync', 'a async'
-        tester 'Basync', 'b async'
+        barrier.await() // what for receiving thread to obtain future
+        
+        and:
+        sendToQueue(3, null) // no value for property
+        sendToQueue(2, propertyValueNotToMatch) // doesn't match
+        sendToQueue(1, propertyValueToMatch) // matches
+        
+        and:
+        receiver.get() // wait for messages to be received
 
         then:
-        simpleReceivingSelectedService.message == 'a async'
-        simpleReceivingSelectedService.message == 'b async'
+        simpleReceivingSelectedService.message == 1
+        simpleReceivingSelectedService.message == null // only 1 message received
     }
 
-    void "Suscriber with Async Selector"() {
+    def "only messages matching selector are returned from topic aysnchronously"() {
+        given:
+        def propertyValueToMatch = "a"
+        def propertyValueNotToMatch = "b"
+        
+        and:
+        def barrier = new CyclicBarrier(1)
+        
+        and:
+        def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedAsyncFromTopic(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
+        
         when:
-        def tester = { qualifier, m ->
-
-            def barrier = new CyclicBarrier(2)
-
-            def receiver = execAsync {
-                simpleReceivingSelectedService.receiveSelectedAsyncFromTopic barrier, "aproperty='$qualifier'", TIMEOUT
-            }
-            
-            //Wait for receivers.
-            barrier.await()
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'nosie')
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, m, null) {
-                it.setStringProperty 'aproperty', qualifier
-                it
-            }
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'noise')
-
-            receiver.get()
-        }
-
-        tester 'Aasync', 'a async'
-        tester 'Basync', 'b async'
+        barrier.await() // what for receiving thread to obtain future
+        
+        and:
+        sendToTopic(3, null) // no value for property
+        sendToTopic(2, propertyValueNotToMatch) // doesn't match
+        sendToTopic(1, propertyValueToMatch) // matches
+        
+        and:
+        receiver.get() // wait for messages to be received
 
         then:
-        simpleReceivingSelectedService.message == 'a async'
-        simpleReceivingSelectedService.message == 'b async'
+        simpleReceivingSelectedService.message == 1
+        simpleReceivingSelectedService.message == null // only 1 message received
     }
+
 }
