@@ -29,14 +29,14 @@ class SimpleReceivingSelectedService extends TestListeningServiceSupport {
 
     def receiveSelectedFromQueue(selector, timeout = DEFAULT_TIMEOUT, template = null) {
         def msg = receiveSelectedJMSMessage(queue: RECEIVING_QUEUE, selector, timeout, template)
-        log.info "queue messaged recived with selector ${selector} : $msg"
+        log.info "queue messaged received with selector ${selector} : $msg"
         putMessage(msg)
         callback?.call(msg)
     }
 
     def receiveSelectedFromTopic(selector, timeout = DEFAULT_TIMEOUT, template = null) {
         def msg = receiveSelectedJMSMessage(topic: RECEIVING_TOPIC, selector, timeout, template)
-        log.info "topic messaged recived with selector ${selector} : $msg"
+        log.info "topic messaged received with selector ${selector} : $msg"
         putMessage(msg)
         callback?.call(msg)
     }
@@ -48,7 +48,7 @@ class SimpleReceivingSelectedService extends TestListeningServiceSupport {
         int index = barrier.await()
         log.debug "barrier triggered $index proceeding..."
         def msg = future.get()
-        log.info "queue messaged recived with selector ${selector} : $msg"
+        log.info "queue messaged received with selector ${selector} : $msg"
         putMessage(msg)
         callback?.call(msg)
 
@@ -61,7 +61,7 @@ class SimpleReceivingSelectedService extends TestListeningServiceSupport {
         int index = barrier.await()
         log.debug "barrier triggered $index proceeding..."
         def msg = future.get()
-        log.info "topic messaged recived with selector ${selector} : $msg"
+        log.info "topic messaged received with selector ${selector} : $msg"
         putMessage(msg)
         callback?.call(msg)
     }
