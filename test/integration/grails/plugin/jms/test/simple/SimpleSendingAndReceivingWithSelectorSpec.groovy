@@ -1,8 +1,9 @@
 package grails.plugin.jms.test.simple
 
 import spock.lang.*
+import grails.plugin.spock.*
 
-import grails.plugin.spock.IntegrationSpec
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.Callable
 import java.util.concurrent.Future
@@ -10,7 +11,6 @@ import java.util.concurrent.FutureTask
 
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_QUEUE
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_TOPIC
-import java.util.concurrent.Executor
 
 class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
