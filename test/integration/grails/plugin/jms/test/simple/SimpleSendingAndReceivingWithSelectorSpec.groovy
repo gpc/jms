@@ -23,12 +23,16 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
     @AutoCleanup("shutdown")
     def executor = Executors.newCachedThreadPool()
     
+    Future execAsync(Closure task) {
+        executor.submit(task as Callable)
+    }
+    
     void "Queue Receivers with Selector"() {
         when:
         def tester = { qualifier, m ->
-            Future receiver = executor.submit({
+            def receiver = execAsync {
                 simpleReceivingSelectedService.receiveSelectedFromQueue "aproperty='$qualifier'", TIMEOUT
-            } as Callable)
+            }
 
             //Starting senders ...
             simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'nosie')
@@ -51,9 +55,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
     void "Suscriber with Selector"() {
         when:
         def tester = { qualifier, m ->
-            Future receiver = executor.submit({
+            def receiver = execAsync {
                 simpleReceivingSelectedService.receiveSelectedFromTopic "aproperty='$qualifier'", TIMEOUT
-            } as Callable)
+            }
 
             //Starting senders ... 
             simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'nosie')
@@ -79,9 +83,10 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
             def barrier = new CyclicBarrier(2)
 
-            Future receiver = executor.submit({
+            def receiver = execAsync {
                 simpleReceivingSelectedService.receiveSelectedAsyncFromQueue barrier, "aproperty='$qualifier'", TIMEOUT
-            } as Callable)
+            }
+            
             //Wait for receivers.
             barrier.await()
             //Starting senders ...
@@ -111,9 +116,10 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
             def barrier = new CyclicBarrier(2)
 
-            Future receiver = executor.submit({
+            def receiver = execAsync {
                 simpleReceivingSelectedService.receiveSelectedAsyncFromTopic barrier, "aproperty='$qualifier'", TIMEOUT
-            } as Callable)
+            }
+            
             //Wait for receivers.
             barrier.await()
             simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'nosie')
