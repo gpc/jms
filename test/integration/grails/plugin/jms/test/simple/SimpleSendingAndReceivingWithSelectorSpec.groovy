@@ -32,9 +32,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
             //Starting senders ...
             simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'nosie')
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, m, null) { javax.jms.Message msg ->
-                msg.setStringProperty 'aproperty', qualifier
-                msg
+            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, m, null) {
+                it.setStringProperty 'aproperty', qualifier
+                it
             }
             simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'noise')
             receiver.get()
@@ -57,9 +57,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
             //Starting senders ... 
             simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'nosie')
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, m, null) { javax.jms.Message msg ->
-                msg.setStringProperty 'aproperty', qualifier
-                msg
+            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, m, null) {
+                it.setStringProperty 'aproperty', qualifier
+                it
             }
             simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'noise')
             receiver.get()
@@ -86,9 +86,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
             barrier.await()
             //Starting senders ...
             simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'nosie')
-            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, m, null) { javax.jms.Message msg ->
-                msg.setStringProperty 'aproperty', qualifier
-                msg
+            simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, m, null) {
+                it.setStringProperty 'aproperty', qualifier
+                it
             }
             simpleSendingService.sendToGivenQueue(RECEIVING_QUEUE, 'noise')
 
@@ -117,9 +117,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
             //Wait for receivers.
             barrier.await()
             simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'nosie')
-            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, m, null) { javax.jms.Message msg ->
-                msg.setStringProperty 'aproperty', qualifier
-                msg
+            simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, m, null) {
+                it.setStringProperty 'aproperty', qualifier
+                it
             }
             simpleSendingService.sendToGivenTopic(RECEIVING_TOPIC, 'noise')
 
