@@ -49,20 +49,20 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
     
     @Unroll("only messages matching selector are returned from #destination")
     def "sync"() {
-        given:
+        given: "a receiver on another thread"
         def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT) }
         
-        when:
-        "sendTo${destination}"(3, null) // no value for property
-        "sendTo${destination}"(2, propertyValueNotToMatch) // doesn't match
-        "sendTo${destination}"(1, propertyValueToMatch) // matches
+        when: "we send some messages"
+        "sendTo${destination}"(3, null)
+        "sendTo${destination}"(2, propertyValueNotToMatch)
+        "sendTo${destination}"(1, propertyValueToMatch)
         
-        and:
-        receiver.get() // wait for messages to be received
+        and: "we wait for them to be received"
+        receiver.get()
 
-        then:
+        then: "only the message matching the selector has been received"
         simpleReceivingSelectedService.message == 1
-        simpleReceivingSelectedService.message == null // only 1 message received
+        simpleReceivingSelectedService.message == null
         
         where:
         destination << ["Topic", "Queue"]
@@ -70,24 +70,24 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
     @Unroll("only messages matching selector are returned from #destination asynchronously")
     def "async"() {
-        given:
+        given: "a barrier"
         def barrier = new CyclicBarrier(1)
         
-        and:
+        and: "an asynchronous receiver on another thread, who will wait on the barrier"
         def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedAsyncFrom${destination}"(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
         
-        when:
+        when: "we wait for the async receive call to reach the barrier"
         barrier.await() // what for receiving thread to obtain future
         
-        and:
+        and: "we send some messages"
         "sendTo${destination}"(3, null) // no value for property
         "sendTo${destination}"(2, propertyValueNotToMatch) // doesn't match
         "sendTo${destination}"(1, propertyValueToMatch) // matches
         
-        and:
+        and: "we wait for them to be received"
         receiver.get() // wait for messages to be received
 
-        then:
+        then: "only the message matching the selector has been received"
         simpleReceivingSelectedService.message == 1
         simpleReceivingSelectedService.message == null // only 1 message received
         
