@@ -20,6 +20,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
     def simpleReceivingSelectedService
     def simpleSendingService
     
+    def propertyValueToMatch = "a"
+    def propertyValueNotToMatch = "b"
+    
     @AutoCleanup("shutdown")
     def executor = Executors.newCachedThreadPool()
     
@@ -46,10 +49,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
     
     def "only messages matching selector are returned from queue"() {
         given:
-        def propertyValueToMatch = "a"
-        def propertyValueNotToMatch = "b"
-        
-        and:
         def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedFromQueue("aproperty='$propertyValueToMatch'", TIMEOUT) }
         
         when:
@@ -67,10 +66,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
     def "only messages matching selector are returned from topic"() {
         given:
-        def propertyValueToMatch = "a"
-        def propertyValueNotToMatch = "b"
-        
-        and:
         def receiver = execAsync { simpleReceivingSelectedService.receiveSelectedFromTopic("aproperty='$propertyValueToMatch'", TIMEOUT) }
         
         when:
@@ -88,10 +83,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
     def "only messages matching selector are returned from queue aysnchronously"() {
         given:
-        def propertyValueToMatch = "a"
-        def propertyValueNotToMatch = "b"
-        
-        and:
         def barrier = new CyclicBarrier(1)
         
         and:
@@ -115,10 +106,6 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
     def "only messages matching selector are returned from topic aysnchronously"() {
         given:
-        def propertyValueToMatch = "a"
-        def propertyValueNotToMatch = "b"
-        
-        and:
         def barrier = new CyclicBarrier(1)
         
         and:
