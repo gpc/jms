@@ -74,7 +74,7 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         and: "an asynchronous receiver on another thread, who will wait on the barrier"
         def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedAsyncFrom${destination}"(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
 
-        and: "an asyncrhounous sender on another thread, who will wait on the barrier"
+        and: "an asyncrhounous sender that will wait on the barrier so it doesn't send without the receivers"
         def sender = execAsync {
             barrier.await()
             "sendTo${destination}"(3, null)
@@ -85,7 +85,7 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         when: "we wait for the senders"
         sender.get()
 
-        and: "we wait for them to be received"
+        and: "we wait for the messages to be received"
         receiver.get()
 
         then: "only the message matching the selector has been received"

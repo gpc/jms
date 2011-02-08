@@ -59,8 +59,7 @@ class SimpleReceivingSelectedService extends TestListeningServiceSupport {
         def future = receiveSelectedAsyncJMSMessage(topic: RECEIVING_TOPIC, selector, timeout, template)
         log.info "future obtained from topic with selector ${selector} : $future"
         log.debug "awaiting for barrier..."
-        int index = barrier.await()
-        log.debug "barrier triggered $index proceeding..."
+        barrier.await()
         def msg = future.get()
         log.info "topic messaged received with selector ${selector} : $msg"
         putMessage(msg)
