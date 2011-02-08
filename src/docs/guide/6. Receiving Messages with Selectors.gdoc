@@ -1,0 +1,102 @@
+As mentioned in chapter *4* this plugin adds a service called @ jmsService @ to your application. In addition to the 
+methods already described in other chapters the @ jmsService @ has the following methods that can be used to receive a 
+selected message as a single operation without a *Service Listener*.
+
+h4. The receiveSelected(destination, selector, timeout, jmsTemplateBeanName)
+
+*destination*
+
+An instance of @ javax.jms.Destination @ , @ javax.jms.Topic @ , a @ String @ or a @ Map @ .
+
+A @ String @ destination argument will be interpreted as the name of a destination _queue_ .
+
+A @ Map @ destination argument can be used in the following ways:
+
+{code}
+// Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+jmsService.receiveSelected(queue: "aQueue", selector, timeout, "standard") 
+
+
+// Expect/Receive a message with a *selector* on a literal topic waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+jmsService.receiveSelected(topic: "aTopic", selector, timeout, "standard") 
+
+
+// Expect/Receive a message with a *selector* on the queue '«appname».person' waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+jmsService.receiveSelected(service: "person", selector, timeout, "standard") 
+
+// Expect/Receive a message with a *selector* on the queue '«appname».person.doIt' waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+jmsService.receiveSelected(service: "person", method: "doIt", selector, timeout, "standard")
+
+
+// Expect/Receive a message with a *selector* on the queue 'remote.person.doIt' waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+jmsService.receiveSelected(app: "remote", service: "person", method: "doIt", selector, timeout, "standard") 
+{code}
+
+*selector*
+
+This is the message selector as described by the JMS Specification. In a nutshell a *message selector* lets a client
+specify a statement, which is similar to an SQL92 statement, that will be used to filter messages through the values
+of their *message headers* and *message properties*.
+"Only messages whose header and property values match the selector are delivered". As described in the *JMS*
+Specification what it means for a message not to be delivered depends on the MessageConsumer being used.
+It is important to mention that the selectors can only access *header* or *properties* but will *not be able to access any message body values*.
+
+h5. References
+[JavaEE 1.3 javax.jms.Message|http://download.oracle.com/javaee/1.3/api/javax/jms/Message.html]
+
+[ActiveMq Selectors|http://activemq.apache.org/selectors.html]
+
+[IBM Guide on Selectors|http://publib.boulder.ibm.com/infocenter/wmbhelp/v6r1m0/topic/com.ibm.etools.mft.doc/ac24876_.htm]
+
+
+*timeout*
+
+A *long* value that specifies the amount of milliseconds that this call should wait until desisting and returning @ null @.
+
+
+*jmsTemplateName*
+
+The name of the template that should be used to send the message. If this value is @ null @ , the standard template will be used (called "standard").
+
+There are variations of the receiveSelected() method for convenience...
+
+h4. receiveSelected() method variants
+
+{code:java}
+jmsService.receiveSelected(destination, selector) // use the default timeout and standard template
+jmsService.receiveSelected(destination, selector, timeout) // use the standard template
+{code}
+
+
+h4.  Specifying a timeout through configuration or the template.
+
+If no *timeout* is specified the JmsService uses a **500** millisecond timeout. You can also specify a timeout through the @ Config.groovy @ file.
+{code::java}
+//Specifying a 100 milliseconds timeout
+jms.receiveTimeout=100l
+{code}
+
+Or if you are providing a custom @ JmsTemplate @ through its @ receiveTimeout @ attribute.
+
+**Note: Both timeouts will be ignored if set to zero, the only way of setting a zero timeout would be by passing such timeout as an argument to the call.
+
+h4. The receiveSelectedAsync(destination, selector, timeout, jmsTemplateBeanName)
+
+This methods provides a variant to the @ receiveSelected @ method, the difference is that this method will execute the request asynchronously by wrapping a call to the
+@ receiveSelected @ within an *Executor Service* (see @ java.util.concurrent.ExecutorService @ in your JDK API 1.5+ ). 
+
+Some examples..
+{code:java}
+// Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
+// Will return a java.util.concurrent.Future that holds the result of the asynchronous execution.
+java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(queue: "aQueue", selector, timeout, "standard") 
+
+// Expect/Receive a message with a *selector* on a literal topic waiting up to the given *timeout*.
+// Will return a java.util.concurrent.Future that holds the result of the asynchronous execution.
+java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(topic: "aTopic", selector, timeout, "standard")
+{code}

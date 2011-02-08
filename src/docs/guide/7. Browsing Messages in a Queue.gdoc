@@ -1,0 +1,122 @@
+If you are looking on ways to obtain the contents of a given @ javax.jms.Queue @ without changing its state the
+@ JmsService @ offers a set of methods designed for this task.
+
+h4. The browse(destination, jmsTemplateName, browserCallback) method.
+Will retrieve all messages inside the given _queue_ at that time without changing its state i.e messages will not be consumed.
+This method will convert the @ javax.jms.Message @ using the @ JmsTemplate @. If you need the  @ javax.jms.Message @
+you should use the @ browseNoConvert() @ method and its variants as described further on.
+
+
+*destination*
+
+An instance of @ javax.jms.Queue @ , a @ String @ or a @ Map @ . *Needs* to be a _queue_ .
+
+A @ String @ destination argument will be interpreted as the name of a destination _queue_ .
+
+A @ Map @ destination argument can be used in the following ways:
+
+{code}
+// browse literal queue
+List messages = jmsService.browse(queue: "aQueue", "standard", null)
+
+// browse the queue '«appname».person'
+List messages = jmsService.browse(service: "person", "standard", null)
+
+// browse the queue '«appname».person.doIt'
+List messages = jmsService.browse(service: "person", method: "doIt", "standard", null)
+
+// browse the queue 'remote.person.doIt'
+List messages = jmsService.browse(app: "remote", service: "person", method: "doIt", "standard", null)
+{code}
+
+
+*jmsTemplateName*
+
+The name of the template that should be used to send the message. If this value is @ null @ , the standard template will be used (called "standard").
+
+*browserCallback*
+
+An optional closure that can be used to "process" the message before being added to the returning message list. The value returned by this *callback* will
+be the one added to the returning list if such value is *not null*.
+
+h4. browse() method variants
+
+There are variations of the browse() method for convenience...
+
+{code:java}
+
+List messages = jmsService.browse(queue)
+
+List messages = jmsService.browse(queue, browserCallback)
+
+List messages = jmsService.browse(queue, jmsTemplateBeanName)
+{code}
+
+
+h4. The browseNoConvert(destination, jmsTemplateName, browserCallback) method.
+This method will not convert the @ javax.jms.Message @. In other words the @ browserCallback:Closure @ will receive a
+ @ javax.jms.Message @ or if no _callback_ is defined a _list_ containing @ javax.jms.Message @ instances will be returned.
+ *You can't* update the returned @ javax.jms.Message @ objects, they are *read-only* instances.
+
+{code:java}
+
+List messages = jmsService.browseNoConvert(queue)
+
+//You can do the following to filter messages or use a selector through the browseSelected* methods
+List messages = jmsService.browseNoConvert(queue){ javax.jms.Message msg ->
+    ( msg.getStringProperty('aproperty') ? msg : null ) 
+}
+
+List messages = jmsService.browseNoConvert(queue, jmsTemplateBeanName)
+messages.each {
+    assert it instanceof javax.jms.Message
+}
+
+{code}
+
+h4. The browseSelected(destination, selector, jmsTemplateName, browserCallback) method.
+Will retrieve messages that match the *selector* inside the given _queue_ at the time of the call without changing its state i.e messages will not be consumed.
+This method will convert the @ javax.jms.Message @ using the @ JmsTemplate @. If you need the  @ javax.jms.Message @
+you should use the @ browseSelectedNotConvert() @ method and its variants as described further on.
+
+*selector*
+
+This is the message selector as described by the JMS Specification. In a nutshell a *message selector* lets a client
+specify a statement, which is similar to an SQL92 statement, that will be used to filter messages through the values
+of their *message headers* and *message properties*.
+"Only messages whose header and property values match the selector are delivered". As described in the *JMS*
+Specification what it means for a message not to be delivered depends on the MessageConsumer being used.
+It is important to mention that the selectors can only access *header* or *properties* but will *not be able to access any message body values*.
+
+{code:java}
+
+List messages = jmsService.browseSelected(queue, " anIntProperty > 0 AND anotherProperty='a Value'")
+
+//filtering through body content.
+List messages = jmsService.browseSelected(queue, " anIntProperty > 0 AND anotherProperty='a Value'"){
+    ( msg == 'avalue' ?: null )
+}
+
+List messages = jmsService.browseSelected(queue, " anIntProperty > 0 AND anotherProperty='a Value'", jmsTemplateBeanName)
+
+{code}
+
+
+h4. The browseSelectedNotConvert(destination, selector, jmsTemplateName, browserCallback) method.
+Will retrieve messages that match the *selector* inside the given _queue_ at the time of the call without changing its state i.e messages will not be consumed.
+As the @ browseNoConvert @ this method will not convert the @ javax.jms.Message @.
+
+{code:java}
+
+List messages = jmsService.browseSelectedNotConvert(queue, " anIntProperty > 0 AND anotherProperty='a Value'")
+
+List messages = jmsService.browseSelectedNotConvert(queue, " anIntProperty > 0 AND anotherProperty='a Value'"){ javax.jms.Message msg ->
+    return msg.JMSCorrelationID
+}
+
+List messages = jmsService.browseSelectedNotConvert(queue, " anIntProperty > 0 AND anotherProperty='a Value'", jmsTemplateBeanName)
+messages.each {
+    assert it instanceof javax.jms.Message
+}
+    
+{code}
