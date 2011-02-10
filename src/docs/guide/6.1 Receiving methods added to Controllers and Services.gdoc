@@ -57,3 +57,44 @@ def afuture = receiveSelectedAsyncJMSMessage(app: "remote", service: "person", m
 
 
 **Note: a afuture.get() will return the *message*.
+
+
+h4. Specifying your own **Executor** for Async. Receivers using the *"Property Override Configuration"* mechanism.
+
+{code}
+beans {
+    jmsService {
+        asyncReceiverExecutor = Executors.newFixedThreadPool(5)
+    }
+}
+{code}
+
+
+h4. Specifying your own **Executor** for Async. Receivers using *Spring IoC*.
+
+{code}
+beans = {
+     jmsAsyncReceiverExecutor( java.util.concurrent.Executors ) { executors ->
+        executors.factoryMethod = "newFixedThreadPool"
+        executors.constructorArgs = [ 5 ]
+    }
+}
+{code}
+
+**Note: If the executor is defined as a *Spring Bean* and also through the *Property Override Configuration* mechanism
+the last one to be set will be the one that will remain active where the previous one will be halted/shutdown.
+Currently in this scenario the *Spring Bean* is the one that will remain active.
+
+
+h4. Disabling *auto-shutdown* of the **Executor** for Async. Receivers using *Property Override Configuration*.
+
+*DO NOT* disable the automatic shutdown mechanism if you are not setting an executor explicitly and managing its life-cycle.
+
+{code}
+//Config.groovy
+beans {
+    jmsService {
+        asyncReceiverExecutorShutdown = false
+    }
+}
+{code}

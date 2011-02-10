@@ -54,22 +54,34 @@ class JmsService {
 
     def grailsApplication
 
-    private ExecutorService asyncReceiverExecutor
+    ExecutorService asyncReceiverExecutor
+    boolean asyncReceiverExecutorShutdown = true
     private Lock asyncReceiverExecutorCreateLock = new ReentrantLock()
 
     //-- Life Cycle --------------
 
     @PreDestroy
     void destroy() {
-        if (this.asyncReceiverExecutor) {
-            try {
-                def runnables = this.asyncReceiverExecutor.shutdownNow()
-                if (runnables && runnables.size() > 0) {
-                    LOG.warn "Async. Executor Shutting down with ${runnables.size()} pending tasks."
+        doWithinAsyncLock {
+            if (this.@asyncReceiverExecutor) {
+                if (asyncReceiverExecutorShutdown) {
+                    shutdownAsyncReceiverExecutorNow()
+                } else {
+                    LOG.info "The flag to shutdown the Async. Executor is turned off. The executor will not be terminated"
                 }
-            } catch (e) {
-                LOG.error "Error while shutting down Async. Executor: $e.message."
             }
+        }
+    }
+
+    private shutdownAsyncReceiverExecutorNow() {
+        LOG.info "Shutting down current Async. Executor..."
+        try {
+            def runnables = this.asyncReceiverExecutor.shutdownNow()
+            if (runnables && runnables.size() > 0) {
+                LOG.warn "Async. Executor Shutting down with ${runnables.size()} pending tasks."
+            }
+        } catch (e) {
+            LOG.error "Error while shutting down Async. Executor: $e.message."
         }
     }
 
@@ -127,14 +139,14 @@ class JmsService {
 
     /**
      * Submits a {@code receiveSelected} call through an {@link java.util.concurrent.Executor} and returns a future
-     * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService.getAsyncReceiverExecutor()}.
+     * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService.getJmsAsyncReceiverExecutor ( )}.
      */
     Future receiveSelectedAsync(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
         if (this.disabled) {
             LOG.warn "will not receive from [$destination] with selector [$selector] because JMS is disabled in config"
             return
         }
-        
+
         LOG.debug "Submitting Async Selected Receiver for [$destination] with selector [$selector].."
         this.getAsyncReceiverExecutor().submit({ receiveSelected(destination, selector, timeout) } as Callable)
     }
@@ -150,7 +162,7 @@ class JmsService {
             LOG.warn "not sending message [$message] to [$destination] because JMS is disabled in config"
             return
         }
-        
+
         def ctx = normalizeServiceCtx(destination, jmsTemplateBeanName)
         logAction "Sending JMS message '$message' to ", ctx
 
@@ -167,7 +179,7 @@ class JmsService {
     protected MessagePostProcessor toMessagePostProcessor(JmsTemplate template, Closure callback) {
         new GrailsMessagePostProcessor(jmsService: this, jmsTemplate: template, processor: callback)
     }
-    
+
     //-- Browsers ---------------
     /**
      * Returns a <i>list</i> with the <i>messages</i> inside the given <b>queue</b>.
@@ -269,10 +281,10 @@ class JmsService {
                     }
                 }
             } as BrowserCallback
-            
+
             jmsTemplate.browseSelected(ndestination, selector, callback)
         }
-        
+
         messages
     }
 
@@ -323,34 +335,46 @@ class JmsService {
         DEFAULT_RECEIVER_TIMEOUT_MILLIS
     }
 
-    /**
-     * Provides the executor that handles Async. Receiving requests. By default it will use a {@code Cached Thread Pool}
-     * as provided by {@link java.util.concurrent.Executors#newCachedThreadPool()}, but if through configuration a number
-     * of <i>Async. Receiver Threads</i> is specified ({@code config.jms.asyncReceiverThreads}) a thread limit
-     * will be imposed through a {@code Fixed Thread Pool} where the given number is the limit.
-     */
-    private getAsyncReceiverExecutor() {
-        if (!this.asyncReceiverExecutor) {
-            if (asyncReceiverExecutorCreateLock.tryLock(180, TimeUnit.SECONDS)) {
-                try {
-                    if (this.asyncReceiverExecutor == null) {
-                        def numThreads = grailsApplication.config.jms.asyncReceiverThreads
-                        if (numThreads) {
-                            LOG.info "Establishing a Fixed Thread Pool for Async Selected Receivers with size : ${numThreads}."
-                            this.asyncReceiverExecutor = Executors.newFixedThreadPool(Integer.valueOf(numThreads))
-                        } else {
-                            LOG.debug "Establishing a Cached Thread Pool for Async Selected Receivers."
-                            this.asyncReceiverExecutor = Executors.newCachedThreadPool()
-                        }
-                    }
-                } finally {
-                    asyncReceiverExecutorCreateLock.unlock()
-                }
-            } else {
-                throw new IllegalStateException("failed to acquire lock to create asyncReceiverExecutor")
+    private doWithinAsyncLock(Closure closure) {
+        if (asyncReceiverExecutorCreateLock.tryLock(500, TimeUnit.MILLISECONDS)) {
+            try {
+                closure.call()
+            } finally {
+                asyncReceiverExecutorCreateLock.unlock()
             }
         }
+    }
 
+    /**
+     * Setter for the <i>executor</i> that handles Async. Receiving requests.
+     * <b>Warning</b> this method will shutdown any previous <i>executor</i> regardless of the {@code asyncReceiverExecutorShutdown} flag.
+     * The {@code asyncReceiverExecutor} will be internally initialized if no <i>executor</i> is set but an <b>async. receiver</b> is
+     * requested.
+     */
+    void setAsyncReceiverExecutor(ExecutorService executorService) {
+        LOG.debug "attempting to set asyncReceiverExecutor $executorService ..."
+        doWithinAsyncLock {
+            if (this.@asyncReceiverExecutor && !this.@asyncReceiverExecutor.shutdown) {
+                shutdownAsyncReceiverExecutorNow()
+            }
+            this.@asyncReceiverExecutor = executorService
+        }
+    }
+
+    /**
+     * Provides the executor that handles Async. Receiving requests. If no {@code asyncReceiverExecutor} is specified
+     * a {@code Cached Thread Pool}, as provided by {@link java.util.concurrent.Executors#newCachedThreadPool()},
+     * will be used.
+     */
+    ExecutorService getAsyncReceiverExecutor() {
+        if (!this.asyncReceiverExecutor) {
+            doWithinAsyncLock {
+                if (this.@asyncReceiverExecutor == null) {
+                    LOG.debug "default to a Cached Thread Pool for Async Selected Receivers."
+                    this.@asyncReceiverExecutor = Executors.newCachedThreadPool()
+                }
+            }
+        }
         this.asyncReceiverExecutor
     }
 
@@ -384,11 +408,11 @@ class JmsService {
         }
 
         [
-            jmsTemplate: jmsTemplate,                    // org.springframework.jms.core.JmsTemplate
-            ndestination: destination,                   // Normalized Destination
-            type: (isTopic ? 'topic' : 'queue'),         // Type of Destination [topic|queue]
-            jmsTemplateBeanName: _jmsTemplateBeanName,   // Name of the bean used to retrieve the JmsTemplate.
-            defaultTemplate: defaultTemplate             // Boolean value that tells us if the JmsTemplate is the Default Template.
+                jmsTemplate: jmsTemplate,                    // org.springframework.jms.core.JmsTemplate
+                ndestination: destination,                   // Normalized Destination
+                type: (isTopic ? 'topic' : 'queue'),         // Type of Destination [topic|queue]
+                jmsTemplateBeanName: _jmsTemplateBeanName,   // Name of the bean used to retrieve the JmsTemplate.
+                defaultTemplate: defaultTemplate             // Boolean value that tells us if the JmsTemplate is the Default Template.
         ]
     }
 
