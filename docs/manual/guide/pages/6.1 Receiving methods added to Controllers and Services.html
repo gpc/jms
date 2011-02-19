@@ -1,0 +1,57 @@
+<html>
+     <head>
+     	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+     	<title>6.1 Receiving methods added to Controllers and Services</title>
+     	<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8">
+     </head>
+	<body class="body">
+		The plugin will inject the following methods to <code> Conrollers </code> and <code> Services </code>.<p class="paragraph"/><h4>Synchronous calls.</h4><p class="paragraph"/><div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(queue: <span class="java&#45;quote">"aQueue"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on a literal topic waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(topic: <span class="java&#45;quote">"aTopic"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(service: <span class="java&#45;quote">"person"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue 'remote.person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg = receiveSelectedJMSMessage(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)</pre></div><p class="paragraph"/>
+<h4>Asynchronous calls.</h4><p class="paragraph"/><div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(queue: <span class="java&#45;quote">"aQueue"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on a literal topic waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(topic: <span class="java&#45;quote">"aTopic"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(service: <span class="java&#45;quote">"person"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue 'remote.person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)</pre></div><p class="paragraph"/>
+<strong class="bold"></strong>Note: a afuture.get() will return the <strong class="bold">message</strong>.<p class="paragraph"/>
+<h4>Specifying your own <strong class="bold"></strong>Executor<strong class="bold"></strong> for Async. Receivers using the <strong class="bold">"Property Override Configuration"</strong> mechanism.</h4><p class="paragraph"/><div class="code"><pre>beans &#123;
+    jmsService &#123;
+        asyncReceiverExecutor = Executors.newFixedThreadPool(5)
+    &#125;
+&#125;</pre></div><p class="paragraph"/>
+<h4>Specifying your own <strong class="bold"></strong>Executor<strong class="bold"></strong> for Async. Receivers using <strong class="bold">Spring IoC</strong>.</h4><p class="paragraph"/><div class="code"><pre>beans = &#123;
+     jmsAsyncReceiverExecutor( java.util.concurrent.Executors ) &#123; executors &#45;&#62;
+        executors.factoryMethod = <span class="java&#45;quote">"newFixedThreadPool"</span>
+        executors.constructorArgs = &#91; 5 &#93;
+    &#125;
+&#125;</pre></div><p class="paragraph"/><strong class="bold"></strong>Note: If the executor is defined as a <strong class="bold">Spring Bean</strong> and also through the <strong class="bold">Property Override Configuration</strong> mechanism
+the last one to be set will be the one that will remain active where the previous one will be halted/shutdown.
+Currently in this scenario the <strong class="bold">Spring Bean</strong> is the one that will remain active.<p class="paragraph"/>
+<h4>Disabling <strong class="bold">auto-shutdown</strong> of the <strong class="bold"></strong>Executor<strong class="bold"></strong> for Async. Receivers using <strong class="bold">Property Override Configuration</strong>.</h4><p class="paragraph"/><strong class="bold">DO NOT</strong> disable the automatic shutdown mechanism if you are not setting an executor explicitly and managing its life-cycle.<p class="paragraph"/><div class="code"><pre>//Config.groovy
+beans &#123;
+    jmsService &#123;
+        asyncReceiverExecutorShutdown = <span class="java&#45;keyword">false</span>
+    &#125;
+&#125;</pre></div>
+	</body>
+</html>

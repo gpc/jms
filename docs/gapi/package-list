@@ -21,5 +21,6 @@ test.integration.grails.plugin.jms.test.reply
 test.integration.grails.plugin.jms.test.servicelevel
 test.integration.grails.plugin.jms.test.simple
 test.integration.grails.plugin.jms.test.transactions
+test.unit.grails.plugin.jms
 test.unit.grails.plugin.jms.bean
 test.unit.grails.plugin.jms.listener
