@@ -121,7 +121,6 @@ class SimpleQueueBrowsingSpec extends IntegrationSpec {
         when:
         send()
         simpleQueueBrowserService.browseSelectedNotConvert("aproperty='2'") { javax.jms.Message msg ->
-            println "Message is $msg"
             ['fromCallback' : msg.getStringProperty('aproperty') ]
         }
 

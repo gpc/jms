@@ -24,12 +24,11 @@ class DomainService extends TestListeningServiceSupport {
     static exposes = ['jms']
     
     def onMessage(msg) {
-        println "here"
         try {
             def person = Person.findByName(msg)
             putMessage(person.things*.name)
         } catch (Exception e) {
-            e.printStackTrace()
+           log.error e, 'onMessage' 
         }
     }
 }
