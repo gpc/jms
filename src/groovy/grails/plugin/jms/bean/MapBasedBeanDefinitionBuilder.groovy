@@ -17,9 +17,11 @@ package grails.plugin.jms.bean
 
 class MapBasedBeanDefinitionBuilder {
 
+    private static final String BEAN_QUALIFIER = 'Bean'
+
     private name
     private definition
-    
+
     MapBasedBeanDefinitionBuilder(name, Map definition) {
         this.name = name
         this.definition = definition
@@ -48,25 +50,36 @@ class MapBasedBeanDefinitionBuilder {
         beanBuilder.with {
             "${this.getName()}"(clazz) { metaBean ->
                 def bean = delegate
-                
-                this.meta.each { k,v ->
+
+                this.meta.each { k, v ->
                     this.set(k, v, metaBean, beanBuilder)
                 }
-                this.properties.each { k,v ->
+                this.properties.each { k, v ->
                     this.set(k, v, bean, beanBuilder)
                 }
             }
         }
     }
-    
+
     def removeFrom(context) {
         def beanName = getName()
         context.containsBean(beanName) && context.removeBeanDefinition(beanName)
     }
-    
+
+    /**
+     * Will bind a property to the given recipient. If such property qualifies as a
+     * <i>Spring Bean</i>, it's name has the {@link MapBasedBeanDefinitionBuilder#BEAN_QUALIFIER} as suffix,
+     * it will assign the bean named as {@code value} if such {@code value} is not {@code null} (i.e. {@code value ? ref(value) : null } ).
+     * If such name doesn't qualify as a bean the given value will be assigned directly to the attribute named as {@code name}.
+     * @param name Name of the attribute, if suffixed by {@link MapBasedBeanDefinitionBuilder#BEAN_QUALIFIER} it will reference a Spring Bean.
+     * @param value direct value or name of the bean in the Application Context
+     * @param recipient
+     * @param beanBuilder
+     * @return
+     */
     protected set(name, value, recipient, beanBuilder) {
-        if (name.endsWith('Bean')) {
-            recipient."${name.substring(0, name.size() - 4)}" = beanBuilder.ref(value)
+        if (name.endsWith(BEAN_QUALIFIER)) {
+            recipient."${name.substring(0, name.size() - BEAN_QUALIFIER.size())}" = value ? beanBuilder.ref(value) : null
         } else {
             recipient."$name" = value
         }
