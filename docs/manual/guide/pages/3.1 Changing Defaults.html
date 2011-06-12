@@ -11,6 +11,16 @@
             messageConverter = <span class="java&#45;keyword">null</span>
         &#125;
     &#125;
-&#125;</pre></div><p class="paragraph"/>This definition will get merged against the plugin provided defaults to produce a standard listener container definition with <code>messageConverter</code> set to <code>null</code>.
+&#125;</pre></div><p class="paragraph"/>This definition will get merged against the plugin provided defaults to produce a standard listener container definition with <code>messageConverter</code> set to <code>null</code>.<p class="paragraph"/><h3>Disabling the default dependency on the Persistence Interceptor.</h3><p class="paragraph"/>If you are not using any <strong class="bold">GORM</strong> implementation such as <strong class="bold">Grials' Hibernate Plugin</strong>
+(i.e. you uninstalled the <strong class="bold">hibernate</strong> plugin) or the <strong class="bold">GORM</strong> implementation you are using doesn't provide a
+<strong class="bold"></strong>Persistence Interceptor Bean<strong class="bold"></strong>, you will have to disable the <em class="italic">default</em> dependency to the <strong class="bold"></strong>Persistence Interceptor Bean<strong class="bold"></strong>. You can do this by setting
+in the <code>Config.groovy</code> the <code>jms.adapters.standard.persistenceInterceptorBean</code> to <code>null</code> .<p class="paragraph"/><div class="code"><pre>jms &#123;
+    adapters &#123;
+        standard &#123;
+            persistenceInterceptorBean = <span class="java&#45;keyword">null</span>
+        &#125;
+    &#125;
+&#125;</pre></div>
+
 	</body>
 </html>

@@ -1,6 +1,6 @@
 <html>
 	<head>
-		  <title>Grails JMS Plugin 1.1 - Reference Documentation</title>
+		  <title>Grails JMS Plugin 1.2 - Reference Documentation</title>
 		  <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Style" charset="utf-8">	
 	</head>
     <body class="body">
@@ -15,7 +15,7 @@
 				<div class="message">JMS integration for Grails</div>
 				<h1>Grails JMS Plugin - Reference Documentation</h1>
 				<p><strong>Authors:</strong> Grails Plugin Collective</p>
-				<p><strong>Version:</strong> 1.1</p>				
+				<p><strong>Version:</strong> 1.2</p>				
 				<em>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</em>
 		</div>                       
 		
@@ -99,7 +99,17 @@ adapters &#123;
             messageConverter = <span class="java&#45;keyword">null</span>
         &#125;
     &#125;
-&#125;</pre></div><p class="paragraph"/>This definition will get merged against the plugin provided defaults to produce a standard listener container definition with <code>messageConverter</code> set to <code>null</code>.<h2><a name="3.2 Syntax Notes">3.2 Syntax Notes</a></h2>There are some noteworthy things about this config syntax.<p class="paragraph"/><h4>Bean names</h4><p class="paragraph"/>The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
+&#125;</pre></div><p class="paragraph"/>This definition will get merged against the plugin provided defaults to produce a standard listener container definition with <code>messageConverter</code> set to <code>null</code>.<p class="paragraph"/><h3>Disabling the default dependency on the Persistence Interceptor.</h3><p class="paragraph"/>If you are not using any <strong class="bold">GORM</strong> implementation such as <strong class="bold">Grials' Hibernate Plugin</strong>
+(i.e. you uninstalled the <strong class="bold">hibernate</strong> plugin) or the <strong class="bold">GORM</strong> implementation you are using doesn't provide a
+<strong class="bold"></strong>Persistence Interceptor Bean<strong class="bold"></strong>, you will have to disable the <em class="italic">default</em> dependency to the <strong class="bold"></strong>Persistence Interceptor Bean<strong class="bold"></strong>. You can do this by setting
+in the <code>Config.groovy</code> the <code>jms.adapters.standard.persistenceInterceptorBean</code> to <code>null</code> .<p class="paragraph"/><div class="code"><pre>jms &#123;
+    adapters &#123;
+        standard &#123;
+            persistenceInterceptorBean = <span class="java&#45;keyword">null</span>
+        &#125;
+    &#125;
+&#125;</pre></div>
+<h2><a name="3.2 Syntax Notes">3.2 Syntax Notes</a></h2>There are some noteworthy things about this config syntax.<p class="paragraph"/><h4>Bean names</h4><p class="paragraph"/>The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
     standard &#123;
         connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>
     &#125;
