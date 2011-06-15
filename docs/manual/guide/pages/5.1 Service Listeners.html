@@ -10,7 +10,7 @@
     def onMessage(msg) &#123;
         // handle message
     &#125;
-&#125;</pre></div><p class="paragraph"/>This will register the <code>onMessage</code> method as a listener for the JMS <em class="italic">topic</em> named <code>«application name».person</code> , where «application name» is the <code>app.name</code> key from the <code>application.properties</code> file.<p class="paragraph"/>
+&#125;</pre></div><p class="paragraph"/>This will register the <code>onMessage</code> method as a listener for the JMS <em class="italic">queue</em> named <code>«application name».person</code> , where «application name» is the <code>app.name</code> key from the <code>application.properties</code> file.<p class="paragraph"/>
 <h4>Configuration</h4><p class="paragraph"/>The following configuration parameters can be set as static variables on the service class…<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th>Property Name</th><th>Type</th><th>Default</th><th>Description</th></tr><tr class="table-odd"><td><strong class="bold">destination</strong></td><td>String</td><td>«app name».«service name»</td><td>The named destination of the listener</td></tr><tr class="table-even"><td><strong class="bold">isTopic</strong></td><td>boolean</td><td>false</td><td>is the destination a topic ( <code>true</code> ) or a queue ( <code>false</code> )</td></tr><tr class="table-odd"><td><strong class="bold">selector</strong></td><td>String</td><td>null</td><td>See the “Message Selector” section of http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html</td></tr><tr class="table-even"><td><strong class="bold">adapter</strong></td><td>String</td><td>"standard"</td><td>The adapter to use for this listener</td></tr><tr class="table-odd"><td><strong class="bold">container</strong></td><td>String</td><td>"standard"</td><td>The container to use for this listener</td></tr></table><p class="paragraph"/><div class="code"><pre>class PersonService &#123;
     <span class="java&#45;keyword">static</span> exposes = &#91;<span class="java&#45;quote">"jms"</span>&#93;
     <span class="java&#45;keyword">static</span> destination = <span class="java&#45;quote">"somethingHappened"</span>
@@ -19,5 +19,6 @@
         // handle message
     &#125;
 &#125;</pre></div>
+
 	</body>
 </html>
