@@ -11,7 +11,7 @@ class PersonService {
 }
 {code}
 
-This will register the @onMessage@ method as a listener for the JMS _topic_ named @«application name».person@ , where «application name» is the @app.name@ key from the @application.properties@ file.
+This will register the @onMessage@ method as a listener for the JMS _queue_ named @«application name».person@ , where «application name» is the @app.name@ key from the @application.properties@ file.
 
 
 h4. Configuration
