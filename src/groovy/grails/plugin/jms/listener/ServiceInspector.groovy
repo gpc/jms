@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 package grails.plugin.jms.listener
+
+import grails.plugin.jms.Subscriber
+import grails.plugin.jms.Queue
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.LogFactory
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
-import grails.plugin.jms.*
 
 class ServiceInspector {
 
@@ -23,20 +27,23 @@ class ServiceInspector {
     final static EXPOSES_SPECIFIER = "exposes"
     final static EXPOSE_SPECIFIER = "expose"
     final static EXPOSES_JMS_SPECIFIER = "jms"
-    
+
+    final static Log LOG = LogFactory.getLog(ServiceInspector)
+
+
     def getListenerConfigs(service, listenerConfigFactory, grailsApplication) {
         if (!exposesJms(service)) return []
-        
+
         def listenerConfigs = []
-        
+
         listenerConfigs << getServiceListenerConfig(service, listenerConfigFactory, grailsApplication)
-        service.methods.each {
+        service.methods.findAll { !it.synthetic }.each {
             listenerConfigs << getServiceMethodListenerConfig(service, it, listenerConfigFactory, grailsApplication)
         }
-        
+
         listenerConfigs.findAll { it != null }
-    } 
-    
+    }
+
     def getServiceListenerConfig(service, listenerConfigFactory, grailsApplication) {
         def hasServiceListenerMethod = hasServiceListenerMethod(service)
         if (hasServiceListenerMethod) {
@@ -44,7 +51,6 @@ class ServiceInspector {
             listenerConfig.with {
                 serviceListener = true
                 listenerMethodName = SERVICE_LISTENER_METHOD
-                
                 explicitDestinationName = GrailsClassUtils.getStaticPropertyValue(service, "destination")
                 topic = GrailsClassUtils.getStaticPropertyValue(service, "isTopic") ?: false
                 messageSelector = GrailsClassUtils.getStaticPropertyValue(service, "selector")
@@ -56,57 +62,81 @@ class ServiceInspector {
             null
         }
     }
-        
+
     def hasServiceListenerMethod(service) {
         service.metaClass.methods.find { it.name == SERVICE_LISTENER_METHOD && it.parameterTypes.size() == 1 } != null
     }
-    
+
     def exposesJms(service) {
-        GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER) || GrailsClassUtils.getStaticPropertyValue(service, EXPOSE_SPECIFIER)?.contains(EXPOSES_JMS_SPECIFIER)
+        GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.
+                contains(EXPOSES_JMS_SPECIFIER) ||
+                GrailsClassUtils.getStaticPropertyValue(service, EXPOSE_SPECIFIER)?.
+                        contains(EXPOSES_JMS_SPECIFIER)
     }
-    
+
     def isSingleton(service) {
         def scope = GrailsClassUtils.getStaticPropertyValue(service, 'scope')
         (scope == null || scope == "singleton")
     }
-    
+
     def getServiceMethodListenerConfig(service, method, listenerConfigFactory, grailsApplication) {
         def subscriberAnnotation = method.getAnnotation(Subscriber)
         def queueAnnotation = method.getAnnotation(Queue)
-        
+
         if (subscriberAnnotation) {
-            getServiceMethodSubscriberListenerConfig(service, method, subscriberAnnotation, listenerConfigFactory, grailsApplication) 
+            getServiceMethodSubscriberListenerConfig(service, method, subscriberAnnotation, listenerConfigFactory, grailsApplication)
         } else if (queueAnnotation) {
-            getServiceMethodQueueListenerConfig(service, method, queueAnnotation, listenerConfigFactory, grailsApplication) 
+            getServiceMethodQueueListenerConfig(service, method, queueAnnotation, listenerConfigFactory, grailsApplication)
         } else {
             null
         }
     }
-    
+
     def getServiceMethodSubscriberListenerConfig(service, method, annotation, listenerConfigFactory, grailsApplication) {
         def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
         listenerConfig.with {
             topic = true
             listenerMethodName = method.name
-            explicitDestinationName = annotation.topic()
+            explicitDestinationName = resolveDestinationName(annotation.topic(), grailsApplication)
             messageSelector = annotation.selector()
             containerParent = annotation.container()
             adapterParent = annotation.adapter()
         }
         listenerConfig
     }
-    
+
     def getServiceMethodQueueListenerConfig(service, method, annotation, listenerConfigFactory, grailsApplication) {
         def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
         listenerConfig.with {
             topic = false
             listenerMethodName = method.name
-            explicitDestinationName = annotation.name()
+            explicitDestinationName = resolveDestinationName(annotation.name(), grailsApplication)
             messageSelector = annotation.selector()
             containerParent = annotation.container()
             adapterParent = annotation.adapter()
         }
         listenerConfig
     }
-    
+
+    String resolveDestinationName(final String name, grailsApplication) {
+        String resolvedName = name
+        if ( resolvedName =~ /^\$/ ) {
+            final List<String> pathTokens = resolvedName.substring(1).tokenize('.').reverse()
+            def node = grailsApplication.config?.jms?.destinations
+            while( node && node instanceof Map && pathTokens.size() ) {
+                node = node[pathTokens.pop()]
+            }
+            if ( node && pathTokens.size() == 0 ) {
+                resolvedName = node
+                LOG.info "key '$name' resolved to destination '$resolvedName'." +
+                        "The name '$resolvedName' will be used as the destination."
+            } else {
+                throw new IllegalArgumentException(
+                        "The destination key '$name' is not available in the 'jms.destinations' configuration space." +
+                                "Please define such key or remove the prefix '\$' from the name.")
+            }
+        }
+        resolvedName
+    }
+
 }
