@@ -80,3 +80,43 @@ class PersonService {
 	}
 }
 {code}
+
+
+h4. Defining the Queue names and Subscriber topics through configuration.
+
+You can specify the names of the given _destinations_ , _queues_ and _topics_ , described through the
+Queue and Subscriber annotations by prefixing the _key_ with a Dollar sign ( @$@ ). The key needs to be
+available through the @Config.groovy@ file in the @jms.destinations@ space, if its not available an *error* will be thrown.
+
+Example…
+
+PersonService.groovy
+{code:groovy}
+import grails.jms.*
+
+class PersonService {
+	static exposes = ["jms"]
+
+	@Subscriber(topic = '$topic.key.in.config')
+	def somethingHappened(msg) {
+	}
+
+	@Queue(name = '$queue.key.in.config')
+	def someWorkToDo(msg) {
+	}
+}
+{code}
+
+Config.groovy
+{code:groovy}
+jms {
+    destinations {
+        //Name of the topic in the JMS server will be person.somethingHappened
+        topic.key.in.config = 'person.somethingHappened'
+
+        //Name of the queue in the JMS server will be person.sendSomeWork
+        queue.key.in.config = 'person.sendSomeWork'
+    }
+}
+{code}
+
