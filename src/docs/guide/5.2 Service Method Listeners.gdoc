@@ -84,14 +84,14 @@ class PersonService {
 
 h4. Overriding Queue names and Subscriber topics through configuration.
 
-You can override the names of the given *destinations*, @queue@ and @topics@, defined through the
-Queue and Subscriber annotations by specifying a *key* inside the @Config.groovy@ file that matches
-the string defined as the @name@ or @topic@ of either of them.
+You can override the names of the given _destinations_ , _queues_ and _topics_ , defined through the
+Queue and Subscriber annotations by specifying a _key_ inside the @Config.groovy@ file that matches
+the string defined as the @name@ or @topic@.
 
 Example…
 
-*PersonService.groovy*
-{code:java}
+PersonService.groovy
+{code:groovy}
 import grails.jms.*
 
 class PersonService {
@@ -107,9 +107,12 @@ class PersonService {
 }
 {code}
 
-*Config.groovy*
-{code:java}
+Config.groovy
+{code:groovy}
+//Name of the topic in the JMS server will be person.somethingHappened
 topic.key.in.config = 'person.somethingHappened'
+
+//Name of the queue in the JMS server will be person.sendSomeWork
 queue.key.in.config = 'person.sendSomeWork'
 {code}
 
