@@ -1,5 +1,3 @@
-import java.util.concurrent.Executors
-
 /*
 * Copyright 2010 Grails Plugin Collective
 *
@@ -47,6 +45,15 @@ environments {
         }
     }
 }
+
+/**
+ *You can override the destination name specified by the annotations Queue and Subscriber
+ * e.g @Subscriber(topic='named.topic.key') and @Queue(name='named.queue.key')
+ */
+named.topic.key = 'conf.named.topic'
+
+named.queue.key = 'conf.named.queue'
+
 
 beans {
     /* If you want to define an executor and/or disable the auto-shutdown mechanism for the async executor.

@@ -80,3 +80,36 @@ class PersonService {
 	}
 }
 {code}
+
+
+h4. Overriding Queue names and Subscriber topics through configuration.
+
+You can override the names of the given *destinations*, @queue@ and @topics@, defined through the
+Queue and Subscriber annotations by specifying a *key* inside the @Config.groovy@ file that matches
+the string defined as the @name@ or @topic@ of either of them.
+
+Example…
+
+*PersonService.groovy*
+{code:java}
+import grails.jms.*
+
+class PersonService {
+	static exposes = ["jms"]
+
+	@Subscriber(topic = "topic.key.in.config")
+	def somethingHappened(msg) {
+	}
+
+	@Queue(name = "queue.key.in.config")
+	def someWorkToDo(msg) {
+	}
+}
+{code}
+
+*Config.groovy*
+{code:java}
+topic.key.in.config = 'person.somethingHappened'
+queue.key.in.config = 'person.sendSomeWork'
+{code}
+
