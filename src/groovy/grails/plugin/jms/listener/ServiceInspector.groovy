@@ -126,7 +126,7 @@ class ServiceInspector {
             while( node && node instanceof Map && pathTokens.size() ) {
                 node = node[pathTokens.pop()]
             }
-            if ( node && pathTokens.size() == 0 ) {
+            if ( node && pathTokens.empty ) {
                 resolvedName = node
                 LOG.info "key '$name' resolved to destination '$resolvedName'." +
                         "The name '$resolvedName' will be used as the destination."
