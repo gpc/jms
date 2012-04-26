@@ -22,9 +22,9 @@ grails.project.dependency.resolution = {
     }  
     dependencies {
         compile 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
-        test ('org.apache.activemq:activemq-core:5.3.0',
-              'org.apache.activemq:activeio-core:3.1.2',
-              'org.apache.xbean:xbean-spring:3.7') {
+        test ('org.apache.activemq:activemq-core:5.5.1',
+              'org.apache.activemq:activeio-core:3.1.3',
+              'org.apache.xbean:xbean-spring:3.9') {
             excludes 'activemq-openwire-generator'
             excludes 'commons-logging'
             excludes 'xalan' // IVY-1006 - use xalan 2.7.0 to avoid (see below)
