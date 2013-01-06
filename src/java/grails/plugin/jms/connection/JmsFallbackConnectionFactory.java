@@ -1,8 +1,14 @@
 package grails.plugin.jms.connection;
 
 import javax.jms.*;
+import javax.jms.IllegalStateException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.lang.reflect.Constructor;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
 * A connection factory that falls back to another connection factory if the primary
@@ -21,21 +27,21 @@ import org.apache.commons.logging.LogFactory;
 public class JmsFallbackConnectionFactory implements ConnectionFactory {
 
 
-	private static final Log LOG = LogFactory.getLog(JmsLocalFallbackConnectionFactory.class);
+	private static final Log LOG = LogFactory.getLog(JmsFallbackConnectionFactory.class);
 
 	private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
-	private final AtomicReference<WrappedParentConnectionFactory> parentRef = new AtomicReference<>(null);
-	private final AtomicReference<ConnectionFactory> fallbackRef = new AtomicReference<>(null);
+	private final AtomicReference<WrappedParentConnectionFactory> parentRef = new AtomicReference<WrappedParentConnectionFactory>(null);
+	private final AtomicReference<ConnectionFactory> fallbackRef = new AtomicReference<ConnectionFactory>(null);
 
-	public JmsLocalFallbackConnectionFactory() {
+	public JmsFallbackConnectionFactory() {
 		LOG.trace("Creating a " + this.getClass().getSimpleName() + " instance without a primary");
 	}
 
-	public JmsLocalFallbackConnectionFactory(ConnectionFactory primary) {
+	public JmsFallbackConnectionFactory(ConnectionFactory primary) {
 		this();
-		LOG.trace("Creating a " + this.getClass().getSimpleName() + " instance with primary [" + parent + "]");
-		setParent(parent);
+		LOG.trace("Creating a " + this.getClass().getSimpleName() + " instance with primary [" + primary + "]");
+		setParent(primary);
 	}
 
 	public void setParent(ConnectionFactory parent) {
@@ -44,12 +50,12 @@ public class JmsFallbackConnectionFactory implements ConnectionFactory {
 			parentRef.set(null);
 		} else {
 			LOG.debug("Setting a non-null parent to a " + this.getClass().getSimpleName() + ":  [" + parent + "]");
-			parent.set(new WrappedParentConnectionFactory(parent));
+            parentRef.set(new WrappedParentConnectionFactory(parent));
 		}
 	}
 
 	public ConnectionFactory getParent() {
-		WrappedParentConnectionFactory toReturn = parent.get();
+		WrappedParentConnectionFactory toReturn = parentRef.get();
 		if(toReturn == null) {
 			LOG.info("Returning a null parent from a " + this.getClass().getSimpleName());
 			return null;

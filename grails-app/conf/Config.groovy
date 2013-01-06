@@ -19,33 +19,6 @@ log4j = {
     debug 'grails.app.service'
 }
 
-dataSource {
-    pooled = true
-    driverClassName = "org.hsqldb.jdbcDriver"
-    username = "sa"
-    password = ""
-}
-hibernate {
-    cache.use_second_level_cache = true
-    cache.use_query_cache = true
-    cache.provider_class = 'com.opensymphony.oscache.hibernate.OSCacheProvider'
-}
-
-environments {
-    development {
-        dataSource {
-            dbCreate = "create-drop"
-            url = "jdbc:hsqldb:mem:devDB"
-        }
-    }
-    test {
-        dataSource {
-            dbCreate = "create-drop"
-            url = "jdbc:hsqldb:mem:testDb"
-        }
-    }
-}
-
 beans {
     /* If you want to define an executor and/or disable the auto-shutdown mechanism for the async executor.
     jmsService {
@@ -122,3 +95,5 @@ grails {
         license = "Apache License 2.0"
     }
 }
+grails.views.default.codec="none" // none, html, base64
+grails.views.gsp.encoding="UTF-8"

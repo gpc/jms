@@ -32,4 +32,8 @@ grails.project.dependency.resolution = {
             exported = false
         }
     }
+    plugins {
+        test ':spock:0.7'
+        runtime ":hibernate:$grailsVersion"
+    }
 }
