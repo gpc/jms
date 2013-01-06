@@ -51,9 +51,14 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT) }
 
         when: "we send some messages"
-        "sendTo${destination}"(3, null)
-        "sendTo${destination}"(2, propertyValueNotToMatch)
-        "sendTo${destination}"(1, propertyValueToMatch)
+        def sender = execAsync {
+            "sendTo${destination}"(3, null)
+            "sendTo${destination}"(2, propertyValueNotToMatch)
+            "sendTo${destination}"(1, propertyValueToMatch)
+        }
+
+        and: "we wait for the senders"
+        sender.get()
 
         and: "we wait for them to be received"
         receiver.get()
