@@ -45,20 +45,15 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         }
     }
 
-    @Unroll("only messages matching selector are returned from #destination")
-    def "sync"() {
+    @Unroll
+    def "sync sending: only messages matching selector are returned from #destination"() {
         given: "a receiver on another thread"
         def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT) }
 
         when: "we send some messages"
-        def sender = execAsync {
-            "sendTo${destination}"(3, null)
-            "sendTo${destination}"(2, propertyValueNotToMatch)
-            "sendTo${destination}"(1, propertyValueToMatch)
-        }
-
-        and: "we wait for the senders"
-        sender.get()
+        "sendTo${destination}"(3, null)
+        "sendTo${destination}"(2, propertyValueNotToMatch)
+        "sendTo${destination}"(1, propertyValueToMatch)
 
         and: "we wait for them to be received"
         receiver.get()
@@ -71,15 +66,15 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         destination << ["Topic", "Queue"]
     }
 
-    @Unroll("only messages matching selector are returned from #destination asynchronously")
-    def "async"() {
+    @Unroll
+    def "async sending: only messages matching selector are returned from #destination asynchronously"() {
         given: "a barrier"
         def barrier = new CyclicBarrier(2)
 
         and: "an asynchronous receiver on another thread, who will wait on the barrier"
         def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedAsyncFrom${destination}"(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
 
-        and: "an asyncrhounous sender that will wait on the barrier so it doesn't send without the receivers"
+        and: "an asynchronous sender that will wait on the barrier so it doesn't send without the receivers"
         def sender = execAsync {
             barrier.await()
             "sendTo${destination}"(3, null)
