@@ -28,7 +28,7 @@ containers {
     standard {
         concurrentConsumers = 1
         subscriptionDurable = false
-        autoStartup = false
+        autoStartup = true
         connectionFactoryBean = "jmsConnectionFactory"
         messageSelector = null
         cacheLevel = DefaultMessageListenerContainer.CACHE_CONSUMER

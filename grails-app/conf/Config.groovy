@@ -51,12 +51,7 @@ jms {
                 parentBean = 'standardJmsListenerContainer'
             }
             connectionFactoryBean = "otherJmsConnectionFactory"
-        }
-        other {
-            meta {
-                parentBean = 'standardJmsListenerContainer'
-            }
-            connectionFactoryBean = "otherJmsConnectionFactory"
+            autoStartup = true
         }
         transacted {
             meta {
@@ -64,6 +59,13 @@ jms {
             }
             transactionManagerBean = "transactionManager"
             sessionTransacted = true
+            autoStartup = true
+        }
+        manualStart {
+            meta {
+                parentBean = 'standardJmsListenerContainer'
+            }
+            autoStartup = false
         }
     }
     adapters {

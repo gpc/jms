@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.jms.test.domain
+package grails.plugin.jms.test.config
 
 import grails.plugin.jms.test.TestListeningServiceSupport
-import grails.plugin.jms.test.*
 
-class DomainService extends TestListeningServiceSupport {
+class ManualStartListenerService extends TestListeningServiceSupport {
 
-    static transactional = false
     static exposes = ['jms']
+    static container = "manualStart"
     
     def onMessage(msg) {
-        try {
-            def person = Person.findByName(msg)
-            putMessage(person.things*.name)
-        } catch (Exception e) {
-           log.error 'onMessage', e
-        }
+        putMessage(msg)
     }
 }
