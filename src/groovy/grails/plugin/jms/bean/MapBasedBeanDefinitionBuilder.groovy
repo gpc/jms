@@ -30,14 +30,14 @@ class MapBasedBeanDefinitionBuilder {
     def getName() {
         name
     }
-    
+
     def getClazz() {
         definition.clazz
     }
-    
+
     def getMeta() {
         definition.meta
-    }    
+    }
 
     def getProperties() {
         def properties = definition.clone()
@@ -48,7 +48,7 @@ class MapBasedBeanDefinitionBuilder {
 
     def build(beanBuilder) {
         beanBuilder.with {
-            "${this.getName()}"(clazz) { metaBean ->
+            "${getName()}"(clazz) { metaBean ->
                 def bean = delegate
 
                 this.meta.each { k, v ->
@@ -80,7 +80,8 @@ class MapBasedBeanDefinitionBuilder {
     protected set(name, value, recipient, beanBuilder) {
         if (name.endsWith(BEAN_QUALIFIER)) {
             recipient."${name.substring(0, name.size() - BEAN_QUALIFIER.size())}" = value ? beanBuilder.ref(value) : null
-        } else {
+        }
+        else {
             recipient."$name" = value
         }
     }

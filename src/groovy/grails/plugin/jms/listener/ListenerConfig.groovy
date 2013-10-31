@@ -14,65 +14,71 @@
  * limitations under the License.
  */
 package grails.plugin.jms.listener
+
+import grails.plugin.jms.bean.JmsListenerAdapterAbstractBeanDefinitionBuilder
+import grails.plugin.jms.bean.JmsListenerContainerAbstractBeanDefinitionBuilder
+
 import org.apache.commons.lang.StringUtils
-import org.springframework.jms.listener.DefaultMessageListenerContainer
-import grails.plugin.jms.bean.*
 
 class ListenerConfig {
-        
-    static final SERVICE_BEAN_SUFFIX = "Service"
-    
-    static final DEFAULT_CONNECTION_FACTORY_BEAN_NAME = "jmsConnectionFactory"
-    
+
+    static final String SERVICE_BEAN_SUFFIX = "Service"
+
+    static final String DEFAULT_CONNECTION_FACTORY_BEAN_NAME = "jmsConnectionFactory"
+
     def grailsApplication
-    
+
     boolean topic = false
-    def listenerMethodName = null
-    def messageSelector = null
-    def explicitDestinationName = null
+    def listenerMethodName
+    def messageSelector
+    def explicitDestinationName
     def serviceListener = false
     def serviceBeanName
     def containerParent
     def adapterParent
-    
+
     def getServiceBeanPrefix() {
         serviceBeanName - SERVICE_BEAN_SUFFIX
     }
-    
+
     def getBeanPrefix() {
         if (serviceListener) {
-            this.serviceBeanPrefix
-        } else {
-            this.serviceBeanPrefix + StringUtils.capitalize(listenerMethodName)
+            serviceBeanPrefix
+        }
+        else {
+            serviceBeanPrefix + StringUtils.capitalize(listenerMethodName)
         }
     }
-    
+
     def getListenerAdapterBeanName() {
-        this.beanPrefix + "JmsListenerAdapter"
+        beanPrefix + "JmsListenerAdapter"
     }
-    
+
     def getListenerContainerBeanName() {
-        this.beanPrefix + "JmsListenerContainer"
+        beanPrefix + "JmsListenerContainer"
     }
-    
+
     def getDestinationName() {
         if (explicitDestinationName) {
             explicitDestinationName
-        } else {
+        }
+        else {
             if (serviceListener) {
-                this.appName + "." + this.serviceBeanPrefix
-            } else if (topic) {
+                appName + "." + serviceBeanPrefix
+            }
+            else if (topic) {
                 listenerMethodName
-            } else {
-                this.appName + "." + this.serviceBeanPrefix + "." + listenerMethodName
+            }
+            else {
+                appName + "." + serviceBeanPrefix + "." + listenerMethodName
             }
         }
     }
-    
+
     def getAppName() {
         grailsApplication.metadata['app.name']
     }
-        
+
     def register(beanBuilder) {
         registerListenerAdapter(beanBuilder)
         registerListenerContainer(beanBuilder)
@@ -80,7 +86,7 @@ class ListenerConfig {
 
     def registerListenerAdapter(beanBuilder) {
         beanBuilder.with {
-            "${this.listenerAdapterBeanName}" {
+            "${listenerAdapterBeanName}" {
                 it.parent = ref(adapterParent + JmsListenerAdapterAbstractBeanDefinitionBuilder.nameSuffix)
                 it.'abstract' = false
                 delegate.delegate = ref(serviceBeanName)
@@ -88,26 +94,26 @@ class ListenerConfig {
             }
         }
     }
-    
+
     def registerListenerContainer(beanBuilder) {
         beanBuilder.with {
-            "${this.listenerContainerBeanName}"() {
+            "${listenerContainerBeanName}"() {
                 it.parent = ref(containerParent + JmsListenerContainerAbstractBeanDefinitionBuilder.nameSuffix)
                 it.'abstract' = false
                 it.destroyMethod = "destroy"
-                
+
                 destinationName = this.destinationName
-                
-                pubSubDomain = this.topic
+
+                pubSubDomain = topic
                 if (messageSelector) {
                     messageSelector = messageSelector
                 }
-                
-                messageListener = ref(this.listenerAdapterBeanName)
+
+                messageListener = ref(listenerAdapterBeanName)
             }
         }
     }
-    
+
     def removeBeansFromContext(ctx) {
         [listenerAdapterBeanName,listenerContainerBeanName].each {
             ctx.removeBeanDefinition(it)

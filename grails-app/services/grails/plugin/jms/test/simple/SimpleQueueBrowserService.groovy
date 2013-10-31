@@ -19,14 +19,12 @@ import grails.plugin.jms.test.TestListeningServiceSupport
 
 class SimpleQueueBrowserService extends TestListeningServiceSupport {
 
-    public static final BROWSER_QUEUE = "simpleBrowserQueue"
-
+    public static final String BROWSER_QUEUE = "simpleBrowserQueue"
 
     def jmsService
+    def callback
 
-    def callback = null
-
-    def browse( callback = null ) {
+    def browse(callback = null) {
         def messages = jmsService.browse(BROWSER_QUEUE, callback)
         log.info "queue messages received : $messages"
         messages.each {
@@ -34,7 +32,7 @@ class SimpleQueueBrowserService extends TestListeningServiceSupport {
         }
     }
 
-    def browseNoConvert( callback = null ) {
+    def browseNoConvert(callback = null) {
         def messages = jmsService.browseNoConvert(BROWSER_QUEUE, callback)
         log.info "queue messages received : $messages"
         messages.each {
@@ -42,7 +40,7 @@ class SimpleQueueBrowserService extends TestListeningServiceSupport {
         }
     }
 
-    def browseSelected( selector, callback = null ) {
+    def browseSelected(selector, callback = null) {
         def messages = jmsService.browseSelected(BROWSER_QUEUE, selector, callback)
         log.info "queue messages received : $messages"
         messages.each {
@@ -50,7 +48,7 @@ class SimpleQueueBrowserService extends TestListeningServiceSupport {
         }
     }
 
-    def browseSelectedNotConvert( selector, callback = null ) {
+    def browseSelectedNotConvert(selector, callback = null) {
         def messages = jmsService.browseSelectedNotConvert(BROWSER_QUEUE, selector, callback)
         log.info "queue messages received : $messages"
         messages.each {
@@ -58,10 +56,10 @@ class SimpleQueueBrowserService extends TestListeningServiceSupport {
         }
     }
 
-    def purge( ){
+    def purge() {
         log.info "purging.."
         int cx = 0
-        while ( receiveSelectedJMSMessage( queue: BROWSER_QUEUE, null, 100l) ){ cx++ }
+        while (receiveSelectedJMSMessage(queue: BROWSER_QUEUE, null, 100l)) { cx++ }
 
         log.info "purging done $cx."
 

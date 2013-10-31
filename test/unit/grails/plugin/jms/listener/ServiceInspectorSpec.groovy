@@ -1,7 +1,9 @@
 package grails.plugin.jms.listener
 
 import grails.plugin.spock.UnitSpec
+
 import org.codehaus.groovy.grails.support.MockApplicationContext
+
 import spock.lang.Unroll
 import spock.util.mop.ConfineMetaClassChanges
 

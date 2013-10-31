@@ -1,5 +1,5 @@
-As mentioned in chapter *4* this plugin adds a service called @ jmsService @ to your application. In addition to the 
-methods already described in other chapters the @ jmsService @ has the following methods that can be used to receive a 
+As mentioned in chapter *4* this plugin adds a service called @ jmsService @ to your application. In addition to the
+methods already described in other chapters the @ jmsService @ has the following methods that can be used to receive a
 selected message as a single operation without a *Service Listener*.
 
 h4. The receiveSelected(destination, selector, timeout, jmsTemplateBeanName)
@@ -15,17 +15,17 @@ A @ Map @ destination argument can be used in the following ways:
 {code}
 // Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
 // Will return the converted message or null if the message was not available.
-jmsService.receiveSelected(queue: "aQueue", selector, timeout, "standard") 
+jmsService.receiveSelected(queue: "aQueue", selector, timeout, "standard")
 
 
 // Expect/Receive a message with a *selector* on a literal topic waiting up to the given *timeout*.
 // Will return the converted message or null if the message was not available.
-jmsService.receiveSelected(topic: "aTopic", selector, timeout, "standard") 
+jmsService.receiveSelected(topic: "aTopic", selector, timeout, "standard")
 
 
 // Expect/Receive a message with a *selector* on the queue '«appname».person' waiting up to the given *timeout*.
 // Will return the converted message or null if the message was not available.
-jmsService.receiveSelected(service: "person", selector, timeout, "standard") 
+jmsService.receiveSelected(service: "person", selector, timeout, "standard")
 
 // Expect/Receive a message with a *selector* on the queue '«appname».person.doIt' waiting up to the given *timeout*.
 // Will return the converted message or null if the message was not available.
@@ -34,7 +34,7 @@ jmsService.receiveSelected(service: "person", method: "doIt", selector, timeout,
 
 // Expect/Receive a message with a *selector* on the queue 'remote.person.doIt' waiting up to the given *timeout*.
 // Will return the converted message or null if the message was not available.
-jmsService.receiveSelected(app: "remote", service: "person", method: "doIt", selector, timeout, "standard") 
+jmsService.receiveSelected(app: "remote", service: "person", method: "doIt", selector, timeout, "standard")
 {code}
 
 *selector*
@@ -88,13 +88,13 @@ Or if you are providing a custom @ JmsTemplate @ through its @ receiveTimeout @ 
 h4. The receiveSelectedAsync(destination, selector, timeout, jmsTemplateBeanName)
 
 This methods provides a variant to the @ receiveSelected @ method, the difference is that this method will execute the request asynchronously by wrapping a call to the
-@ receiveSelected @ within an *Executor Service* (see @ java.util.concurrent.ExecutorService @ in your JDK API 1.5+ ). 
+@ receiveSelected @ within an *Executor Service* (see @ java.util.concurrent.ExecutorService @ in your JDK API 1.5+ ).
 
 Some examples..
 {code:java}
 // Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
 // Will return a java.util.concurrent.Future that holds the result of the asynchronous execution.
-java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(queue: "aQueue", selector, timeout, "standard") 
+java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(queue: "aQueue", selector, timeout, "standard")
 
 // Expect/Receive a message with a *selector* on a literal topic waiting up to the given *timeout*.
 // Will return a java.util.concurrent.Future that holds the result of the asynchronous execution.

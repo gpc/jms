@@ -1,14 +1,16 @@
 package grails.plugin.jms.test.domain
 
-import grails.plugin.spock.*
-import grails.plugin.jms.test.*
+import grails.plugin.jms.test.Person
+import grails.plugin.jms.test.Thing
+import grails.plugin.spock.IntegrationSpec
 
 class DomainServiceSpec extends IntegrationSpec {
 
     static transactional = false
+
     def jmsService
     def domainService
-    
+
     void testIt() {
         given:
         def p = new Person(

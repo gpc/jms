@@ -1,4 +1,4 @@
-First we need the ActiveMQ core jar. 
+First we need the ActiveMQ core jar.
 
 Our @BuildConfig.groovy@ looks something like...
 
@@ -9,7 +9,7 @@ grails.project.dependency.resolution = {
     repositories {
         grailsHome()
         mavenCentral()
-    }  
+    }
     dependencies {
         compile 'org.apache.activemq:activemq-core:5.3.0'
     }
@@ -21,6 +21,6 @@ An example @resources.groovy@ configuration for ActiveMQ would look something li
 
 {code}
 jmsConnectionFactory(org.apache.activemq.ActiveMQConnectionFactory) {
-	brokerURL = 'vm://localhost'
+   brokerURL = 'vm://localhost'
 }
 {code}

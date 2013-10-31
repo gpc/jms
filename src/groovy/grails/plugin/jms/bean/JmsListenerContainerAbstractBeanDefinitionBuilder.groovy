@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 package grails.plugin.jms.bean
+
 import org.springframework.jms.listener.DefaultMessageListenerContainer
 
 class JmsListenerContainerAbstractBeanDefinitionBuilder extends JmsBeanDefinitionBuilder {
-    
-    final static nameSuffix = "JmsListenerContainer"
-    final static defaultClazz = DefaultMessageListenerContainer
-    
+
+    static final String nameSuffix = "JmsListenerContainer"
+    static final Class defaultClazz = DefaultMessageListenerContainer
+
     JmsListenerContainerAbstractBeanDefinitionBuilder(name, definition) {
         super(name, definition)
     }
-    
+
     def getMeta() {
         (super.getMeta() ?: [:]) + ['abstract': true]
     }

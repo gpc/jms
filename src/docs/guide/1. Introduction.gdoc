@@ -1,4 +1,4 @@
-This plugin makes it easy to both send and receive JMS messages inside a Grails application. 
+This plugin makes it easy to both send and receive JMS messages inside a Grails application.
 
 h3. Examples
 
@@ -8,19 +8,18 @@ h4. Service Queue Listeners
 
 {code}
 class ListeningService {
-    
+
     static exposes = ['jms']
-    
+
     def onMessage(message) {
         assert message == 1
     }
-
 }
 {code}
 
 {code}
 class SomeController {
-    
+
     def jmsService
 
     def someAction = {
@@ -35,9 +34,9 @@ h4. Service Method Queue Listeners
 import grails.plugin.jms.Queue
 
 class ListeningService {
-    
+
     static exposes = ['jms']
-    
+
     @Queue
     def receive(message) {
         assert message == 1
@@ -47,7 +46,7 @@ class ListeningService {
 
 {code}
 class SomeController {
-    
+
     def jmsService
 
     def someAction = {
@@ -62,9 +61,9 @@ h4. Topic Listeners
 import grails.plugin.jms.Subscriber
 
 class ListeningService {
-    
+
     static exposes = ['jms']
-    
+
     @Subscriber
     def newMessages(message) {
         assert message == 1
@@ -74,7 +73,7 @@ class ListeningService {
 
 {code}
 class SomeController {
-    
+
     def jmsService
 
     def someAction = {
@@ -89,7 +88,7 @@ h4. Post Processing Messages
 import javax.jms.Message
 
 class SomeController {
-    
+
     def jmsService
 
     def someAction = {

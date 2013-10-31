@@ -22,16 +22,16 @@ import grails.plugin.jms.test.TestListeningServiceSupport
 class SimpleReceivingService extends TestListeningServiceSupport {
 
     static exposes = ['jms']
-    
-    def callback = null
-    
+
+    def callback
+
     @Queue
     def queue(msg) {
         log.info "queue received: $msg"
         putMessage(msg)
         callback?.call(msg)
     }
-    
+
     @Subscriber
     def simpleTopic(msg) {
         log.info "subscriber received: $msg"

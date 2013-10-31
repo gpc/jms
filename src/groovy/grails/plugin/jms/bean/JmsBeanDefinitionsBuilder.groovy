@@ -23,13 +23,13 @@ class JmsBeanDefinitionsBuilder {
         adapters: JmsListenerAdapterAbstractBeanDefinitionBuilder,
         converters: JmsMessageConverterBeanDefinitionBuilder
     ]
-    
+
     final beans
-    
+
     JmsBeanDefinitionsBuilder(beans) {
         this.beans = beans
     }
-    
+
     def build(beanBuilder) {
         mappings.each { key, builderClazz ->
             beans[key].each { name, definition ->
@@ -37,7 +37,7 @@ class JmsBeanDefinitionsBuilder {
             }
         }
     }
-    
+
     def removeFrom(context) {
         mappings.each { key, builderClazz ->
             beans[key].each { name, definition ->
@@ -45,5 +45,4 @@ class JmsBeanDefinitionsBuilder {
             }
         }
     }
-
 }

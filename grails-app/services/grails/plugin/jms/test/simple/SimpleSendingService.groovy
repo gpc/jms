@@ -24,7 +24,7 @@ class SimpleSendingService {
     def sendToTransactionalQueue(msg, template = null) {
         sendJMSMessage(service: 'simpleReceiving', method: 'transactionalQueue', msg, template)
     }
-    
+
     def sendToTopic(msg) {
         sendJMSMessage(topic: 'simpleTopic', msg)
     }
@@ -36,5 +36,4 @@ class SimpleSendingService {
     def sendToGivenTopic(topic, msg, template = null, postProcessor = null) {
         sendJMSMessage(topic: topic, msg, template, postProcessor)
     }
-
 }

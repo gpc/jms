@@ -64,7 +64,7 @@ List messages = jmsService.browseNoConvert(queue)
 
 //You can do the following to filter messages or use a selector through the browseSelected* methods
 List messages = jmsService.browseNoConvert(queue){ javax.jms.Message msg ->
-    ( msg.getStringProperty('aproperty') ? msg : null ) 
+    ( msg.getStringProperty('aproperty') ? msg : null )
 }
 
 List messages = jmsService.browseNoConvert(queue, jmsTemplateBeanName)
@@ -118,5 +118,5 @@ List messages = jmsService.browseSelectedNotConvert(queue, " anIntProperty > 0 A
 messages.each {
     assert it instanceof javax.jms.Message
 }
-    
+
 {code}

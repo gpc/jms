@@ -15,20 +15,21 @@
  */
 package grails.plugin.jms.test.domain
 
+import grails.plugin.jms.test.Person
 import grails.plugin.jms.test.TestListeningServiceSupport
-import grails.plugin.jms.test.*
 
 class DomainService extends TestListeningServiceSupport {
 
     static transactional = false
     static exposes = ['jms']
-    
+
     def onMessage(msg) {
         try {
             def person = Person.findByName(msg)
             putMessage(person.things*.name)
-        } catch (Exception e) {
-           log.error e, 'onMessage' 
+        }
+        catch (e) {
+            log.error e, 'onMessage'
         }
     }
 }

@@ -1,13 +1,12 @@
 package grails.plugin.jms.test.simple
 
-import grails.plugin.spock.IntegrationSpec
 import static grails.plugin.jms.test.simple.SimpleQueueBrowserService.BROWSER_QUEUE
+import grails.plugin.spock.IntegrationSpec
 
 class SimpleQueueBrowsingSpec extends IntegrationSpec {
 
     def simpleQueueBrowserService
     def simpleSendingService
-
 
     def setup() {
         simpleQueueBrowserService.purge()
@@ -16,7 +15,6 @@ class SimpleQueueBrowsingSpec extends IntegrationSpec {
     def cleanup() {
         simpleQueueBrowserService.purge()
     }
-
 
     void send() {
         simpleSendingService.sendToGivenQueue(BROWSER_QUEUE, '1', null) { msg ->
@@ -31,9 +29,8 @@ class SimpleQueueBrowsingSpec extends IntegrationSpec {
             msg.setStringProperty 'aproperty', '3'
             msg
         }
-
     }
-     
+
     def "Should be able to browse the contents of a Queue"() {
         when:
         send()
@@ -74,7 +71,6 @@ class SimpleQueueBrowsingSpec extends IntegrationSpec {
         simpleQueueBrowserService.message.getStringProperty('aproperty') == '2'
         simpleQueueBrowserService.message == null
     }
-
 
     def "Should be able to browse the contents of a Queue and define a callback"() {
         when:

@@ -1,13 +1,13 @@
 package grails.plugin.jms.test.simple
 
-import grails.plugin.spock.*
+import grails.plugin.spock.IntegrationSpec
 import spock.lang.Unroll
 
 class SimpleSendingAndReceivingSpec extends IntegrationSpec {
 
     def simpleSendingService
     def simpleReceivingService
-    
+
     def "receive with queue"() {
         when:
         simpleSendingService.sendToQueue("a")
@@ -37,5 +37,4 @@ class SimpleSendingAndReceivingSpec extends IntegrationSpec {
         'Topic' | 'conf.named.topic'
         'Queue' | 'conf.named.queue'
     }
-
 }

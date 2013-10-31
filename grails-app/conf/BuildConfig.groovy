@@ -13,23 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+grails.project.work.dir = 'target'
+
 grails.project.dependency.resolution = {
-    inherits "global"
-    log "warn"
+
+    inherits 'global'
+    log 'warn'
+
     repositories {
-        grailsHome()
+        grailsCentral()
+        mavenLocal()
         mavenCentral()
-    }  
+    }
+
     dependencies {
+
         compile 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
-        test ('org.apache.activemq:activemq-core:5.5.1',
-              'org.apache.activemq:activeio-core:3.1.3',
-              'org.apache.xbean:xbean-spring:3.9') {
+
+        test 'org.apache.activemq:activemq-core:5.5.1',
+             'org.apache.activemq:activeio-core:3.1.3',
+             'org.apache.xbean:xbean-spring:3.9', {
             excludes 'activemq-openwire-generator'
             excludes 'commons-logging'
             excludes 'xalan' // IVY-1006 - use xalan 2.7.0 to avoid (see below)
             excludes 'xml-apis' // GROOVY-3356
-            exported = false
+            export = false
         }
     }
 }

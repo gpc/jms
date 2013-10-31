@@ -16,19 +16,19 @@
 package grails.plugin.jms.bean
 
 abstract class JmsBeanDefinitionBuilder extends MapBasedBeanDefinitionBuilder {
-    
+
     JmsBeanDefinitionBuilder(name, definition) {
         super(name, definition)
     }
-    
+
     def getName() {
-        super.getName() + this.class.nameSuffix
+        super.getName() + getClass().nameSuffix
     }
-    
+
     def getClazz() {
-        super.getClazz() ?: this.class.defaultClazz
+        super.getClazz() ?: getClass().defaultClazz
     }
-    
+
     static getNameSuffix() {
         throw new IllegalStateException("${this} does not implement getNameSuffix()")
     }
@@ -36,5 +36,4 @@ abstract class JmsBeanDefinitionBuilder extends MapBasedBeanDefinitionBuilder {
     static getDefaultClazz() {
         throw new IllegalStateException("${this} does not implement getDefaultClazz()")
     }
-    
 }

@@ -6,17 +6,15 @@ Another avenue is to expose specific methods as message listeners via annotation
 import grails.plugin.jms.*
 
 class PersonService {
-	static exposes = ["jms"]
-	
-	@Queue
-	def addPerson(msg) {
-		
-	}
-	
-	@Subscriber
-	def somethingHappened(msg) {
-		
-	}
+   static exposes = ["jms"]
+
+   @Queue
+   def addPerson(msg) {
+   }
+
+   @Subscriber
+   def somethingHappened(msg) {
+   }
 }
 {code}
 
@@ -42,15 +40,14 @@ Example…
 import grails.jms.*
 
 class PersonService {
-	static exposes = ["jms"]
-	
-	@Queue(
-		name = "myQueue",
-		selector = "name IS NOT NULL"
-	)
-	def addPerson(msg) {
-		
-	}
+   static exposes = ["jms"]
+
+   @Queue(
+      name = "myQueue",
+      selector = "name IS NOT NULL"
+   )
+   def addPerson(msg) {
+   }
 }
 {code}
 
@@ -72,12 +69,11 @@ Example…
 import grails.jms.*
 
 class PersonService {
-	static exposes = ["jms"]
-	
-	@Subscriber(topic = "aTopic")
-	def somethingHappened(msg) {
-		
-	}
+   static exposes = ["jms"]
+
+   @Subscriber(topic = "aTopic")
+   def somethingHappened(msg) {
+   }
 }
 {code}
 
@@ -95,15 +91,15 @@ PersonService.groovy
 import grails.jms.*
 
 class PersonService {
-	static exposes = ["jms"]
+   static exposes = ["jms"]
 
-	@Subscriber(topic = '$topic.key.in.config')
-	def somethingHappened(msg) {
-	}
+   @Subscriber(topic = '$topic.key.in.config')
+   def somethingHappened(msg) {
+   }
 
-	@Queue(name = '$queue.key.in.config')
-	def someWorkToDo(msg) {
-	}
+   @Queue(name = '$queue.key.in.config')
+   def someWorkToDo(msg) {
+   }
 }
 {code}
 
@@ -119,4 +115,3 @@ jms {
     }
 }
 {code}
-

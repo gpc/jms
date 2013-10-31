@@ -1,19 +1,20 @@
 package grails.plugin.jms.test.simple
 
-import spock.lang.*
-import grails.plugin.spock.*
-
-import java.util.concurrent.Executors
-import java.util.concurrent.Callable
-import java.util.concurrent.Future
-import java.util.concurrent.CyclicBarrier
-
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_QUEUE
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_TOPIC
+import grails.plugin.spock.IntegrationSpec
+
+import java.util.concurrent.Callable
+import java.util.concurrent.CyclicBarrier
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+
+import spock.lang.AutoCleanup
+import spock.lang.Unroll
 
 class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
 
-    static final long TIMEOUT = 3000l
+    static final long TIMEOUT = 3000
 
     def simpleReceivingSelectedService
     def simpleSendingService
@@ -95,5 +96,4 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
         where:
         destination << ["Topic", "Queue"]
     }
-
 }

@@ -1,17 +1,14 @@
 package grails.plugin.jms
 
 import grails.plugin.spock.UnitSpec
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import spock.lang.Unroll
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+
+import spock.lang.Unroll
 
 class JmsServiceConfSpec extends UnitSpec {
 
-    def jmsService
-
-    def setup() {
-        jmsService = new JmsService()
-    }
+    def jmsService = new JmsService()
 
     @Unroll("the calculated receiver timeout should follow rule [#rule]")
     def "receiveTimeout"() {
@@ -37,7 +34,6 @@ class JmsServiceConfSpec extends UnitSpec {
         "use default if conf and template are 0"    | null                | "jms.receiveTimeout=0"  | 0                     |  JmsService.DEFAULT_RECEIVER_TIMEOUT_MILLIS
         "use default if none provided"              | null                | ""                      | 0                     |  JmsService.DEFAULT_RECEIVER_TIMEOUT_MILLIS
     }
-
 
     @Unroll("the JmsService should #action if the jms config is set to [#config]")
     def "enable-disable"() {

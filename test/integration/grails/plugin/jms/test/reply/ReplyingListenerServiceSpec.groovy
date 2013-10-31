@@ -1,12 +1,12 @@
 package grails.plugin.jms.test.reply
 
-import grails.plugin.spock.*
+import grails.plugin.spock.IntegrationSpec
 
 class ReplyingListenerServiceSpec extends IntegrationSpec {
 
     def jmsService
     def replyingListenerService
-    
+
     void testIt() {
         when:
         jmsService.send(service: 'replyingListener', method: 'initial', 1) {

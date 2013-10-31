@@ -8,7 +8,7 @@ Spring provides "JmsTemplate":http://static.springsource.org/spring/docs/3.0.x/j
 
 h2. MessageConverter
 
-The "MessageConverter":http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html abstraction conveniently allows pluggable message conversion. By default, this plugin uses Spring's "SimpleMessageConverter":http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html which handles 'standard' message payloads and JMS Message types. 
+The "MessageConverter":http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html abstraction conveniently allows pluggable message conversion. By default, this plugin uses Spring's "SimpleMessageConverter":http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html which handles 'standard' message payloads and JMS Message types.
 
 h2. MessageListenerContainer
 

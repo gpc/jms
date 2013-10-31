@@ -12,7 +12,7 @@ environments {
 }
 {code}
 
-If JMS is disabled then no listeners are registered (so no messages will be received). 
+If JMS is disabled then no listeners are registered (so no messages will be received).
 
 If an attempt is made to send a message while JMS is disabled you will only get a log message alerting you that the message will not be sent because JMS is disabled. This allows you to still use the @sendMessage()@ methods or @jmsService@ even if JMS is disabled.
 

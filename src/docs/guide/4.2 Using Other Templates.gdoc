@@ -22,7 +22,7 @@ beans = {
 }
 {code}
 
-h5. Config.groovy 
+h5. Config.groovy
 
 {code}
 jms {

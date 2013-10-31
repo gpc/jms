@@ -11,7 +11,7 @@ jms {
             }
         }
     }
-    adapters { 
+    adapters {
         other {
             meta {
                 parentBean = 'standardJmsListenerAdapter'

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import grails.util.GrailsUtil
-import grails.plugin.jms.listener.ServiceInspector
-import grails.plugin.jms.listener.ListenerConfigFactory
-import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
-
 import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
+import grails.plugin.jms.listener.ListenerConfigFactory
+import grails.plugin.jms.listener.ServiceInspector
+import grails.util.Environment;
+import grails.util.GrailsUtil
 
 import org.apache.commons.logging.LogFactory
+import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
 
 class JmsGrailsPlugin {
 
@@ -36,18 +36,18 @@ class JmsGrailsPlugin {
     def observe = ['services', 'controllers']
 
     def pluginExcludes = [
-            "conf/spring/**",
-            "**/grails/plugin/jms/test/**"
+        "src/docs/**",
+        "**/grails/plugin/jms/test/**"
     ]
 
     def listenerConfigs = [:]
     def serviceInspector = new ServiceInspector()
     def listenerConfigFactory = new ListenerConfigFactory()
-    def jmsConfigHash = null
-    def jmsConfig = null
+    def jmsConfigHash
+    def jmsConfig
 
     def getDefaultConfig() {
-        new ConfigSlurper(GrailsUtil.environment).parse(DefaultJmsBeans)
+        new ConfigSlurper(Environment.current.name).parse(DefaultJmsBeans)
     }
 
     def getListenerConfigs(serviceClass, application) {
@@ -59,7 +59,6 @@ class JmsGrailsPlugin {
         def queueOrTopic = (listenerConfig.topic) ? "TOPIC" : "QUEUE"
         LOG.info "registering listener for '${listenerConfig.listenerMethodName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
         listenerConfig.register(beanBuilder)
-
     }
 
     def doWithSpring = {
@@ -103,11 +102,12 @@ class JmsGrailsPlugin {
                 LOG.info "A jmsAsyncReceiverExecutor was detected in the Application Context and therefore will be set in the JmsService."
                 applicationContext.getBean('jmsService').asyncReceiverExecutor = asyncReceiverExecutor
             }
-        } catch (e) {
+        }
+        catch (e) {
             LOG.debug "No jmsAsyncReceiverExecutor was detected in the Application Context."
         }
-
     }
+
     //Send*
     def sendJMSMessage2 = { jmsService, destination, message ->
         jmsService.send(destination, message)
@@ -138,17 +138,17 @@ class JmsGrailsPlugin {
     }
 
     def addSendMethodsToClass(jmsService, clazz) {
-        [
-                sendJMSMessage: "sendJMSMessage",
-                sendQueueJMSMessage: "sendQueueJMSMessage",
-                sendTopicJMSMessage: "sendTopicJMSMessage",
-                sendPubSubJMSMessage: "sendTopicJMSMessage"
+        [sendJMSMessage: "sendJMSMessage",
+         sendQueueJMSMessage: "sendQueueJMSMessage",
+         sendTopicJMSMessage: "sendTopicJMSMessage",
+         sendPubSubJMSMessage: "sendTopicJMSMessage"
         ].each { m, i ->
             2.upto(4) { n ->
                 clazz.metaClass."$m" << this."$i$n".curry(jmsService)
             }
         }
     }
+
     //ReceiveSelected*
     def receiveSelectedJMSMessage1 = { jmsService, destination, selector ->
         jmsService.receiveSelected(destination, selector)
@@ -177,132 +177,140 @@ class JmsGrailsPlugin {
     }
 
     def addReceiveSelectedToClass(jmsService, clazz) {
-        [
-                receiveSelectedJMSMessage: "receiveSelectedJMSMessage",
-                receiveSelectedAsyncJMSMessage: "receiveSelectedAsyncJMSMessage"
+        [receiveSelectedJMSMessage: "receiveSelectedJMSMessage",
+         receiveSelectedAsyncJMSMessage: "receiveSelectedAsyncJMSMessage"
         ].each { m, i ->
             1.upto(4) { n ->
                 clazz.metaClass."$m" << this."$i$n".curry(jmsService)
             }
         }
     }
-    //---
 
     def addServiceMethodsToClass(jmsService, clazz) {
         addSendMethodsToClass(jmsService, clazz)
         addReceiveSelectedToClass(jmsService, clazz)
     }
 
-
     def doWithDynamicMethods = { ctx ->
         addServiceMethods(application)
     }
 
     def onChange = { event ->
-        if (event.source && event.ctx) {
-            def jmsService = event.ctx.getBean('jmsService')
+        if (!event.source || !event.ctx) {
+            return
+        }
 
-            if (application.isControllerClass(event.source)) {
-                addServiceMethodsToClass(jmsService, event.source)
-            } else if (application.isServiceClass(event.source)) {
-                if (event.source.name.endsWith(".JmsService")) {
-                    return
-                }
-                if (jmsConfig.disabled) {
-                    LOG.warn("not inspecting $event.source for listener changes because JMS is disabled in config")
-                } else {
-                    boolean isNew = event.application.getServiceClass(event.source?.name) == null
-                    def serviceClass = application.addArtefact(ServiceArtefactHandler.TYPE, event.source).clazz
+        def jmsService = event.ctx.getBean('jmsService')
 
-                    if (!isNew) {
-                        listenerConfigs.remove(serviceClass.name).each { unregisterListener(it, event.ctx) }
-                    }
+        if (application.isControllerClass(event.source)) {
+            addServiceMethodsToClass(jmsService, event.source)
+            return
+        }
 
-                    def serviceListenerConfigs = getListenerConfigs(serviceClass, application)
-                    if (serviceListenerConfigs) {
-                        listenerConfigs[serviceClass.name] = serviceListenerConfigs
-                        def newBeans = beans {
-                            serviceListenerConfigs.each { listenerConfig ->
-                                registerListenerConfig(listenerConfig, delegate)
-                            }
-                        }
-                        newBeans.beanDefinitions.each { n, d ->
-                            event.ctx.registerBeanDefinition(n, d)
-                        }
-                        serviceListenerConfigs.each {
-                            startListenerContainer(it, event.ctx)
-                        }
-                    }
-                }
+        if (!application.isServiceClass(event.source)) {
+            return
+        }
 
-                addServiceMethodsToClass(jmsService, event.source)
+        if (event.source.name.endsWith(".JmsService")) {
+            return
+        }
+
+        if (jmsConfig.disabled) {
+            LOG.warn("not inspecting $event.source for listener changes because JMS is disabled in config")
+        }
+        else {
+            boolean isNew = event.application.getServiceClass(event.source?.name) == null
+            def serviceClass = application.addArtefact(ServiceArtefactHandler.TYPE, event.source).clazz
+
+            if (!isNew) {
+                listenerConfigs.remove(serviceClass.name).each { unregisterListener(it, event.ctx) }
             }
 
+            def serviceListenerConfigs = getListenerConfigs(serviceClass, application)
+            if (serviceListenerConfigs) {
+                listenerConfigs[serviceClass.name] = serviceListenerConfigs
+                def newBeans = beans {
+                    serviceListenerConfigs.each { listenerConfig ->
+                        registerListenerConfig(listenerConfig, delegate)
+                    }
+                }
+                newBeans.beanDefinitions.each { n, d ->
+                    event.ctx.registerBeanDefinition(n, d)
+                }
+                serviceListenerConfigs.each {
+                    startListenerContainer(it, event.ctx)
+                }
+            }
         }
+
+        addServiceMethodsToClass(jmsService, event.source)
     }
 
     def onConfigChange = { event ->
         def newJmsConfig = defaultConfig.merge(event.source.jms)
         def newJmsConfigHash = newJmsConfig.hashCode()
 
-        if (newJmsConfigHash != jmsConfigHash) {
-            def previousJmsConfig = jmsConfig
-            jmsConfig = newJmsConfig
-            jmsConfigHash = newJmsConfigHash
-            LOG.warn("tearing down all JMS listeners/templates due to config change")
+        if (newJmsConfigHash == jmsConfigHash) {
+            return
+        }
 
-            // Remove the listeners
-            listenerConfigs.keySet().toList().each {
-                listenerConfigs.remove(it).each { unregisterListener(it, event.ctx) }
+        def previousJmsConfig = jmsConfig
+        jmsConfig = newJmsConfig
+        jmsConfigHash = newJmsConfigHash
+        LOG.warn("tearing down all JMS listeners/templates due to config change")
+
+        // Remove the listeners
+        listenerConfigs.keySet().toList().each {
+            listenerConfigs.remove(it).each { unregisterListener(it, event.ctx) }
+        }
+
+        // Remove the templates and abstract definitions from config
+        new JmsBeanDefinitionsBuilder(previousJmsConfig).removeFrom(event.ctx)
+
+        if (jmsConfig.disabled) {
+            LOG.warn("NOT re-registering listeners/templates because JMS is disabled after config change")
+        }
+        else {
+            LOG.warn("re-registering listeners/templates after config change")
+
+            // Find all of the listeners
+            application.serviceClasses.each { serviceClassClass ->
+                def serviceClass = serviceClassClass.clazz
+                def serviceListenerConfigs = getListenerConfigs(serviceClass, application)
+                if (serviceListenerConfigs) {
+                    listenerConfigs[serviceClass.name] = serviceListenerConfigs
+                }
             }
 
-            // Remove the templates and abstract definitions from config
-            new JmsBeanDefinitionsBuilder(previousJmsConfig).removeFrom(event.ctx)
+            def newBeans = beans {
+                def builder = delegate
 
-            if (jmsConfig.disabled) {
-                LOG.warn("NOT re-registering listeners/templates because JMS is disabled after config change")
-            } else {
-                LOG.warn("re-registering listeners/templates after config change")
-
-                // Find all of the listeners
-                application.serviceClasses.each { serviceClassClass ->
-                    def serviceClass = serviceClassClass.clazz
-                    def serviceListenerConfigs = getListenerConfigs(serviceClass, application)
-                    if (serviceListenerConfigs) {
-                        listenerConfigs[serviceClass.name] = serviceListenerConfigs
-                    }
-                }
-
-                def newBeans = beans {
-                    def builder = delegate
-
-                    new JmsBeanDefinitionsBuilder(jmsConfig).build(builder)
-
-                    listenerConfigs.each { name, serviceListenerConfigs ->
-                        serviceListenerConfigs.each { listenerConfig ->
-                            registerListenerConfig(listenerConfig, builder)
-                        }
-                    }
-                }
-
-                newBeans.beanDefinitions.each { n, d ->
-                    event.ctx.registerBeanDefinition(n, d)
-                }
+                new JmsBeanDefinitionsBuilder(jmsConfig).build(builder)
 
                 listenerConfigs.each { name, serviceListenerConfigs ->
                     serviceListenerConfigs.each { listenerConfig ->
-                        startListenerContainer(listenerConfig, event.ctx)
+                        registerListenerConfig(listenerConfig, builder)
                     }
                 }
             }
 
-            // We need to trigger a reload of the jmsService so it gets any new beans
-            def jmsServiceClass = application.classLoader.reloadClass(application.mainContext.jmsService.class.name)
-            application.mainContext.pluginManager.informOfClassChange(jmsServiceClass)
+            newBeans.beanDefinitions.each { n, d ->
+                event.ctx.registerBeanDefinition(n, d)
+            }
 
-            // This also means we need to add new versions of the send methods
-            addServiceMethods(application)
+            listenerConfigs.each { name, serviceListenerConfigs ->
+                serviceListenerConfigs.each { listenerConfig ->
+                    startListenerContainer(listenerConfig, event.ctx)
+                }
+            }
         }
+
+        // We need to trigger a reload of the jmsService so it gets any new beans
+        def jmsServiceClass = application.classLoader.reloadClass(application.mainContext.jmsService.getClass().name)
+        application.mainContext.pluginManager.informOfClassChange(jmsServiceClass)
+
+        // This also means we need to add new versions of the send methods
+        addServiceMethods(application)
     }
 
     def addServiceMethods(application) {
@@ -324,5 +332,4 @@ class JmsGrailsPlugin {
     def startListenerContainer(listenerConfig, applicationContext) {
         applicationContext.getBean(listenerConfig.listenerContainerBeanName).start()
     }
-
 }

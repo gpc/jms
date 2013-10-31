@@ -11,7 +11,7 @@ jmsService.send(topic: 'somethingHappened', 1) { Message msg ->
 
 h4. Setting destinations
 
-Post processors can use the @createDestination()@ method in post processor implementations to create destinations using the same API style as @jmsService.send()@ method 
+Post processors can use the @createDestination()@ method in post processor implementations to create destinations using the same API style as @jmsService.send()@ method
 
 {code}
 jmsService.send(service: 'initial', 1) {

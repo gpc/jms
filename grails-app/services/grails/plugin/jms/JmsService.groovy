@@ -15,30 +15,28 @@
  */
 package grails.plugin.jms
 
-import javax.jms.Destination
-import javax.jms.Topic
-import javax.jms.Session
-import javax.jms.QueueBrowser
-import javax.jms.Message
-import javax.jms.JMSException
-
 import grails.plugin.jms.listener.GrailsMessagePostProcessor
-import org.apache.commons.logging.LogFactory
 
-import org.springframework.jms.core.JmsTemplate
-import org.springframework.jms.core.BrowserCallback
-import org.springframework.jms.core.MessagePostProcessor
-import org.springframework.jms.support.JmsUtils
-
-import javax.annotation.PreDestroy
-
+import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
-import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+
+import javax.annotation.PreDestroy
+import javax.jms.Destination
+import javax.jms.JMSException
+import javax.jms.Message
+import javax.jms.QueueBrowser
+import javax.jms.Session
+import javax.jms.Topic
+
+import org.springframework.jms.core.BrowserCallback
+import org.springframework.jms.core.JmsTemplate
+import org.springframework.jms.core.MessagePostProcessor
+import org.springframework.jms.support.JmsUtils
 
 /**
  * @todo Enable TTL for the Template.
@@ -47,10 +45,8 @@ class JmsService {
 
     static transactional = false
 
-    private static final LOG = LogFactory.getLog(JmsService)
-
-    public static final DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
-    public static final long DEFAULT_RECEIVER_TIMEOUT_MILLIS = 500l
+    public static final String DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
+    public static final long DEFAULT_RECEIVER_TIMEOUT_MILLIS = 500
 
     def grailsApplication
 
@@ -66,22 +62,24 @@ class JmsService {
             if (this.@asyncReceiverExecutor) {
                 if (asyncReceiverExecutorShutdown) {
                     shutdownAsyncReceiverExecutorNow()
-                } else {
-                    LOG.info "The flag to shutdown the Async. Executor is turned off. The executor will not be terminated"
+                }
+                else {
+                    log.info "The flag to shutdown the Async. Executor is turned off. The executor will not be terminated"
                 }
             }
         }
     }
 
     private shutdownAsyncReceiverExecutorNow() {
-        LOG.info "Shutting down current Async. Executor..."
+        log.info "Shutting down current Async. Executor..."
         try {
-            def runnables = this.asyncReceiverExecutor.shutdownNow()
+            def runnables = asyncReceiverExecutor.shutdownNow()
             if (runnables && runnables.size() > 0) {
-                LOG.warn "Async. Executor Shutting down with ${runnables.size()} pending tasks."
+                log.warn "Async. Executor Shutting down with ${runnables.size()} pending tasks."
             }
-        } catch (e) {
-            LOG.error "Error while shutting down Async. Executor: $e.message."
+        }
+        catch (e) {
+            log.error "Error while shutting down Async. Executor: $e.message."
         }
     }
 
@@ -112,8 +110,8 @@ class JmsService {
      * </ol>
      */
     def receiveSelected(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
-        if (this.disabled) {
-            LOG.warn "will not receive over [$destination] because JMS is disabled in config"
+        if (disabled) {
+            log.warn "will not receive over [$destination] because JMS is disabled in config"
             return
         }
 
@@ -121,14 +119,15 @@ class JmsService {
 
         logAction "Awaiting for JMS message with selector '$selector' from ", ctx
 
+        def log = this.log
         ctx.with {
             jmsTemplate.receiveTimeout = calculatedReceiverTimeout(timeout, jmsTemplate)
-            JmsService.LOG.debug "JMS Template receiver timeout set to ${jmsTemplate.receiveTimeout}"
+            log.debug "JMS Template receiver timeout set to ${jmsTemplate.receiveTimeout}"
 
             logAction "Receivng JMS message with selector '$selector' from ", ctx
             def msg = jmsTemplate.receiveSelectedAndConvert(ndestination, selector)
 
-            JmsService.LOG.debug "Received JMS message with selector '$selector': $msg"
+            log.debug "Received JMS message with selector '$selector': $msg"
             msg
         }
     }
@@ -142,13 +141,13 @@ class JmsService {
      * that reflects the execution of the task. The {@code Executor} is provided by {@code JmsService.getJmsAsyncReceiverExecutor ( )}.
      */
     Future receiveSelectedAsync(destination, selector, Long timeout = null, String jmsTemplateBeanName = null) {
-        if (this.disabled) {
-            LOG.warn "will not receive from [$destination] with selector [$selector] because JMS is disabled in config"
+        if (disabled) {
+            log.warn "will not receive from [$destination] with selector [$selector] because JMS is disabled in config"
             return
         }
 
-        LOG.debug "Submitting Async Selected Receiver for [$destination] with selector [$selector].."
-        this.getAsyncReceiverExecutor().submit({ receiveSelected(destination, selector, timeout) } as Callable)
+        log.debug "Submitting Async Selected Receiver for [$destination] with selector [$selector].."
+        getAsyncReceiverExecutor().submit({ receiveSelected(destination, selector, timeout) } as Callable)
     }
 
     //-- Senders ---------------
@@ -158,8 +157,8 @@ class JmsService {
     }
 
     def send(destination, message, String jmsTemplateBeanName = null, Closure callback = null) {
-        if (this.disabled) {
-            LOG.warn "not sending message [$message] to [$destination] because JMS is disabled in config"
+        if (disabled) {
+            log.warn "not sending message [$message] to [$destination] because JMS is disabled in config"
             return
         }
 
@@ -169,11 +168,11 @@ class JmsService {
         ctx.with {
             if (callback) {
                 jmsTemplate.convertAndSend(ndestination, message, toMessagePostProcessor(jmsTemplate, callback))
-            } else {
+            }
+            else {
                 jmsTemplate.convertAndSend(ndestination, message)
             }
         }
-
     }
 
     protected MessagePostProcessor toMessagePostProcessor(JmsTemplate template, Closure callback) {
@@ -245,11 +244,12 @@ class JmsService {
      * @param browserCallback Closure that gets executed per message. If specified its return value will be the one added to the <i>list</i> that this method returns.
      */
     private doBrowseSelected(queue, selector, String jmsTemplateBeanName = null, boolean convert = true, Closure browserCallback = null) {
-        if (this.disabled) {
+        if (disabled) {
             if (selector) {
-                LOG.warn "not browsing [$queue] with selector [$selector] because JMS is disabled in config"
-            } else {
-                LOG.warn "not browsing [$queue] because JMS is disabled in config"
+                log.warn "not browsing [$queue] with selector [$selector] because JMS is disabled in config"
+            }
+            else {
+                log.warn "not browsing [$queue] because JMS is disabled in config"
             }
             return
         }
@@ -261,7 +261,8 @@ class JmsService {
 
         if (selector) {
             logAction "Browsing messages with selector [$selector] ", ctx
-        } else {
+        }
+          else {
             logAction "Browsing messages ", ctx
         }
 
@@ -276,7 +277,8 @@ class JmsService {
                         if (val != null) {
                             messages << val
                         }
-                    } else {
+                    }
+                    else {
                         messages << (processedMessage)
                     }
                 }
@@ -299,7 +301,8 @@ class JmsService {
             def converter = template?.messageConverter
             try {
                 converter?.fromMessage(message)
-            } catch (JMSException ex) {
+            }
+            catch (JMSException ex) {
                 throw JmsUtils.convertJmsAccessException(ex)
             }
         }
@@ -339,7 +342,8 @@ class JmsService {
         if (asyncReceiverExecutorCreateLock.tryLock(500, TimeUnit.MILLISECONDS)) {
             try {
                 closure.call()
-            } finally {
+            }
+            finally {
                 asyncReceiverExecutorCreateLock.unlock()
             }
         }
@@ -352,7 +356,7 @@ class JmsService {
      * requested.
      */
     void setAsyncReceiverExecutor(ExecutorService executorService) {
-        LOG.debug "attempting to set asyncReceiverExecutor $executorService ..."
+        log.debug "attempting to set asyncReceiverExecutor $executorService ..."
         doWithinAsyncLock {
             if (this.@asyncReceiverExecutor && !this.@asyncReceiverExecutor.shutdown) {
                 shutdownAsyncReceiverExecutorNow()
@@ -367,15 +371,15 @@ class JmsService {
      * will be used.
      */
     ExecutorService getAsyncReceiverExecutor() {
-        if (!this.asyncReceiverExecutor) {
+        if (!asyncReceiverExecutor) {
             doWithinAsyncLock {
                 if (this.@asyncReceiverExecutor == null) {
-                    LOG.debug "default to a Cached Thread Pool for Async Selected Receivers."
+                    log.debug "default to a Cached Thread Pool for Async Selected Receivers."
                     this.@asyncReceiverExecutor = Executors.newCachedThreadPool()
                 }
             }
         }
-        this.asyncReceiverExecutor
+        asyncReceiverExecutor
     }
 
     /**
@@ -400,20 +404,19 @@ class JmsService {
         def isTopic
         if (destination instanceof Destination) {
             isTopic = destination instanceof Topic
-        } else {
+        }
+        else {
             def destinationMap = convertToDestinationMap(destination)
             isTopic = destinationMap.containsKey("topic")
             jmsTemplate.pubSubDomain = isTopic
             destination = (isTopic) ? destinationMap.topic : destinationMap.queue
         }
 
-        [
-                jmsTemplate: jmsTemplate,                    // org.springframework.jms.core.JmsTemplate
-                ndestination: destination,                   // Normalized Destination
-                type: (isTopic ? 'topic' : 'queue'),         // Type of Destination [topic|queue]
-                jmsTemplateBeanName: _jmsTemplateBeanName,   // Name of the bean used to retrieve the JmsTemplate.
-                defaultTemplate: defaultTemplate             // Boolean value that tells us if the JmsTemplate is the Default Template.
-        ]
+        [jmsTemplate: jmsTemplate,                    // org.springframework.jms.core.JmsTemplate
+         ndestination: destination,                   // Normalized Destination
+         type: (isTopic ? 'topic' : 'queue'),         // Type of Destination [topic|queue]
+         jmsTemplateBeanName: _jmsTemplateBeanName,   // Name of the bean used to retrieve the JmsTemplate.
+         defaultTemplate: defaultTemplate]            // Boolean value that tells us if the JmsTemplate is the Default Template.
     }
 
     /**
@@ -422,33 +425,40 @@ class JmsService {
      * @param ctx Context of the action as provided by the {@link JmsService#normalizeServiceCtx(Object, String)} method.
      */
     private void logAction(final String action, final ctx) {
-        if (LOG.infoEnabled) {
-            def logMsg = ''
-            ctx.with {
-                logMsg = "$action $type '$ndestination'"
-                if (!defaultTemplate) {
-                    logMsg += " using template '$jmsTemplateBeanName'"
-                }
-            }
-            LOG.info(logMsg)
+        if (!log.infoEnabled) {
+            return
         }
+
+        def logMsg = ''
+        ctx.with {
+            logMsg = "$action $type '$ndestination'"
+            if (!defaultTemplate) {
+                logMsg += " using template '$jmsTemplateBeanName'"
+            }
+        }
+        log.info(logMsg)
     }
 
     def convertToDestinationMap(destination) {
         if (destination == null) {
             [queue: null]
-        } else if (destination instanceof String) {
+        }
+        else if (destination instanceof String) {
             [queue: destination]
-        } else if (destination instanceof Map) {
+        }
+        else if (destination instanceof Map) {
             if (destination.queue) {
                 [queue: destination.queue]
-            } else if (destination.topic) {
+            }
+            else if (destination.topic) {
                 [topic: destination.topic]
-            } else {
+            }
+            else {
                 def parts = []
                 if (destination.app) {
                     parts << destination.app
-                } else {
+                }
+                else {
                     parts << grailsApplication.metadata['app.name']
                 }
                 if (destination.service) {
@@ -459,7 +469,8 @@ class JmsService {
                 }
                 [queue: (parts) ? parts.join('.') : null]
             }
-        } else {
+        }
+        else {
             [queue: destination.toString()]
         }
     }

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 package grails.plugin.jms.bean
+
 import org.springframework.jms.core.JmsTemplate
 
 class JmsTemplateBeanDefinitionBuilder extends JmsBeanDefinitionBuilder {
-    
-    final static nameSuffix = "JmsTemplate"
-    final static defaultClazz = JmsTemplate
-    
+
+    static final String nameSuffix = "JmsTemplate"
+    static final Class defaultClazz = JmsTemplate
+
     JmsTemplateBeanDefinitionBuilder(name, definition) {
         super(name, definition)
     }
-    
 }

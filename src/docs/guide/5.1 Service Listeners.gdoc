@@ -33,7 +33,7 @@ class PersonService {
     static destination = "somethingHappened"
     static isTopic = true
     static adapter = "custom"
-    
+
     def onMessage(msg) {
         // handle message
     }

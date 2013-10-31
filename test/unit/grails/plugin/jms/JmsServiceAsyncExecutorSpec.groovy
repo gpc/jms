@@ -1,23 +1,20 @@
 package grails.plugin.jms
 
 import grails.plugin.spock.UnitSpec
+
 import java.util.concurrent.Executors
+
 import spock.lang.AutoCleanup
 
 class JmsServiceAsyncExecutorSpec extends UnitSpec {
 
-    def jmsService
-
-    def setup() {
-        jmsService = new JmsService()
-    }
+    def jmsService = new JmsService()
 
     @AutoCleanup("shutdown")
     def executor = Executors.newCachedThreadPool()
 
     @AutoCleanup("shutdown")
     def executor2 = Executors.newCachedThreadPool()
-
 
     def "we can set an Async Receiver Executor"() {
         when: "we set the executor in the service"
@@ -29,7 +26,6 @@ class JmsServiceAsyncExecutorSpec extends UnitSpec {
         then: "the executor should receive a shutdown request"
         jmsService.asyncReceiverExecutor == executor
         executor.shutdown
-
     }
 
     def "setting a second executor will shutdown the first one"() {

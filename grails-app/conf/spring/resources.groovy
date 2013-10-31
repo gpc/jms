@@ -2,14 +2,15 @@ import org.apache.activemq.ActiveMQConnectionFactory
 import org.springframework.jms.connection.SingleConnectionFactory
 
 beans = {
+
     xmlns amq:"http://activemq.apache.org/schema/core"
 
-    amq.broker( xmlns:"http://activemq.apache.org/schema/core",
-                brokerName:"localhost",
-                dataDirectory:"target/activemq-data" ){
+    amq.broker(xmlns:"http://activemq.apache.org/schema/core",
+               brokerName:"localhost",
+               dataDirectory:"target/activemq-data" ){
 
         amq.transportConnectors{
-             amq.transportConnector(name:"vm", uri:"vm://localhost" )
+            amq.transportConnector(name:"vm", uri:"vm://localhost" )
         }
     }
 

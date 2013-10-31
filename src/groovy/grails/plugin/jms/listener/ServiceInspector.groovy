@@ -15,21 +15,21 @@
  */
 package grails.plugin.jms.listener
 
-import grails.plugin.jms.Subscriber
 import grails.plugin.jms.Queue
+import grails.plugin.jms.Subscriber
+
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
 
 class ServiceInspector {
 
-    final static SERVICE_LISTENER_METHOD = "onMessage"
-    final static EXPOSES_SPECIFIER = "exposes"
-    final static EXPOSE_SPECIFIER = "expose"
-    final static EXPOSES_JMS_SPECIFIER = "jms"
+    static final String SERVICE_LISTENER_METHOD = "onMessage"
+    static final String EXPOSES_SPECIFIER = "exposes"
+    static final String EXPOSE_SPECIFIER = "expose"
+    static final String EXPOSES_JMS_SPECIFIER = "jms"
 
-    final static Log LOG = LogFactory.getLog(ServiceInspector)
-
+    static final Log LOG = LogFactory.getLog(this)
 
     def getListenerConfigs(service, listenerConfigFactory, grailsApplication) {
         if (!exposesJms(service)) return []
@@ -58,8 +58,6 @@ class ServiceInspector {
                 adapterParent = GrailsClassUtils.getStaticPropertyValue(service, "adapter") ?: "standard"
             }
             listenerConfig
-        } else {
-            null
         }
     }
 
@@ -69,9 +67,9 @@ class ServiceInspector {
 
     def exposesJms(service) {
         GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.
-                contains(EXPOSES_JMS_SPECIFIER) ||
+            contains(EXPOSES_JMS_SPECIFIER) ||
                 GrailsClassUtils.getStaticPropertyValue(service, EXPOSE_SPECIFIER)?.
-                        contains(EXPOSES_JMS_SPECIFIER)
+                    contains(EXPOSES_JMS_SPECIFIER)
     }
 
     def isSingleton(service) {
@@ -85,10 +83,9 @@ class ServiceInspector {
 
         if (subscriberAnnotation) {
             getServiceMethodSubscriberListenerConfig(service, method, subscriberAnnotation, listenerConfigFactory, grailsApplication)
-        } else if (queueAnnotation) {
+        }
+        else if (queueAnnotation) {
             getServiceMethodQueueListenerConfig(service, method, queueAnnotation, listenerConfigFactory, grailsApplication)
-        } else {
-            null
         }
     }
 
@@ -129,14 +126,14 @@ class ServiceInspector {
             if ( node && pathTokens.empty ) {
                 resolvedName = node
                 LOG.info "key '$name' resolved to destination '$resolvedName'." +
-                        "The name '$resolvedName' will be used as the destination."
-            } else {
+                    "The name '$resolvedName' will be used as the destination."
+            }
+            else {
                 throw new IllegalArgumentException(
-                        "The destination key '$name' is not available in the 'jms.destinations' configuration space." +
-                                "Please define such key or remove the prefix '\$' from the name.")
+                    "The destination key '$name' is not available in the 'jms.destinations' configuration space." +
+                    "Please define such key or remove the prefix '\$' from the name.")
             }
         }
         resolvedName
     }
-
 }

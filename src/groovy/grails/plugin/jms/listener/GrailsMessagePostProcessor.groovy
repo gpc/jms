@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 package grails.plugin.jms.listener
-import org.springframework.jms.core.MessagePostProcessor
+
 import javax.jms.Message
+
+import org.springframework.jms.core.MessagePostProcessor
 
 class GrailsMessagePostProcessor implements MessagePostProcessor {
 
@@ -27,11 +29,11 @@ class GrailsMessagePostProcessor implements MessagePostProcessor {
         def destinationMap = jmsService.convertToDestinationMap(destination)
         def session = jmsTemplate.createSession(jmsTemplate.createConnection())
         def destinationResolver = jmsTemplate.destinationResolver
-        def isTopic = destinationMap.containsKey("topic") 
+        def isTopic = destinationMap.containsKey("topic")
         def destinationString = (isTopic) ? destinationMap.topic : destinationMap.queue
         destinationResolver.resolveDestinationName(session, destinationString, isTopic)
     }
-    
+
     Message postProcessMessage(Message message) {
         processor.delegate = this
         processor.resolveStrategy = Closure.DELEGATE_ONLY
