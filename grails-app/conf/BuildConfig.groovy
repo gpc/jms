@@ -40,4 +40,19 @@ grails.project.dependency.resolution = {
             export = false
         }
     }
+
+    plugins {
+
+        test ':spock:0.7', {
+            export = false
+        }
+
+        runtime ":hibernate:$grailsVersion", {
+            export = false
+        }
+
+        build ':release:2.2.1', ':rest-client-builder:1.0.3', {
+            export = false
+        }
+    }
 }
