@@ -1,15 +1,17 @@
 package grails.plugin.jms.test.transactions
 
 import grails.plugin.jms.test.Person
-import grails.plugin.spock.IntegrationSpec
+
 
 import java.util.concurrent.CountDownLatch
 
-import spock.lang.Ignore
-import spock.lang.Timeout
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
 
+@TestMixin(IntegrationTestMixin)
 @Ignore("This is not yet working, may need to create a listener container subclass")
-class TransactionalReceivingSpec extends IntegrationSpec {
+class TransactionalReceivingSpec extends Specification {
 
     static transactional = false
 

@@ -1,12 +1,11 @@
 package grails.plugin.jms
 
-import grails.plugin.spock.UnitSpec
 
 import java.util.concurrent.Executors
 
-import spock.lang.AutoCleanup
+import spock.lang.*
 
-class JmsServiceAsyncExecutorSpec extends UnitSpec {
+class JmsServiceAsyncExecutorSpec extends Specification {
 
     def jmsService = new JmsService()
 

@@ -2,17 +2,19 @@ package grails.plugin.jms.test.simple
 
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_QUEUE
 import static grails.plugin.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_TOPIC
-import grails.plugin.spock.IntegrationSpec
+
 
 import java.util.concurrent.Callable
 import java.util.concurrent.CyclicBarrier
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
-import spock.lang.AutoCleanup
-import spock.lang.Unroll
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
 
-class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
+@TestMixin(IntegrationTestMixin)
+class SimpleSendingAndReceivingWithSelectorSpec extends Specification {
 
     static final long TIMEOUT = 3000
 
@@ -47,9 +49,12 @@ class SimpleSendingAndReceivingWithSelectorSpec extends IntegrationSpec {
     }
 
     @Unroll("only messages matching selector are returned from #destination")
+    @Ignore
     def "sync"() {
         given: "a receiver on another thread"
-        def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT) }
+        def receiver = execAsync { 
+            simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT) 
+        }
 
         when: "we send some messages"
         "sendTo${destination}"(3, null)

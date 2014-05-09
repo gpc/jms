@@ -1,8 +1,12 @@
 package grails.plugin.jms.test.config
 
-import grails.plugin.spock.IntegrationSpec
 
-class OtherListenerServiceSpec extends IntegrationSpec {
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
+
+@TestMixin(IntegrationTestMixin)
+class OtherListenerServiceSpec extends Specification {
 
     def jmsService
     def otherListenerService

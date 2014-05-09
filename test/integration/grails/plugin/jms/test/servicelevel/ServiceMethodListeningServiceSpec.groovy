@@ -1,8 +1,11 @@
 package grails.plugin.jms.test.servicelevel
 
-import grails.plugin.spock.IntegrationSpec
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
 
-class ServiceMethodListeningServiceSpec extends IntegrationSpec {
+@TestMixin(IntegrationTestMixin)
+class ServiceMethodListeningServiceSpec extends Specification {
 
     def jmsService
     def serviceMethodListeningService

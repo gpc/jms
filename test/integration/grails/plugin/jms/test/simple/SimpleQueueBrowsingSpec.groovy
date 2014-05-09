@@ -1,9 +1,12 @@
 package grails.plugin.jms.test.simple
 
 import static grails.plugin.jms.test.simple.SimpleQueueBrowserService.BROWSER_QUEUE
-import grails.plugin.spock.IntegrationSpec
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
 
-class SimpleQueueBrowsingSpec extends IntegrationSpec {
+@TestMixin(IntegrationTestMixin)
+class SimpleQueueBrowsingSpec extends Specification {
 
     def simpleQueueBrowserService
     def simpleSendingService

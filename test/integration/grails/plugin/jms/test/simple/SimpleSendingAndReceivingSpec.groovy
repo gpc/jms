@@ -1,9 +1,12 @@
 package grails.plugin.jms.test.simple
 
-import grails.plugin.spock.IntegrationSpec
-import spock.lang.Unroll
 
-class SimpleSendingAndReceivingSpec extends IntegrationSpec {
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
+
+@TestMixin(IntegrationTestMixin)
+class SimpleSendingAndReceivingSpec extends Specification {
 
     def simpleSendingService
     def simpleReceivingService

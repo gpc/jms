@@ -1,0 +1,16 @@
+language: groovy
+jdk:
+- openjdk6
+before_script:
+- rm -rf target
+script: ./travis-build.sh
+env:
+  global:
+  - GIT_NAME="Graeme Rocher"
+  - GIT_EMAIL="graeme.rocher@gmail.com"
+  - secure: dji/n8hNPzuvssTFzFJhU1BB43uju4+Iaz31X3aIsZ6KEGgTmn8lxXloKOBoJi6z/ohHQNBt3XhG8MH87EGB9IEX4QkUVoHqgY9ygZubcOvMWtc/wXBbMH13omWCwOfoLwxEFMmcINXJtvHJp146BahFskDK6lftbXu6coG4LoI=
+  - secure: rJ8c9Z8z53hwAsDIilfNJ6R0h2XwsTCyavgO8sWaEwYxjFH3/SY/idzTgCSDnT5uA01tqgoSd4bvAmsO8H7//NvpG4F9eUS087DzB0rcCC2KE45mTwK/+10ZD52aayU2weTC0zV1S2Il53CEVKyHwkgV1RhqXSVvFxR580beqZg=
+  - secure: LIhIwAYoyylATIC4JJt60vsz8PJBq2Q+1RJXtquDLtlv9n/lZNeZGhtZcwoabD5cz0cSRfEHUsX1oDuG3supfkgUncoTjDDGj3jqnB9kVVyFY6GHpnN2qaWDbhy26UNNBUitldB9V7K+IQPNuuaI28rGpErHvORwjbyaPYyPRWE=
+  - secure: yJJuVxwgdlv0vrb06nvL2EGOAFl6Lez0EU/RrEwfcQLcftSQgcrMCquDVms4l28DuHt/ZuCt3EtXPGygJUmwoFIEJhOmc6pgM740PVLmOrra1naR+AMBkrVKDdANWxIqVyDtvzuRgmqG/F2PU39EpN1wEZGym4ZcFJjMgTXy/bA=
+  - secure: d7tvZ6Jl/JvpGuH7pPzeP16M3MlLhdImglvi5d0igI/IUjkbGW8hCdPQyF8YPKypMRIrnKKNS0h0ZQNVfcvynCpWWQ0w/lgaU9mn70Zo67e5nMqdvRLEghENaXrWg+cOezvvkrJmYixHcsTszBmovWJfn1Fzc9OMx9deRyhkBl4=
+  - secure: U1OtCXIzx+nxqSI7mLuafj3uyKuzq5vj1CsC7haJWG/Ko1sF9QM+YmkCtfgp3lImsSyQqNlZhNqgG6EE++C9FOLbsYzAsaEc7KGBxN/apChSaEGtmrax2OUE3lWCLNHNp0pbHyoVrfAzxBPqw6v/x96VPEswUA5ALdJSqB7Q+V8=

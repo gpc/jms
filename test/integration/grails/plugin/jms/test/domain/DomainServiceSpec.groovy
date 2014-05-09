@@ -2,9 +2,12 @@ package grails.plugin.jms.test.domain
 
 import grails.plugin.jms.test.Person
 import grails.plugin.jms.test.Thing
-import grails.plugin.spock.IntegrationSpec
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
 
-class DomainServiceSpec extends IntegrationSpec {
+@TestMixin(IntegrationTestMixin)
+class DomainServiceSpec extends Specification {
 
     static transactional = false
 

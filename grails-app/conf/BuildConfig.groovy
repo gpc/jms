@@ -15,6 +15,7 @@
  */
 grails.project.work.dir = 'target'
 
+grails.project.dependency.resolver = 'maven'
 grails.project.dependency.resolution = {
 
     inherits 'global'
@@ -28,6 +29,9 @@ grails.project.dependency.resolution = {
 
     dependencies {
 
+        compile 'org.springframework:spring-jms:3.2.8.RELEASE', {
+            excludes 'spring-core', 'spring-aop','spring-beans', 'spring-context'
+        }
         compile 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
 
         test 'org.apache.activemq:activemq-core:5.5.1',
@@ -37,21 +41,18 @@ grails.project.dependency.resolution = {
             excludes 'commons-logging'
             excludes 'xalan' // IVY-1006 - use xalan 2.7.0 to avoid (see below)
             excludes 'xml-apis' // GROOVY-3356
+            excludes 'spring-context'
             export = false
         }
     }
 
     plugins {
 
-        test ':spock:0.7', {
+        runtime ":hibernate:3.6.10.14", {
             export = false
         }
 
-        runtime ":hibernate:$grailsVersion", {
-            export = false
-        }
-
-        build ':release:2.2.1', ':rest-client-builder:1.0.3', {
+        build ':release:3.0.1', ':rest-client-builder:2.0.1', {
             export = false
         }
     }

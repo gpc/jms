@@ -1,13 +1,16 @@
 package grails.plugin.jms.test.transactions
 
 import grails.plugin.jms.test.Person
-import grails.plugin.spock.IntegrationSpec
+
 
 import java.util.concurrent.CountDownLatch
 
-import spock.lang.Timeout
+import spock.lang.*
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
 
-class TransactionalSendingSpec extends IntegrationSpec {
+@TestMixin(IntegrationTestMixin)
+class TransactionalSendingSpec extends Specification {
 
     static transactional = false
 

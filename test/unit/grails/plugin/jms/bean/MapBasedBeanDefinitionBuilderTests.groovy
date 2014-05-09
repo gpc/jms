@@ -1,11 +1,14 @@
 package grails.plugin.jms.bean
 
 import grails.spring.BeanBuilder
+import org.junit.*
+import static org.junit.Assert.*
 
-class MapBasedBeanDefinitionBuilderTests extends GroovyTestCase {
+class MapBasedBeanDefinitionBuilderTests {
 
     private bb = new BeanBuilder()
 
+    @Test
     void testCreate() {
 
         def s1Value = "s1Value"
