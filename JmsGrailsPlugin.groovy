@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.util.List;
+
 import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
 import grails.plugin.jms.listener.ListenerConfigFactory
 import grails.plugin.jms.listener.ServiceInspector
+import grails.plugin.jms.listener.ListenerConfig
 import grails.util.Environment;
 import grails.util.GrailsUtil
 
 import org.apache.commons.logging.LogFactory
 import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
+
+import grails.plugin.jms.JmsUtils
+import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class JmsGrailsPlugin {
 
@@ -40,57 +46,47 @@ class JmsGrailsPlugin {
         "**/grails/plugin/jms/test/**"
     ]
 
-    def listenerConfigs = [:]
-    def serviceInspector = new ServiceInspector()
-    def listenerConfigFactory = new ListenerConfigFactory()
-    def jmsConfigHash
-    def jmsConfig
+    ServiceInspector serviceInspector = new ServiceInspector()
+    ListenerConfigFactory listenerConfigFactory = new ListenerConfigFactory()
 
-    def getDefaultConfig() {
-        new ConfigSlurper(Environment.current.name).parse(DefaultJmsBeans)
-    }
 
-    def getListenerConfigs(serviceClass, application) {
+    List<ListenerConfig> getListenerConfigs(Class serviceClass, GrailsApplication application) {
         LOG.debug("inspecting '${serviceClass.name}' for JMS listeners")
-        serviceInspector.getListenerConfigs(serviceClass, listenerConfigFactory, application)
+        return serviceInspector.getListenerConfigs(serviceClass, listenerConfigFactory, application)
     }
 
-    def registerListenerConfig(listenerConfig, beanBuilder) {
+    def registerListenerConfig(ListenerConfig listenerConfig, Closure beanBuilder) {
         def queueOrTopic = (listenerConfig.topic) ? "TOPIC" : "QUEUE"
         LOG.info "registering listener for '${listenerConfig.listenerMethodName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
         listenerConfig.register(beanBuilder)
     }
 
     def doWithSpring = {
-        jmsConfig = defaultConfig.merge(application.config.jms)
+        JmsUtils.application = application
 
-        // We have to take a hash now because a config object
-        // will dynamically create nested maps as needed
-        jmsConfigHash = jmsConfig.hashCode()
-
-        LOG.debug("merged config: $jmsConfig")
-        if (jmsConfig.disabled) {
+        if (JmsUtils.jmsConfig.disabled) {
             isDisabled = true
             LOG.warn("not registering listeners because JMS is disabled")
             return
         }
 
-        new JmsBeanDefinitionsBuilder(jmsConfig).build(delegate)
+        new JmsBeanDefinitionsBuilder(JmsUtils.jmsConfig).build(delegate)
 
         application.serviceClasses?.each { service ->
+           
             def serviceClass = service.getClazz()
-            def serviceClassListenerConfigs = getListenerConfigs(serviceClass, application)
-            if (serviceClassListenerConfigs) {
-                serviceClassListenerConfigs.each {
-                    registerListenerConfig(it, delegate)
-                }
-                listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
+				
+            List<ListenerConfig> serviceClassListenerConfigs = getListenerConfigs(serviceClass, application)
+            serviceClassListenerConfigs?.each {ListenerConfig listenerConfig->
+                registerListenerConfig(listenerConfig, delegate)
             }
+            JmsUtils.listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
+              
         }
     }
 
     def doWithApplicationContext = { applicationContext ->
-        listenerConfigs.each { serviceClassName, serviceClassListenerConfigs ->
+        JmsUtils.listenerConfigs.each { serviceClassName, serviceClassListenerConfigs ->
             serviceClassListenerConfigs.each {
                 startListenerContainer(it, applicationContext)
             }
@@ -215,7 +211,7 @@ class JmsGrailsPlugin {
             return
         }
 
-        if (jmsConfig.disabled) {
+        if (JmsUtils.jmsConfig.disabled) {
             LOG.warn("not inspecting $event.source for listener changes because JMS is disabled in config")
         }
         else {
@@ -223,12 +219,12 @@ class JmsGrailsPlugin {
             def serviceClass = application.addArtefact(ServiceArtefactHandler.TYPE, event.source).clazz
 
             if (!isNew) {
-                listenerConfigs.remove(serviceClass.name).each { unregisterListener(it, event.ctx) }
+                JmsUtils.listenerConfigs.remove(serviceClass.name).each { unregisterListener(it, event.ctx) }
             }
 
             def serviceListenerConfigs = getListenerConfigs(serviceClass, application)
             if (serviceListenerConfigs) {
-                listenerConfigs[serviceClass.name] = serviceListenerConfigs
+                JmsUtils.listenerConfigs[serviceClass.name] = serviceListenerConfigs
                 def newBeans = beans {
                     serviceListenerConfigs.each { listenerConfig ->
                         registerListenerConfig(listenerConfig, delegate)
@@ -247,21 +243,18 @@ class JmsGrailsPlugin {
     }
 
     def onConfigChange = { event ->
-        def newJmsConfig = defaultConfig.merge(event.source.jms)
-        def newJmsConfigHash = newJmsConfig.hashCode()
+       def previousJmsConfig = JmsUtils.jmsConfig
 
-        if (newJmsConfigHash == jmsConfigHash) {
+        if (JmsUtils.setNewConfig(event.source.jms)) {
             return
         }
 
-        def previousJmsConfig = jmsConfig
-        jmsConfig = newJmsConfig
-        jmsConfigHash = newJmsConfigHash
+    
         LOG.warn("tearing down all JMS listeners/templates due to config change")
 
         // Remove the listeners
-        listenerConfigs.keySet().toList().each {
-            listenerConfigs.remove(it).each { unregisterListener(it, event.ctx) }
+        JmsUtils.listenerConfigs.keySet().toList().each {
+            JmsUtils.listenerConfigs.remove(it).each { unregisterListener(it, event.ctx) }
         }
 
         // Remove the templates and abstract definitions from config
@@ -278,16 +271,16 @@ class JmsGrailsPlugin {
                 def serviceClass = serviceClassClass.clazz
                 def serviceListenerConfigs = getListenerConfigs(serviceClass, application)
                 if (serviceListenerConfigs) {
-                    listenerConfigs[serviceClass.name] = serviceListenerConfigs
+                    JmsUtils.listenerConfigs[serviceClass.name] = serviceListenerConfigs
                 }
             }
 
             def newBeans = beans {
                 def builder = delegate
 
-                new JmsBeanDefinitionsBuilder(jmsConfig).build(builder)
+                new JmsBeanDefinitionsBuilder(JmsUtils.jmsConfig).build(builder)
 
-                listenerConfigs.each { name, serviceListenerConfigs ->
+                JmsUtils.listenerConfigs.each { name, serviceListenerConfigs ->
                     serviceListenerConfigs.each { listenerConfig ->
                         registerListenerConfig(listenerConfig, builder)
                     }
@@ -298,7 +291,7 @@ class JmsGrailsPlugin {
                 event.ctx.registerBeanDefinition(n, d)
             }
 
-            listenerConfigs.each { name, serviceListenerConfigs ->
+            JmsUtils.listenerConfigs.each { name, serviceListenerConfigs ->
                 serviceListenerConfigs.each { listenerConfig ->
                     startListenerContainer(listenerConfig, event.ctx)
                 }

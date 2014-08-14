@@ -79,12 +79,12 @@ class ListenerConfig {
         grailsApplication.metadata['app.name']
     }
 
-    def register(beanBuilder) {
+    def register(Closure beanBuilder) {
         registerListenerAdapter(beanBuilder)
         registerListenerContainer(beanBuilder)
     }
 
-    def registerListenerAdapter(beanBuilder) {
+    def registerListenerAdapter(Closure beanBuilder) {
         beanBuilder.with {
             "${listenerAdapterBeanName}" {
                 it.parent = ref(adapterParent + JmsListenerAdapterAbstractBeanDefinitionBuilder.nameSuffix)
@@ -95,7 +95,7 @@ class ListenerConfig {
         }
     }
 
-    def registerListenerContainer(beanBuilder) {
+    def registerListenerContainer(Closure beanBuilder) {
         beanBuilder.with {
             "${listenerContainerBeanName}"() {
                 it.parent = ref(containerParent + JmsListenerContainerAbstractBeanDefinitionBuilder.nameSuffix)

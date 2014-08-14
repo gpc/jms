@@ -15,11 +15,13 @@
  */
 package grails.plugin.jms.listener
 
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
+import groovy.transform.CompileStatic
 
 class ListenerConfigFactory {
 
-    def getListenerConfig(Class serviceClass, grailsApplication) {
+    ListenerConfig getListenerConfig(Class serviceClass, GrailsApplication grailsApplication) {
         new ListenerConfig(
             serviceBeanName: GrailsClassUtils.getPropertyName(serviceClass),
             grailsApplication: grailsApplication
