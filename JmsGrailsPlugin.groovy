@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.util.List;
-
 import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
 import grails.plugin.jms.listener.ListenerConfigFactory
 import grails.plugin.jms.listener.ServiceInspector
@@ -74,8 +72,8 @@ class JmsGrailsPlugin {
 
         application.serviceClasses?.each { service ->
            
-            def serviceClass = service.getClazz()
-				
+            Class serviceClass = service.getClazz()
+
             List<ListenerConfig> serviceClassListenerConfigs = getListenerConfigs(serviceClass, application)
             serviceClassListenerConfigs?.each {ListenerConfig listenerConfig->
                 registerListenerConfig(listenerConfig, delegate)
@@ -86,11 +84,12 @@ class JmsGrailsPlugin {
     }
 
     def doWithApplicationContext = { applicationContext ->
-        JmsUtils.listenerConfigs.each { serviceClassName, serviceClassListenerConfigs ->
-            serviceClassListenerConfigs.each {
-                startListenerContainer(it, applicationContext)
-            }
+        if(!JmsUtils.jmsConfig.manualStart){
+            JmsUtils.startListeners(applicationContext)
+        }else{
+            LOG.info "Call JmsUtils.startListeners() to start JMS listeners manually"
         }
+
         //Fetch and set the asyncReceiverExecutor
         try {
             def asyncReceiverExecutor = applicationContext.getBean('jmsAsyncReceiverExecutor')
@@ -233,8 +232,8 @@ class JmsGrailsPlugin {
                 newBeans.beanDefinitions.each { n, d ->
                     event.ctx.registerBeanDefinition(n, d)
                 }
-                serviceListenerConfigs.each {
-                    startListenerContainer(it, event.ctx)
+                serviceListenerConfigs.each {ListenerConfig listenerConfig->
+                    JmsUtils.startListenerContainer(listenerConfig, event.ctx)
                 }
             }
         }
@@ -243,13 +242,11 @@ class JmsGrailsPlugin {
     }
 
     def onConfigChange = { event ->
-       def previousJmsConfig = JmsUtils.jmsConfig
-
-        if (JmsUtils.setNewConfig(event.source.jms)) {
+        Map previousJmsConfig = JmsUtils.jmsConfig
+        if (!JmsUtils.compareAndSetNewConfig(event.source.jms)) {
             return
         }
 
-    
         LOG.warn("tearing down all JMS listeners/templates due to config change")
 
         // Remove the listeners
@@ -291,11 +288,7 @@ class JmsGrailsPlugin {
                 event.ctx.registerBeanDefinition(n, d)
             }
 
-            JmsUtils.listenerConfigs.each { name, serviceListenerConfigs ->
-                serviceListenerConfigs.each { listenerConfig ->
-                    startListenerContainer(listenerConfig, event.ctx)
-                }
-            }
+            JmsUtils.startListeners(event.ctx)
         }
 
         // We need to trigger a reload of the jmsService so it gets any new beans
@@ -322,7 +315,5 @@ class JmsGrailsPlugin {
         listenerConfig.removeBeansFromContext(appCtx)
     }
 
-    def startListenerContainer(listenerConfig, applicationContext) {
-        applicationContext.getBean(listenerConfig.listenerContainerBeanName).start()
-    }
+   
 }
