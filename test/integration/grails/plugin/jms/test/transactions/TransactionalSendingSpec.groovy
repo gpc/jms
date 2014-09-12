@@ -20,7 +20,7 @@ class TransactionalSendingSpec extends Specification {
     static final String PAYLOAD = "payload"
 
     @Timeout(10)
-    void "message sent in successful transaction to a non transacted template is sent straightaway"() {
+    void "A message sent in a successful transaction to a non-transacted template is sent straightaway"() {
         given: "a thread sending a messaging in a transaction, but waiting to close the transaction"
         def latch = new CountDownLatch(1)
 
@@ -32,7 +32,7 @@ class TransactionalSendingSpec extends Specification {
             }
         }
 
-        expect: "the message has been sent (even though the transaction is still open)"
+        expect: "the message is sent and received (even though the transaction is still open)"
         simpleReceivingService.getMessage(2) == PAYLOAD
 
         cleanup:
@@ -40,8 +40,8 @@ class TransactionalSendingSpec extends Specification {
     }
 
     @Timeout(10)
-    void "message sent in successful transaction is sent on commit"() {
-        given: "a thread sending a messaging in a transaction, but waiting to close the transaction"
+    void "A message sent in a successful transaction should be received by receiver."() {
+        given: "a sender that wraps the send in a successful transaction"
         def latch = new CountDownLatch(1)
         def payload = "payload"
 
@@ -52,38 +52,40 @@ class TransactionalSendingSpec extends Specification {
             }
         }
 
-        expect: "the message has not been sent (transaction not committed)"
+        expect: "the receiver to get the message only after the transaction has been committed."
         simpleReceivingService.getMessage(2) == null
 
         when: "the transaction is allowed to commit"
         latch.countDown()
 
-        then: "the message is sent"
+        then: "the message is sent to the receiver since the transaction was successful"
         simpleReceivingService.getMessage(2) == PAYLOAD
     }
 
     @Timeout(10)
-    void "message sent in unsuccessful transaction is not sent on rollback"() {
+    void "A message sent in an unsuccessful transaction shouldn't be received"() {
 
-        given: "a thread sending a messaging in a transaction, but waiting to close the transaction after erroring"
+        given: "a sender that wraps the send in a failed transaction"
         def latch = new CountDownLatch(1)
         def payload = "payload"
 
         Thread.start {
+          try {
             Person.withTransaction {
                 simpleSendingService.sendToQueue(PAYLOAD, 'transacted')
                 latch.await()
-                throw new RuntimeException("Bang!!!!!")
+                throw new RuntimeException("Error that we intentionally throw to fail the transaction.")
             }
+          } catch (e) { }
         }
 
-        expect: "the message has not been sent (transaction not committed)"
+        expect: "that the receiver shouldn't get the message"
         simpleReceivingService.getMessage(2) == null
 
         when: "the transaction is allowed to fail and rollback"
         latch.countDown()
 
-        then: "the message is not sent"
+        then: "the message is not sent to the receiver since the transaction failed"
         simpleReceivingService.getMessage(2) == null
     }
 }

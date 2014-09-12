@@ -15,8 +15,8 @@
  */
 log4j = {
     error ''
-    debug 'grails.plugin.jms'
-    debug 'grails.app.service'
+    info 'grails.plugin.jms'
+    info 'grails.app.service'
 }
 
 beans {
