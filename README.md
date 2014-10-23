@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gpc/grails-jms.svg)](https://travis-ci.org/gpc/grails-jms)
+[![Build Status](https://travis-ci.org/gpc/grails-jms.svg?branch=master)](https://travis-ci.org/gpc/grails-jms)
 
 JMS for Grails
 ==============
