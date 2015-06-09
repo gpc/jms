@@ -32,7 +32,7 @@ class JmsGrailsPlugin {
     def title = "JMS integration for Grails"
     def grailsVersion = "1.2.0 > *"
 
-    def loadAfter = ['services', 'controllers']
+    def loadAfter = ['services', 'controllers','dataSource','hibernate', 'hibernate4']
     def observe = ['services', 'controllers']
 
     def pluginExcludes = [
