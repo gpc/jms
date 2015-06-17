@@ -1,9 +1,9 @@
 package grails.plugin.jms.listener
 
-import org.codehaus.groovy.grails.support.MockApplicationContext
 import spock.lang.*
-import spock.util.mop.ConfineMetaClassChanges
+import grails.test.mixin.support.GrailsUnitTestMixin
 
+@TestMixin(GrailsUnitTestMixin)
 class ServiceInspectorSpec extends Specification {
 
     def serviceInspector = new ServiceInspector()
@@ -27,14 +27,13 @@ class ServiceInspectorSpec extends Specification {
         !serviceInspector.hasServiceListenerMethod(HasNoServiceListener)
     }
 
-    @ConfineMetaClassChanges([MockApplicationContext])
     @Unroll("key [#key] resolves to expected value [#expected] with conf [#configuration]")
     def 'able to resolve destination names through configuration'() {
         given:
-        def applicationContext = getApplicationContext(configuration)
+        replaceGrailsApplicationConfig(configuration)
 
         when:
-        String obtained = serviceInspector.resolveDestinationName(key, applicationContext)
+        String obtained = serviceInspector.resolveDestinationName(key, grailsApplication)
 
         then:
         expected == obtained
@@ -47,22 +46,19 @@ class ServiceInspectorSpec extends Specification {
         '$.a.queue.key.' | 'my.service.queue' | "jms.destinations.a.queue.key='my.service.queue'"
     }
 
-    @ConfineMetaClassChanges([MockApplicationContext])
     def 'fail if we are unable to resolve destination names'() {
         given:
-        def applicationContext = getApplicationContext("just.another.entry='something'")
+            replaceGrailsApplicationConfig("just.another.entry='something'")
 
         when:
-        serviceInspector.resolveDestinationName('$no.match', applicationContext)
+        serviceInspector.resolveDestinationName('$no.match', grailsApplication)
 
         then:
         thrown(IllegalArgumentException)
     }
 
-    def getApplicationContext(String configuration){
-        def applicationContext = new MockApplicationContext()
-        applicationContext.metaClass.config = new ConfigSlurper().parse(configuration)
-        applicationContext
+    void replaceGrailsApplicationConfig(String configuration){
+        grailsApplication.config = new ConfigSlurper().parse(configuration)
     }
 
 }
