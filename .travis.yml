@@ -1,0 +1,15 @@
+language: groovy
+jdk:
+- openjdk7
+before_script:
+- rm -rf target
+script: ./travis-build.sh
+env:
+  global:
+  - GIT_NAME="Jeff Scott Brown"
+  - GIT_EMAIL="brownj@ociweb.com"
+  - secure: ehN+A/gd+onszRjErPcnX1VDI5HuDoUFHJZb8ZQSPexu3qKANox8L00eY13EA5tv29+XaPxP+LeLgMtSdCW2W8GT8qo4Z8SxKSZBqyiNeupVI+8EkZ/kn/S4f7yjpkfILOBWRsZ2BrRSVCi9YNWOloWciP0iOS3N4H7q5VJCzXg=
+  - secure: epe75QFSRz2xlLDiFPgUwuPVQl/doD8+rYSaXX55u7spN9z6NCKyMjASqOWOdTBdUGZIp8HKK7UnIW37VHPGlQgk+xAFR4jNIYK9N7w5kgiqqFhkTqdn6ezPpKV/XorLDQE9EF/dT26OH/E0LfhNXgEKZzyS+koDi4my7qfVcIQ=
+  - secure: HvlNdBhfMmZvPGU7RBABFTPMNi6Gr7PEWviG+sXLd4HZZfke6G0aoPkEoDbfOSWVokzn9HzctnH9o+DJTOVmoGKz0RQjCGppV00SpMmuU5qDLWTTvVrpyPT20KWW4cvERe+L0v8a4uq2sD1NC7kpe1HhMCvg8M5yQC5o8AlpH3Q=
+  - secure: rSxj3vvRCRjN0tjeDhdabZuVoa7XJNCwYHuIEP4dkjOmGaroa1e9OGYcdhqkSVw/xZUttz/NcqxwO3bmGhM/ppvqQZXXMMzRp6YpF6+hVDYWL4Jk3/Jr6UJKo7bEg4RZiUSUdw5kRQZvL6lRJVCeA62g0bc8b7s+XA6+3XEv5tE=
+  - secure: yeCLEviZOjCBSDhTnahyrie4iGqWkr7mFyjs6YczV0tgN/GDsdLIFN3nKMkqBm69Fb4iRFaFIQ22WMtors3Kkkgx25hsMzglXQk5qx3pY/AKfuOoI+UYvZ0exPRuDKnTTFEZyF3Wpx3F9OpxAS5QQU0rDqXhxRaDPol0xad+r9o=
