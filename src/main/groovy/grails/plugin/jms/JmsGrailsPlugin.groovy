@@ -1,0 +1,98 @@
+package grails.plugin.jms
+
+import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
+import grails.plugin.jms.listener.ListenerConfigFactory
+import grails.plugin.jms.listener.ServiceInspector
+import grails.plugins.Plugin
+import groovy.util.logging.Commons
+import org.springframework.jms.support.converter.SimpleMessageConverter
+
+@Commons
+class JmsGrailsPlugin extends Plugin {
+
+    // the version or versions of Grails the plugin is designed for
+    def grailsVersion = "3.0.2 > *"
+
+    // resources that are excluded from plugin packaging
+    def pluginExcludes = [
+            "grails-app/views/error.gsp"
+    ]
+
+    def title = "Jms" // Headline display name of the plugin
+    def author = "Jeff Brown"
+    def authorEmail = "brownj@ociweb.com"
+    def description = '''\
+JMS integration for Grails.
+'''
+    def profiles = ['web']
+
+    def documentation = "http://grails.org/plugin/jms"
+
+    def license = "APACHE"
+
+    def developers = [[name: "Weiqi Gao", email: "gaow@ociweb.com"]]
+
+    def issueManagement = [system: "GitHub", url: "https://github.com/grails3-plugins/jms/issues"]
+
+    def scm = [url: "https://github.com/grails3-plugins/jms"]
+
+    def serviceInspector = new ServiceInspector()
+    def listenerConfigs = [:]
+    def listenerConfigFactory = new ListenerConfigFactory()
+
+    Closure doWithSpring() {
+        { ->
+            new JmsBeanDefinitionsBuilder(config.jms).build(delegate)
+
+            // TODO
+            standardJmsMessageConverter SimpleMessageConverter
+
+            grailsApplication.serviceClasses?.each { service ->
+                def serviceClass = service.getClazz()
+                def serviceClassListenerConfigs = getListenerConfigs(serviceClass, grailsApplication)
+                if (serviceClassListenerConfigs) {
+                    serviceClassListenerConfigs.each {
+                        registerListenerConfig(it, delegate)
+                    }
+                    listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
+                }
+            }
+        }
+    }
+
+    def getListenerConfigs(serviceClass, application) {
+        log.debug("inspecting '${serviceClass.name}' for JMS listeners")
+        serviceInspector.getListenerConfigs(serviceClass, listenerConfigFactory, application)
+    }
+
+    def registerListenerConfig(listenerConfig, beanBuilder) {
+        def queueOrTopic = (listenerConfig.topic) ? "TOPIC" : "QUEUE"
+        log.info "registering listener for '${listenerConfig.listenerMethodName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
+        listenerConfig.register(beanBuilder)
+    }
+
+    void doWithApplicationContext() {
+        listenerConfigs.each { serviceClassName, serviceClassListenerConfigs ->
+            serviceClassListenerConfigs.each {
+                startListenerContainer(it, applicationContext)
+            }
+        }
+        //Fetch and set the asyncReceiverExecutor
+        try {
+            def asyncReceiverExecutor = applicationContext.getBean('jmsAsyncReceiverExecutor')
+            if (asyncReceiverExecutor) {
+                log.info "A jmsAsyncReceiverExecutor was detected in the Application Context and therefore will be set in the JmsService."
+                applicationContext.getBean('jmsService').asyncReceiverExecutor = asyncReceiverExecutor
+            }
+        }
+        catch (e) {
+            log.debug "No jmsAsyncReceiverExecutor was detected in the Application Context."
+        }
+
+    }
+
+
+    def startListenerContainer(listenerConfig, applicationContext) {
+        applicationContext.getBean(listenerConfig.listenerContainerBeanName).start()
+    }
+}
