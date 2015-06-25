@@ -26,7 +26,7 @@ class ListenerConfigTests extends GroovyTestCase {
 
     void testGetDestinationName() {
         def mockGrailsApplication = new ConfigObject()
-        mockGrailsApplication.metadata["app.name"] = "app"
+        mockGrailsApplication.metadata["info.app.name"] = "app"
 
         def lc1 = newListenerConfig(
             grailsApplication: mockGrailsApplication,

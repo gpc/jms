@@ -76,7 +76,7 @@ class ListenerConfig {
     }
 
     def getAppName() {
-        grailsApplication.metadata['app.name']
+        grailsApplication.metadata['info.app.name']
     }
 
     def register(beanBuilder) {
