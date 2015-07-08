@@ -8,7 +8,7 @@ filename=$(basename "$filename")
 
 EXIT_STATUS=0
 echo "Publishing archives for branch $TRAVIS_BRANCH"
-if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'grails3' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == '2.0.x' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
   echo "Publishing archives"
 
@@ -28,8 +28,8 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'grails3' && $TRAVIS_PULL_REQUES
   git clone https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git -b gh-pages gh-pages --single-branch > /dev/null
   cd gh-pages
 
-  # If this is the grails3 branch then update the snapshot
-  if [[ $TRAVIS_BRANCH == 'grails3' ]]; then
+  # If this is the 2.0.x branch then update the snapshot
+  if [[ $TRAVIS_BRANCH == '2.0.x' ]]; then
     mkdir -p snapshot
     cp -r ../build/docs/manual/. ./snapshot/
 
