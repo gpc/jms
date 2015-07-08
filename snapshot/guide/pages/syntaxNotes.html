@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>3.2 Syntax Notes 2.0.0-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/logging.html"><strong>9</strong><span>Logging</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p></p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/jmsProvider.html">&lt;&lt; <strong>2</strong><span>Plugging In A JMS Provider</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3.2 Syntax Notes - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> </p>
+
+                    <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="syntaxNotes">3.2 Syntax Notes</h2>
+There are some noteworthy things about this config syntax.<p class="paragraph"/><h4>Bean names</h4><p class="paragraph"/>The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
+    standard &#123;
+        connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>
+    &#125;
+&#125;</pre></div><p class="paragraph"/><h4>Setting Class</h4><p class="paragraph"/>To set the class of a bean, you must use the following syntax<p class="paragraph"/><div class="code"><pre>templates &#123;
+    standard &#123;
+        meta &#123;
+            clazz = my.org.CustomJmsTemplate
+        &#125;
+    &#125;
+&#125;</pre></div><p class="paragraph"/><h4>Extending Definitions</h4><p class="paragraph"/>Bean definition can inherit from parents and selectively override settings.<p class="paragraph"/><div class="code"><pre>templates &#123;
+    other &#123;
+        meta &#123;
+            parentBean = 'standardJmsTemplate'
+        &#125;
+        connectionFactoryBean = <span class="java&#45;quote">"someOtherJmsConnectionFactory"</span>
+    &#125;
+&#125;</pre></div><p class="paragraph"/>This creates an "other" template, that inherits all of the standard settings but uses a custom connectionFactory.
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/jmsProvider.html">&lt;&lt; <strong>2</strong><span>Plugging In A JMS Provider</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Service</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Service/receiveSelectedAsyncJMSMessage.html">receiveSelectedAsyncJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Service/receiveSelectedJMSMessage.html">receiveSelectedJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Service/sendJMSMessage.html">sendJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Service/sendPubSubJMSMessage.html">sendPubSubJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Service/sendQueueJMSMessage.html">sendQueueJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Service/sendTopicJMSMessage.html">sendTopicJMSMessage</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>7 Browsing Messages In A Queue 2.0.0-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/logging.html"><strong>9</strong><span>Logging</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p></p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/receivingMessagesWithSelectors.html">&lt;&lt; <strong>6</strong><span>Receiving Messages With Selectors</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>7 Browsing Messages In A Queue - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> </p>
+
+                    <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h1 id="browsingMessagesInQueue">7 Browsing Messages In A Queue</h1>
+If you are looking on ways to obtain the contents of a given <code> javax.jms.Queue </code> without changing its state the
+<code> JmsService </code> offers a set of methods designed for this task.<p class="paragraph"/><h4>The browse(destination, jmsTemplateName, browserCallback) method.</h4>
+Will retrieve all messages inside the given  <em class="italic">queue</em>  at that time without changing its state i.e messages will not be consumed.
+This method will convert the <code> javax.jms.Message </code> using the <code> JmsTemplate </code>. If you need the  <code> javax.jms.Message </code>
+you should use the <code> browseNoConvert() </code> method and its variants as described further on.<p class="paragraph"/>
+<strong class="bold">destination</strong><p class="paragraph"/>An instance of <code> javax.jms.Queue </code> , a <code> String </code> or a <code> Map </code> . <strong class="bold">Needs</strong> to be a  <em class="italic">queue</em>  .<p class="paragraph"/>A <code> String </code> destination argument will be interpreted as the name of a destination  <em class="italic">queue</em>  .<p class="paragraph"/>A <code> Map </code> destination argument can be used in the following ways:<p class="paragraph"/><div class="code"><pre>// browse literal queue
+List messages = jmsService.browse(queue: <span class="java&#45;quote">"aQueue"</span>, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>)<p class="paragraph"/>// browse the queue '«appname».person'
+List messages = jmsService.browse(service: <span class="java&#45;quote">"person"</span>, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>)<p class="paragraph"/>// browse the queue '«appname».person.doIt'
+List messages = jmsService.browse(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>)<p class="paragraph"/>// browse the queue 'remote.person.doIt'
+List messages = jmsService.browse(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>)</pre></div><p class="paragraph"/>
+<strong class="bold">jmsTemplateName</strong><p class="paragraph"/>The name of the template that should be used to send the message. If this value is <code> null </code> , the standard template will be used (called "standard").<p class="paragraph"/><strong class="bold">browserCallback</strong><p class="paragraph"/>An optional closure that can be used to "process" the message before being added to the returning message list. The value returned by this <strong class="bold">callback</strong> will
+be the one added to the returning list if such value is <strong class="bold">not null</strong>.<p class="paragraph"/><h4>browse() method variants</h4><p class="paragraph"/>There are variations of the browse() method for convenience...<p class="paragraph"/><div class="code"><pre>List messages = jmsService.browse(queue)<p class="paragraph"/>List messages = jmsService.browse(queue, browserCallback)<p class="paragraph"/>List messages = jmsService.browse(queue, jmsTemplateBeanName)</pre></div><p class="paragraph"/>
+<h4>The browseNoConvert(destination, jmsTemplateName, browserCallback) method.</h4>
+This method will not convert the <code> javax.jms.Message </code>. In other words the <code> browserCallback:Closure </code> will receive a
+ <code> javax.jms.Message </code> or if no  <em class="italic">callback</em>  is defined a  <em class="italic">list</em>  containing <code> javax.jms.Message </code> instances will be returned.
+ <strong class="bold">You can't</strong> update the returned <code> javax.jms.Message </code> objects, they are <strong class="bold">read-only</strong> instances.<p class="paragraph"/><div class="code"><pre>List messages = jmsService.browseNoConvert(queue)<p class="paragraph"/>//You can <span class="java&#45;keyword">do</span> the following to filter messages or use a selector through the browseSelected&#42; methods
+List messages = jmsService.browseNoConvert(queue)&#123; javax.jms.Message msg &#45;&#62;
+    ( msg.getStringProperty('aproperty') ? msg : <span class="java&#45;keyword">null</span> )
+&#125;<p class="paragraph"/>List messages = jmsService.browseNoConvert(queue, jmsTemplateBeanName)
+messages.each &#123;
+    assert it <span class="java&#45;keyword">instanceof</span> javax.jms.Message
+&#125;</pre></div><p class="paragraph"/><h4>The browseSelected(destination, selector, jmsTemplateName, browserCallback) method.</h4>
+Will retrieve messages that match the <strong class="bold">selector</strong> inside the given  <em class="italic">queue</em>  at the time of the call without changing its state i.e messages will not be consumed.
+This method will convert the <code> javax.jms.Message </code> using the <code> JmsTemplate </code>. If you need the  <code> javax.jms.Message </code>
+you should use the <code> browseSelectedNotConvert() </code> method and its variants as described further on.<p class="paragraph"/><strong class="bold">selector</strong><p class="paragraph"/>This is the message selector as described by the JMS Specification. In a nutshell a <strong class="bold">message selector</strong> lets a client
+specify a statement, which is similar to an SQL92 statement, that will be used to filter messages through the values
+of their <strong class="bold">message headers</strong> and <strong class="bold">message properties</strong>.
+"Only messages whose header and property values match the selector are delivered". As described in the <strong class="bold">JMS</strong>
+Specification what it means for a message not to be delivered depends on the MessageConsumer being used.
+It is important to mention that the selectors can only access <strong class="bold">header</strong> or <strong class="bold">properties</strong> but will <strong class="bold">not be able to access any message body values</strong>.<p class="paragraph"/><div class="code"><pre>List messages = jmsService.browseSelected(queue, <span class="java&#45;quote">" anIntProperty &#62; 0 AND anotherProperty='a Value'"</span>)<p class="paragraph"/>//filtering through body content.
+List messages = jmsService.browseSelected(queue, <span class="java&#45;quote">" anIntProperty &#62; 0 AND anotherProperty='a Value'"</span>)&#123;
+    ( msg == 'avalue' ?: <span class="java&#45;keyword">null</span> )
+&#125;<p class="paragraph"/>List messages = jmsService.browseSelected(queue, <span class="java&#45;quote">" anIntProperty &#62; 0 AND anotherProperty='a Value'"</span>, jmsTemplateBeanName)</pre></div><p class="paragraph"/>
+<h4>The browseSelectedNotConvert(destination, selector, jmsTemplateName, browserCallback) method.</h4>
+Will retrieve messages that match the <strong class="bold">selector</strong> inside the given  <em class="italic">queue</em>  at the time of the call without changing its state i.e messages will not be consumed.
+As the <code> browseNoConvert </code> this method will not convert the <code> javax.jms.Message </code>.<p class="paragraph"/><div class="code"><pre>List messages = jmsService.browseSelectedNotConvert(queue, <span class="java&#45;quote">" anIntProperty &#62; 0 AND anotherProperty='a Value'"</span>)<p class="paragraph"/>List messages = jmsService.browseSelectedNotConvert(queue, <span class="java&#45;quote">" anIntProperty &#62; 0 AND anotherProperty='a Value'"</span>)&#123; javax.jms.Message msg &#45;&#62;
+    <span class="java&#45;keyword">return</span> msg.JMSCorrelationID
+&#125;<p class="paragraph"/>List messages = jmsService.browseSelectedNotConvert(queue, <span class="java&#45;quote">" anIntProperty &#62; 0 AND anotherProperty='a Value'"</span>, jmsTemplateBeanName)
+messages.each &#123;
+    assert it <span class="java&#45;keyword">instanceof</span> javax.jms.Message
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/receivingMessagesWithSelectors.html">&lt;&lt; <strong>6</strong><span>Receiving Messages With Selectors</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Service</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Service/receiveSelectedAsyncJMSMessage.html">receiveSelectedAsyncJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/receiveSelectedJMSMessage.html">receiveSelectedJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendJMSMessage.html">sendJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendPubSubJMSMessage.html">sendPubSubJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendQueueJMSMessage.html">sendQueueJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendTopicJMSMessage.html">sendTopicJMSMessage</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

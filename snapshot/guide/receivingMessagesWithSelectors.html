@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>6 Receiving Messages With Selectors 2.0.0-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/logging.html"><strong>9</strong><span>Logging</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p></p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/receivingMessages.html">&lt;&lt; <strong>5</strong><span>Receiving Messages</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>6 Receiving Messages With Selectors - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> </p>
+
+                    <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#receivingMethodsAddedToControllersAndServices"><strong>6.1</strong><span>Receiving Methods Added To Controllers And Services</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+
+<h1 id="receivingMessagesWithSelectors">6 Receiving Messages With Selectors</h1>
+As mentioned in chapter <strong class="bold">4</strong> this plugin adds a service called <code> jmsService </code> to your application. In addition to the
+methods already described in other chapters the <code> jmsService </code> has the following methods that can be used to receive a
+selected message as a single operation without a <strong class="bold">Service Listener</strong>.<p class="paragraph"/><h4>The receiveSelected(destination, selector, timeout, jmsTemplateBeanName)</h4><p class="paragraph"/><strong class="bold">destination</strong><p class="paragraph"/>An instance of <code> javax.jms.Destination </code> , <code> javax.jms.Topic </code> , a <code> String </code> or a <code> Map </code> .<p class="paragraph"/>A <code> String </code> destination argument will be interpreted as the name of a destination  <em class="italic">queue</em>  .<p class="paragraph"/>A <code> Map </code> destination argument can be used in the following ways:<p class="paragraph"/><div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+jmsService.receiveSelected(queue: <span class="java&#45;quote">"aQueue"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on a literal topic waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+jmsService.receiveSelected(topic: <span class="java&#45;quote">"aTopic"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+jmsService.receiveSelected(service: <span class="java&#45;quote">"person"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+jmsService.receiveSelected(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue 'remote.person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+jmsService.receiveSelected(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)</pre></div><p class="paragraph"/><strong class="bold">selector</strong><p class="paragraph"/>This is the message selector as described by the JMS Specification. In a nutshell a <strong class="bold">message selector</strong> lets a client
+specify a statement, which is similar to an SQL92 statement, that will be used to filter messages through the values
+of their <strong class="bold">message headers</strong> and <strong class="bold">message properties</strong>.
+"Only messages whose header and property values match the selector are delivered". As described in the <strong class="bold">JMS</strong>
+Specification what it means for a message not to be delivered depends on the MessageConsumer being used.
+It is important to mention that the selectors can only access <strong class="bold">header</strong> or <strong class="bold">properties</strong> but will <strong class="bold">not be able to access any message body values</strong>.<p class="paragraph"/><h5>References</h5>
+<a href="http://download.oracle.com/javaee/1.3/api/javax/jms/Message.html" target="blank">JavaEE 1.3 javax.jms.Message</a><p class="paragraph"/><a href="http://activemq.apache.org/selectors.html" target="blank">ActiveMq Selectors</a><p class="paragraph"/><a href="http://publib.boulder.ibm.com/infocenter/wmbhelp/v6r1m0/topic/com.ibm.etools.mft.doc/ac24876_.htm" target="blank">IBM Guide on Selectors</a><p class="paragraph"/>
+<strong class="bold">timeout</strong><p class="paragraph"/>A <strong class="bold">long</strong> value that specifies the amount of milliseconds that this call should wait until desisting and returning <code> null </code>.<p class="paragraph"/>
+<strong class="bold">jmsTemplateName</strong><p class="paragraph"/>The name of the template that should be used to send the message. If this value is <code> null </code> , the standard template will be used (called "standard").<p class="paragraph"/>There are variations of the receiveSelected() method for convenience...<p class="paragraph"/><h4>receiveSelected() method variants</h4><p class="paragraph"/><div class="code"><pre>jmsService.receiveSelected(destination, selector) // use the <span class="java&#45;keyword">default</span> timeout and standard template
+jmsService.receiveSelected(destination, selector, timeout) // use the standard template</pre></div><p class="paragraph"/>
+<h4> Specifying a timeout through configuration or the template.</h4><p class="paragraph"/>If no <strong class="bold">timeout</strong> is specified the JmsService uses a <strong class="bold"></strong>500<strong class="bold"></strong> millisecond timeout. You can also specify a timeout through the <code> Config.groovy </code> file.
+<div class="code"><pre>//Specifying a 100 milliseconds timeout
+jms.receiveTimeout=100l</pre></div><p class="paragraph"/>Or if you are providing a custom <code> JmsTemplate </code> through its <code> receiveTimeout </code> attribute.<p class="paragraph"/><strong class="bold"></strong>Note: Both timeouts will be ignored if set to zero, the only way of setting a zero timeout would be by passing such timeout as an argument to the call.<p class="paragraph"/><h4>The receiveSelectedAsync(destination, selector, timeout, jmsTemplateBeanName)</h4><p class="paragraph"/>This methods provides a variant to the <code> receiveSelected </code> method, the difference is that this method will execute the request asynchronously by wrapping a call to the
+<code> receiveSelected </code> within an <strong class="bold">Executor Service</strong> (see <code> java.util.concurrent.ExecutorService </code> in your JDK API 1.5+ ).<p class="paragraph"/>Some examples..
+<div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future that holds the result of the asynchronous execution.
+java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(queue: <span class="java&#45;quote">"aQueue"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>// Expect/Receive a message with a &#42;selector&#42; on a literal topic waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future that holds the result of the asynchronous execution.
+java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(topic: <span class="java&#45;quote">"aTopic"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)</pre></div>
+
+
+<h2 id="receivingMethodsAddedToControllersAndServices">6.1 Receiving Methods Added To Controllers And Services</h2>
+<blockquote class="note">The methods described below are not supported in the current 2.0.0 milestone but will be added soon.</blockquote><p class="paragraph"/>The plugin will inject the following methods to <code> Conrollers </code> and <code> Services </code>.<p class="paragraph"/><h4>Synchronous calls.</h4><p class="paragraph"/><div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(queue: <span class="java&#45;quote">"aQueue"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on a literal topic waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(topic: <span class="java&#45;quote">"aTopic"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(service: <span class="java&#45;quote">"person"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg =receiveSelectedJMSMessage(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue 'remote.person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
+def msg = receiveSelectedJMSMessage(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)</pre></div><p class="paragraph"/>
+<h4>Asynchronous calls.</h4><p class="paragraph"/><div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(queue: <span class="java&#45;quote">"aQueue"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on a literal topic waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(topic: <span class="java&#45;quote">"aTopic"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(service: <span class="java&#45;quote">"person"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>// Expect/Receive a message with a &#42;selector&#42; on the queue '«appname».person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
+// Expect/Receive a message with a &#42;selector&#42; on the queue 'remote.person.doIt' waiting up to the given &#42;timeout&#42;.
+// Will <span class="java&#45;keyword">return</span> a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)</pre></div><p class="paragraph"/>
+<strong class="bold"></strong>Note: a afuture.get() will return the <strong class="bold">message</strong>.<p class="paragraph"/>
+<h4>Specifying your own <strong class="bold"></strong>Executor<strong class="bold"></strong> for Async. Receivers using <strong class="bold">Spring IoC</strong>.</h4><p class="paragraph"/><div class="code"><pre>beans = &#123;
+     jmsAsyncReceiverExecutor( java.util.concurrent.Executors ) &#123; executors &#45;&#62;
+        executors.factoryMethod = <span class="java&#45;quote">"newFixedThreadPool"</span>
+        executors.constructorArgs = &#91; 5 &#93;
+    &#125;
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/receivingMessages.html">&lt;&lt; <strong>5</strong><span>Receiving Messages</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Service</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Service/receiveSelectedAsyncJMSMessage.html">receiveSelectedAsyncJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/receiveSelectedJMSMessage.html">receiveSelectedJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendJMSMessage.html">sendJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendPubSubJMSMessage.html">sendPubSubJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendQueueJMSMessage.html">sendQueueJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendTopicJMSMessage.html">sendTopicJMSMessage</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
