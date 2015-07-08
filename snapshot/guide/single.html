@@ -164,7 +164,7 @@ The plugin does not include a JMS provider so you must install and configure you
 
 
 <h2 id="activeMqExample">2.1 ActiveMQ Example</h2>
-Getting ActiveMQ up and running as your provider is very simple.  All that is reuqired is adding a runtime dependency on the <code>activemq-spring</code> library in <code>build.gradle</code>.<p class="paragraph"/><div class="code"><pre>// ...<p class="paragraph"/>dependencies &#123;<p class="paragraph"/>    // &#8230;
+Getting ActiveMQ up and running as your provider is very simple.  All that is required is adding a runtime dependency on the <code>activemq-spring</code> library in <code>build.gradle</code>.<p class="paragraph"/><div class="code"><pre>// ...<p class="paragraph"/>dependencies &#123;<p class="paragraph"/>    // &#8230;
     compile 'org.grails.plugins:jms:2.0.0&#45;SNAPSHOT'
     runtime 'org.apache.activemq:activemq&#45;spring:5.11.1'
 &#125;</pre></div><p class="paragraph"/>The runtime will recognize that <code>activemq-spring</code> is available and will auto
