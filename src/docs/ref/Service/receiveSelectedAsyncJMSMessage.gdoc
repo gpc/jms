@@ -1,0 +1,22 @@
+
+h1. receiveSelectedAsyncJMSMessage
+
+h2. Purpose
+
+
+
+h2. Examples
+
+{code:java}
+foo.receiveSelectedAsyncJMSMessage(object,object)
+{code}
+
+h2. Description
+
+
+
+Arguments:
+
+[* @object@
+, * @object@
+]

@@ -1,0 +1,22 @@
+
+h1. sendTopicJMSMessage
+
+h2. Purpose
+
+
+
+h2. Examples
+
+{code:java}
+foo.sendTopicJMSMessage(object,object)
+{code}
+
+h2. Description
+
+
+
+Arguments:
+
+[* @object@
+, * @object@
+]

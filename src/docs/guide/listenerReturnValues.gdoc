@@ -1,0 +1,5 @@
+Spring's "MessageListenerAdapter":http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/listener/adapter/MessageListenerAdapter.html adds some special handling of listener method return values.
+
+From MessageListenerAdapter's JavaDoc: "If a target listener method returns a non-null object (typically of a message content type such as String or byte array), it will get wrapped in a JMS Message and sent to the response destination (either the JMS "reply-to" destination or a specified default destination)."
+
+Be careful with Groovy's implicit return mechanism; ensure that you return null explicitly if you want nothing to be sent to the reply destination. If you accidentally return a value that cannot be sent to the reply destination, you may have odd side effects like messages never being removed from the queue (due to implicit rollbacks!).
