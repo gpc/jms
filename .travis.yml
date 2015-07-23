@@ -2,7 +2,7 @@ language: groovy
 jdk:
 - openjdk7
 before_script:
-- rm -rf target
+- rm -rf build
 script: ./travis-build.sh
 env:
   global:
