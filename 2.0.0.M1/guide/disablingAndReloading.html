@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>10 Disabling And Reloading 2.0.0.M1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/logging.html"><strong>9</strong><span>Logging</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p></p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/logging.html">&lt;&lt; <strong>9</strong><span>Logging</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+
+
+                <div class="project">
+                    <h1>10 Disabling And Reloading - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> </p>
+
+                    <p><strong>Version:</strong> 2.0.0.M1</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h1 id="disablingAndReloading">10 Disabling And Reloading</h1>
+<h3>Disabling</h3><p class="paragraph"/>You can globally disable all JMS functionality by setting <code>jms.disabled</code> to true in your application config.<p class="paragraph"/>For example you could turn JMS for testing with…<p class="paragraph"/><div class="code"><pre>environments &#123;
+    test &#123;
+        jms.disabled = <span class="java&#45;keyword">true</span>
+    &#125;
+&#125;</pre></div><p class="paragraph"/>If JMS is disabled then no listeners are registered (so no messages will be received).<p class="paragraph"/>If an attempt is made to send a message while JMS is disabled you will only get a log message alerting you that the message will not be sent because JMS is disabled. This allows you to still use the <code>sendMessage()</code> methods or <code>jmsService</code> even if JMS is disabled.<p class="paragraph"/><h3>Reloading</h3><p class="paragraph"/>The JMS plugin has good support for hot reloading during development.<p class="paragraph"/><h4>Listeners</h4><p class="paragraph"/>If you make a change to a service class that is a listener during development, all existing listeners for that service will be shutdown. The service is then re-inspected for listeners that are then registered. This means you can change listener config and have it take effect without restarting your application.<p class="paragraph"/><h4>Config</h4><p class="paragraph"/>If any change to the JMS config is detected, all JMS functionality is torn down and then re-established with the new config. This allows you to change bean definitions (such as container or template options) and have them take effect without restarting your application.<p class="paragraph"/><h4>Disabled/Enabled</h4><p class="paragraph"/>You can also temporarily disable or enable JMS functionality by changing the <code>jms.disabled</code> config option during development and have it take effect without restarting your application.
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/logging.html">&lt;&lt; <strong>9</strong><span>Logging</span></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Service</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Service/receiveSelectedAsyncJMSMessage.html">receiveSelectedAsyncJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/receiveSelectedJMSMessage.html">receiveSelectedJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendJMSMessage.html">sendJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendPubSubJMSMessage.html">sendPubSubJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendQueueJMSMessage.html">sendQueueJMSMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Service/sendTopicJMSMessage.html">sendTopicJMSMessage</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
