@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>jms 2.0.0-SNAPSHOT</title>
+        <title>jms 2.0.0.M1</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
         <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
@@ -70,7 +70,7 @@ function addJsClass(el) {
                         <div class="project">
                             <h1>jms - Reference Documentation</h1>
                             <p><strong>Authors:</strong> </p>
-                            <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
+                            <p><strong>Version:</strong> 2.0.0.M1</p>
                             
                         </div>
 
@@ -165,7 +165,7 @@ The plugin does not include a JMS provider so you must install and configure you
 
 <h2 id="activeMqExample">2.1 ActiveMQ Example</h2>
 Getting ActiveMQ up and running as your provider is very simple.  All that is required is adding a runtime dependency on the <code>activemq-spring</code> library in <code>build.gradle</code>.<p class="paragraph"/><div class="code"><pre>// ...<p class="paragraph"/>dependencies &#123;<p class="paragraph"/>    // &#8230;
-    compile 'org.grails.plugins:jms:2.0.0&#45;SNAPSHOT'
+    compile 'org.grails.plugins:jms:2.0.0.M1'
     runtime 'org.apache.activemq:activemq&#45;spring:5.11.1'
 &#125;</pre></div><p class="paragraph"/>The runtime will recognize that <code>activemq-spring</code> is available and will auto
 configure the <code>jmsConnectionFactory</code> in the Spring application context.  The
