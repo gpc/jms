@@ -22,28 +22,21 @@ beans = {
 }
 {code}
 
-h5. Config.groovy
+h5. application.yml
 
 {code}
-jms {
-    containers {
-        other {
-            meta {
-                parentBean = 'standardJmsListenerContainer'
-            }
-            concurrentConsumers = 5
-            connectionFactoryBean = "otherJmsConnectionFactory"
-        }
-    }
-    adapters {
-        other {
-            meta {
-                parentBean = 'standardJmsListenerAdapter'
-            }
-            messageConverter = null // do no message conversion
-        }
-    }
-}
+jms:
+    containers:
+        other:
+            meta:
+                parentBean: 'standardJmsListenerContainer'
+            concurrentConsumers: 5
+            connectionFactoryBean: "otherJmsConnectionFactory"
+    adapters:
+        other:
+            meta:
+                parentBean: 'standardJmsListenerAdapter'
+            messageConverter: null # do no message conversion
 {code}
 
 h5. Sending messages
