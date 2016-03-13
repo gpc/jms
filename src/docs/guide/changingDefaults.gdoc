@@ -5,7 +5,7 @@ Let's suppose you do not want any message conversion on listeners. If a listener
 In your application's @application.yml@
 
 {code}
-jms: 
+jms:
     containers:
         standard:
             messageConverter: null
