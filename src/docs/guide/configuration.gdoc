@@ -18,7 +18,7 @@ templates:
 
 {code}
 
-Thatt creates a map of "bean definitions" that get processed into real bean definitions.
+That creates a map of "bean definitions" that get processed into real bean definitions.
 
 The default config creates our standard (i.e. default) converters, jms templates for sending, and listener containers and adapters for receiving.
 
