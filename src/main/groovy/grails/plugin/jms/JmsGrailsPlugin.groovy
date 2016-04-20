@@ -32,9 +32,9 @@ JMS integration for Grails.
 
     def developers = [[name: "Weiqi Gao", email: "gaow@ociweb.com"]]
 
-    def issueManagement = [system: "GitHub", url: "https://github.com/grails3-plugins/jms/issues"]
+    def issueManagement = [system: "GitHub", url: "https://github.com/gpc/jms/issues"]
 
-    def scm = [url: "https://github.com/grails3-plugins/jms"]
+    def scm = [url: "https://github.com/gpc/jms"]
 
     def serviceInspector = new ServiceInspector()
     def listenerConfigs = [:]
