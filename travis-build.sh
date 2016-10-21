@@ -8,34 +8,47 @@ rm -rf build
 
 integration-test-app/run_integration_tests.sh
 
-if [[ -n $TRAVIS_TAG && $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+./gradlew package-plugin --non-interactive
+./gradlew doc --pdf --non-interactive
 
-	./gradlew bintrayUpload --stacktrace
+filename=$(find . -name "grails-*.zip" | head -1)
+filename=$(basename $filename)
+plugin=${filename:7}
+plugin=${plugin/.zip/}
+plugin=${plugin/-SNAPSHOT/}
+version="${plugin#*-}";
+plugin=${plugin/"-$version"/}
 
-	./gradlew docs --stacktrace
+echo "Publishing plugin $plugin with version $version"
 
-	git config --global user.name "$GIT_NAME"
-	git config --global user.email "$GIT_EMAIL"
-	git config --global credential.helper "store --file=~/.git-credentials"
-	echo "https://$GH_TOKEN:@github.com" > ~/.git-credentials
+if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_REPO_SLUG == "gpc/grails-$plugin" && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+  git config --global user.name "$GIT_NAME"
+  git config --global user.email "$GIT_EMAIL"
+  git config --global credential.helper "store --file=~/.git-credentials"
+  echo "https://$GH_TOKEN:@github.com" > ~/.git-credentials
 
-	git checkout gh-pages
 
-	git rm v3/jms-*.epub
-	mv build/docs/jms-*.epub v3
-	git add v3/jms-*.epub
+  if [[ $filename != *-SNAPSHOT* ]]
+  then
+    git clone https://${GH_TOKEN}@github.com/$TRAVIS_REPO_SLUG.git -b gh-pages gh-pages --single-branch > /dev/null
+    cd gh-pages
+    git rm -rf .
+    cp -r ../target/docs/. ./
+    git add *
+    git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
+    git push origin HEAD
+    cd ..
+    rm -rf gh-pages
+  else
+    echo "SNAPSHOT version, not publishing docs"
+  fi
 
-	git rm v3/jms-*.pdf
-	mv build/docs/jms-*.pdf v3
-	git add v3/jms-*.pdf
 
-	mv build/docs/index.html v3
-	git add v3/index.html
-
-	mv build/docs/ghpages.html index.html
-	git add index.html
-
-	git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
-	git push origin
-
+  ./grailsw publish-plugin --no-scm --allow-overwrite --non-interactive
+else
+  echo "Not on master branch, so not publishing"
+  echo "PLUGIN NAME: $plugin"
+  echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
+  echo "TRAVIS_REPO_SLUG: $TRAVIS_REPO_SLUG"
+  echo "TRAVIS_PULL_REQUEST: $TRAVIS_PULL_REQUEST"
 fi
