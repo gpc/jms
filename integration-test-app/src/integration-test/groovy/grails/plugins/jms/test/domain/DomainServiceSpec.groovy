@@ -4,6 +4,7 @@ import grails.plugins.jms.test.Person
 import grails.plugins.jms.test.Thing
 import grails.test.mixin.integration.Integration
 import grails.transaction.Rollback
+import grails.transaction.Transactional
 import spock.lang.Specification
 
 @Integration
@@ -14,6 +15,7 @@ class DomainServiceSpec extends Specification {
     def jmsService
     def domainService
 
+    @Transactional
     void setupData() {
         def p = new Person()
         p.name = 'p'
