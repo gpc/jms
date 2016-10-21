@@ -1,0 +1,10 @@
+[[receiving]]
+== Receiving Messages
+
+include::receiving/service.adoc[]
+include::receiving/serviceMethod.adoc[]
+include::receiving/returnValues.adoc[]
+include::receiving/adapters.adoc[]
+
+include::receiving/receivingWithSelectors.adoc[]
+include::receiving/receivingMethods.adoc[]

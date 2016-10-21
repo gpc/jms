@@ -1,0 +1,161 @@
+[[serviceMethod]]
+=== Service Method Listeners
+
+Another avenue is to expose specific methods as message listeners via annotations. This looks like…
+
+[source,groovy]
+----
+import grails.plugin.jms.*
+
+class PersonService {
+   static exposes = ["jms"]
+
+   @Queue
+   def addPerson(msg) {
+   }
+
+   @Subscriber
+   def somethingHappened(msg) {
+   }
+}
+----
+
+The above configuration binds the `personService.addPerson()` method to a queue named `«app name».person.addPerson` and binds the method `personService.somethingHappened()` as a listener to the topic named `somethingHappened` .
+
+Note that you still need to expose the class via `static exposes = ["jms"]`.
+
+==== `@Queue` Configuration
+
+The following configuration parameters can be set as annotation parameters…
+
+[cols="25,25,25,25"]
+|====================
+| *Property Name* | *Type* | *Default* | *Description*
+
+|*name*
+| String
+| «app name».«service name».«method name»
+| The destination name for the queue
+
+| *selector*
+| String
+| null
+| The message selector to apply (See the “Message Selector” section of {message}[JMS Specification])
+
+| *adapter*
+| String
+| "standard"
+| The adapter to use for this listener
+
+| *container*
+| String
+| "standard"
+| The container to use for this listener
+
+|====================
+
+
+Example…
+
+[source,groovy]
+----
+import grails.plugin.jms.*
+
+class PersonService {
+   static exposes = ["jms"]
+
+   @Queue(
+      name = "myQueue",
+      selector = "name IS NOT NULL"
+   )
+   def addPerson(msg) {
+   }
+}
+----
+
+==== `@Subscriber` Configuration
+
+The following configuration parameters can be set as annotation parameters…
+
+[cols="25,25,25,25"]
+|====================
+| *Property Name* | *Type* | *Default* | *Description*
+
+| *topic*
+| `String`
+| «method name»
+| The name of the topic to subscribe to
+
+| *selector*
+| `String`
+| `null`
+| The message selector to apply (See the “Message Selector” section of {message}[JMS Specification])
+
+| *adapter*
+| `String`
+| "standard"
+| The adapter to use for this listener
+
+| *container*
+| `String`
+| "standard"
+| The container to use for this listener
+
+|====================
+
+Example…
+
+[source,groovy]
+----
+import grails.plugin.jms.*
+
+class PersonService {
+   static exposes = ["jms"]
+
+   @Subscriber(topic = "aTopic")
+   def somethingHappened(msg) {
+   }
+}
+----
+
+==== Defining the Queue names and Subscriber topics through configuration.
+
+You can specify the names of the given _destinations_ , _queues_ and _topics_ , described through the
+Queue and Subscriber annotations by prefixing the _key_ with a Dollar sign (`$`). The key needs to be
+available through the `application.groovy` file in the `jms.destinations` space, if its not available an *error* will be thrown.
+
+Example…
+
+PersonService.groovy
+
+[source,groovy]
+----
+import grails.plugin.jms.*
+
+class PersonService {
+   static exposes = ["jms"]
+
+   @Subscriber(topic = '$topic.key.in.config')
+   def somethingHappened(msg) {
+   }
+
+   @Queue(name = '$queue.key.in.config')
+   def someWorkToDo(msg) {
+   }
+}
+----
+
+Config.groovy
+
+[source,groovy]
+----
+grails.plugin.jms {
+    destinations {
+        //Name of the topic in the JMS server will be person.somethingHappened
+        topic.key.in.config = 'person.somethingHappened'
+
+        //Name of the queue in the JMS server will be person.sendSomeWork
+        queue.key.in.config = 'person.sendSomeWork'
+    }
+}
+----

@@ -1,28 +1,33 @@
+[[syntax]]
+=== Syntax Notes
+
 There are some noteworthy things about this config syntax.
 
-h4. Bean names
+==== Bean names
 
 The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.
 
-h4. Setting Beans
+==== Setting Beans
 
-To set a property to another Spring bean, simply append @Bean@ to the property name and set the property to the name of the bean.
+To set a property to another Spring bean, simply append `Bean` to the property name and set the property to the name of the bean.
 
-Here is how the standard template is defined to use the bean named @jmsConnectionFactory@ as it's connection factory...
+Here is how the standard template is defined to use the bean named `jmsConnectionFactory` as it's connection factory...
 
-{code}
+[source,groovy]
+----
 templates {
     standard {
         connectionFactoryBean = "jmsConnectionFactory"
     }
 }
-{code}
+----
 
-h4. Setting Class
+==== Setting Class
 
 To set the class of a bean, you must use the following syntax
 
-{code}
+[source,groovy]
+----
 templates {
     standard {
         meta {
@@ -30,13 +35,14 @@ templates {
         }
     }
 }
-{code}
+----
 
-h4. Extending Definitions
+==== Extending Definitions
 
 Bean definition can inherit from parents and selectively override settings.
 
-{code}
+[source,groovy]
+----
 templates {
     other {
         meta {
@@ -45,6 +51,6 @@ templates {
         connectionFactoryBean = "someOtherJmsConnectionFactory"
     }
 }
-{code}
+----
 
 This creates an "other" template, that inherits all of the standard settings but uses a custom connectionFactory.

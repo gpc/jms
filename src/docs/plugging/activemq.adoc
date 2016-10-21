@@ -1,0 +1,23 @@
+[[activemq]]
+=== ActiveMQ Example
+
+First we need the ActiveMQ core jar.
+
+Our `build.gradle` looks something like...
+
+[source,groovy]
+----
+dependencies {
+    compile 'org.apache.activemq:activemq-core:5.3.0'
+}
+----
+
+Then in `resources.groovy`..
+An example `resources.groovy` configuration for ActiveMQ would look something like…
+
+[source,groovy]
+----
+jmsConnectionFactory(org.apache.activemq.ActiveMQConnectionFactory) {
+    brokerURL = 'vm://localhost'
+}
+----

@@ -1,8 +1,12 @@
-The plugin will inject the following methods to @ Conrollers @ and @ Services @.
+[[receivingMethods]]
+=== Receiving methods added to Controllers and Services
 
-h4. Synchronous calls.
+The plugin will inject the following methods to `Conrollers` and `Services`.
 
-{code}
+==== Synchronous calls.
+
+[source,groovy]
+----
 // Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
 // Will return the converted message or null if the message was not available.
 def msg =receiveSelectedJMSMessage(queue: "aQueue", selector, timeout, "standard")
@@ -25,12 +29,12 @@ def msg =receiveSelectedJMSMessage(service: "person", method: "doIt", selector, 
 // Expect/Receive a message with a *selector* on the queue 'remote.person.doIt' waiting up to the given *timeout*.
 // Will return the converted message or null if the message was not available.
 def msg = receiveSelectedJMSMessage(app: "remote", service: "person", method: "doIt", selector, timeout, "standard")
-{code}
+----
 
+==== Asynchronous calls.
 
-h4. Asynchronous calls.
-
-{code}
+[source,groovy]
+----
 // Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
 // Will return a java.util.concurrent.Future wrapping the result the task.
 def afuture = receiveSelectedAsyncJMSMessage(queue: "aQueue", selector, timeout, "standard")
@@ -53,48 +57,46 @@ def afuture = receiveSelectedAsyncJMSMessage(service: "person", method: "doIt", 
 // Expect/Receive a message with a *selector* on the queue 'remote.person.doIt' waiting up to the given *timeout*.
 // Will return a java.util.concurrent.Future wrapping the result the task.
 def afuture = receiveSelectedAsyncJMSMessage(app: "remote", service: "person", method: "doIt", selector, timeout, "standard")
-{code}
-
+----
 
 **Note: a afuture.get() will return the *message*.
 
+==== Specifying your own **Executor** for Async. Receivers using the *"Property Override Configuration"* mechanism.
 
-h4. Specifying your own **Executor** for Async. Receivers using the *"Property Override Configuration"* mechanism.
-
-{code}
+[source,groovy]
+----
 beans {
     jmsService {
         asyncReceiverExecutor = Executors.newFixedThreadPool(5)
     }
 }
-{code}
+----
 
+==== Specifying your own **Executor** for Async. Receivers using *Spring IoC*.
 
-h4. Specifying your own **Executor** for Async. Receivers using *Spring IoC*.
-
-{code}
+[source,groovy]
+----
 beans = {
      jmsAsyncReceiverExecutor( java.util.concurrent.Executors ) { executors ->
         executors.factoryMethod = "newFixedThreadPool"
         executors.constructorArgs = [ 5 ]
     }
 }
-{code}
+----
 
 **Note: If the executor is defined as a *Spring Bean* and also through the *Property Override Configuration* mechanism
 the last one to be set will be the one that will remain active where the previous one will be halted/shutdown.
 Currently in this scenario the *Spring Bean* is the one that will remain active.
 
-
-h4. Disabling *auto-shutdown* of the **Executor** for Async. Receivers using *Property Override Configuration*.
+==== Disabling *auto-shutdown* of the **Executor** for Async. Receivers using *Property Override Configuration*.
 
 *DO NOT* disable the automatic shutdown mechanism if you are not setting an executor explicitly and managing its life-cycle.
 
-{code}
-//Config.groovy
+[source,groovy]
+----
 beans {
     jmsService {
         asyncReceiverExecutorShutdown = false
     }
 }
-{code}
+----

@@ -1,9 +1,13 @@
-Both templates and adapters use a "MessageConverter":http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html to convert objects into messages. By default, this plugin configures templates and adapters to use a "SimpleMessageConverter":http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html.
+[[conversion]]
+== Message Conversion
+
+Both templates and adapters use a {message_converter}[MessageConverter]: to convert objects into messages. By default, this plugin configures templates and adapters to use a {simple_message_converter}[SimpleMessageConverter].
 
 This can be changed via the config mechanism…
 
-{code}
-jms {
+[source,groovy]
+----
+grails.plugin.jms {
     converters {
         other {
             meta {
@@ -20,14 +24,15 @@ jms {
         }
     }
 }
-{code}
+----
 
 This would configure the “other” listener adapter to use our special message converter.
 
 To globally use a custom message converter, you can augment the standard definition…
 
-{code}
-jms {
+[source,groovy]
+----
+grails.plugin.jms {
     converters {
         standard {
             meta {
@@ -36,6 +41,6 @@ jms {
         }
     }
 }
-{code}
+----
 
 This would cause all templates and adapters to use your custom converter.

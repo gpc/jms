@@ -1,12 +1,16 @@
+[[introduction]]
+== Introduction
+
 This plugin makes it easy to both send and receive JMS messages inside a Grails application.
 
-h3. Examples
+=== Examples
 
 The following are some simple examples to give you a feel for the plugin.
 
-h4. Service Queue Listeners
+==== Service Queue Listeners
 
-{code}
+[source,groovy]
+----
 class ListeningService {
 
     static exposes = ['jms']
@@ -15,9 +19,10 @@ class ListeningService {
         assert message == 1
     }
 }
-{code}
+----
 
-{code}
+[source,groovy]
+----
 class SomeController {
 
     def jmsService
@@ -26,11 +31,12 @@ class SomeController {
         jmsService.send(service: 'listening', 1)
     }
 }
-{code}
+----
 
-h4. Service Method Queue Listeners
+==== Service Method Queue Listeners
 
-{code}
+[source,groovy]
+----
 import grails.plugin.jms.Queue
 
 class ListeningService {
@@ -42,9 +48,10 @@ class ListeningService {
         assert message == 1
     }
 }
-{code}
+----
 
-{code}
+[source,groovy]
+----
 class SomeController {
 
     def jmsService
@@ -53,11 +60,12 @@ class SomeController {
         jmsService.send(service: 'listening', method: 'receive', 1)
     }
 }
-{code}
+----
 
-h4. Topic Listeners
+==== Topic Listeners
 
-{code}
+[source,groovy]
+----
 import grails.plugin.jms.Subscriber
 
 class ListeningService {
@@ -69,9 +77,10 @@ class ListeningService {
         assert message == 1
     }
 }
-{code}
+----
 
-{code}
+[source,groovy]
+----
 class SomeController {
 
     def jmsService
@@ -80,11 +89,12 @@ class SomeController {
         jmsService.send(topic: 'newMessages', 1)
     }
 }
-{code}
+----
 
-h4. Post Processing Messages
+==== Post Processing Messages
 
-{code}
+[source,groovy]
+----
 import javax.jms.Message
 
 class SomeController {
@@ -98,4 +108,6 @@ class SomeController {
         }
     }
 }
-{code}
+----
+
+include::introduction/springJms.adoc[]

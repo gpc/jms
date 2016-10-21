@@ -1,8 +1,12 @@
+[[adapters]]
+=== Using Other Containers Or Adapters
+
 Here is an example of using a container and adapter other than standard.
 
-h5. resources.groovy
+==== `resources.groovy`
 
-{code}
+[source,groovy]
+----
 import org.apache.activemq.ActiveMQConnectionFactory
 import org.springframework.jms.connection.SingleConnectionFactory
 
@@ -20,12 +24,13 @@ beans = {
         }
     }
 }
-{code}
+----
 
-h5. Config.groovy
+==== `application.groovy`
 
-{code}
-jms {
+[source,groovy]
+----
+grails.plugin.jms {
     containers {
         other {
             meta {
@@ -44,11 +49,12 @@ jms {
         }
     }
 }
-{code}
+----
 
-h5. Sending messages
+==== Sending messages
 
-{code}
+[source,groovy]
+----
 class ListeningService {
     static exposes = ["jms"]
     static adapter = "other"
@@ -58,9 +64,10 @@ class ListeningService {
         // handle message
     }
 }
-{code}
+----
 
-{code}
+[source,groovy]
+----
 import grails.plugin.jms.*
 
 class ListeningService {
@@ -71,4 +78,4 @@ class ListeningService {
         // handle message
     }
 }
-{code}
+----

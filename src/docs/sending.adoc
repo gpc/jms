@@ -1,16 +1,20 @@
-This plugin adds a service called @ jmsService @ to your application that can be used to send JMS messages.
+[[sending]]
+== Sending Messages
 
-h4. The send(destination, message, jmsTemplateName, postProcessor) method.
+This plugin adds a service called `jmsService` to your application that can be used to send JMS messages.
+
+=== The send(destination, message, jmsTemplateName, postProcessor) method.
 
 *destination*
 
-An instance of @ javax.jms.Destination @ , @ javax.jms.Topic @ , a @ String @ or a @ Map @ .
+An instance of `javax.jms.Destination` , `javax.jms.Topic` , a `String` or a `Map` .
 
-A @ String @ destination argument will be interpreted as the name of a destination _queue_ .
+A `String` destination argument will be interpreted as the name of a destination _queue_ .
 
-A @ Map @ destination argument can be used in the following ways:
+A `Map` destination argument can be used in the following ways:
 
-{code}
+[source,groovy]
+----
 jmsService.send(queue: "aQueue", msg, "standard", null) // send to a literal queue
 
 jmsService.send(topic: "aTopic", msg, "standard", null) // send to a literal topic
@@ -20,7 +24,7 @@ jmsService.send(service: "person", msg, "standard", null) // send to the queue '
 jmsService.send(service: "person", method: "doIt", msg, "standard", null) // send to the queue '«appname».person.doIt'
 
 jmsService.send(app: "remote", service: "person", method: "doIt", msg, "standard", null) // send to the queue 'remote.person.doIt'
-{code}
+----
 
 The app/service/method convention makes a lot more sense if you read the section below on service method listener queue subscribers.
 
@@ -30,17 +34,21 @@ This is the message payload. By default this can be any Java/Groovy object or a 
 
 *jmsTemplateName*
 
-The name of the template that should be used to send the message. If this value is @ null @ , the standard template will be used (called "standard").
+The name of the template that should be used to send the message. If this value is `null` , the standard template will be used (called "standard").
 
 *postProcessor*
 
-An optional closure that can be used to "post process" the message after it has been converted into a message but before it has been sent. This closure acts as the implementation of the [postProcessMessage()|http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html#postProcessMessage(javax.jms.Message)] method of the [MessagePostProcessor|http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html] class.
+An optional closure that can be used to "post process" the message after it has been converted into a message but before it has been sent. This closure acts as the implementation of the {post_process_message}[postProcessMessage()] method of the {message_post_processor}[MessagePostProcessor] class.
 
-h4. send() method variants
+=== send() method variants
 
 There are variations of the send() method for convenience...
 
-{code:java}
+[source,groovy]
+----
 jmsService.send(destination, message) // use the standard template and no post processor
 jmsService.send(destination, message, postProcessor) // use the standard template
-{code}
+----
+
+include::sending/postProcessing.adoc[]
+include::sending/otherTemplates.adoc[]

@@ -1,0 +1,29 @@
+= JMS Plugin - Reference Documentation
+Grails Plugin Collective
+ifndef::imagesdir[:imagesdir: images]
+
+:message_converter: http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html
+:simple_message_converter: http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html
+:connection_factory: http://java.sun.com/javaee/5/docs/api/javax/jms/ConnectionFactory.html
+:post_process_message: http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html#postProcessMessage(javax.jms.Message)
+:message_post_processor: http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html
+:spring_jms: http://static.springsource.org/spring/docs/3.0.x/reference/html/jms.html
+:jms_template: http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/core/JmsTemplate.html
+:message_converter: http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html
+:default_message_listener: http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/listener/DefaultMessageListenerContainer.html
+:msg_listener_adapter: http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/listener/adapter/MessageListenerAdapter.html
+:simple_msg_converter: http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html
+:single_connection_factory: http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/connection/SingleConnectionFactory.html
+:activemq_jmstemplate: http://activemq.apache.org/jmstemplate-gotchas.html
+:message: http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html
+:activemq_selectors: http://activemq.apache.org/selectors.html
+:ibm_guide: http://publib.boulder.ibm.com/infocenter/wmbhelp/v6r1m0/topic/com.ibm.etools.mft.doc/ac24876_.htm
+
+include::introduction.adoc[]
+include::plugging.adoc[]
+include::configuration.adoc[]
+include::sending.adoc[]
+include::receiving.adoc[]
+include::browsing.adoc[]
+include::conversion.adoc[]
+include::disabling.adoc[]

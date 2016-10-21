@@ -1,8 +1,12 @@
+[[otherTemplates]]
+=== Using Other Templates
+
 Here is an example of using a custom template that uses a different connection factory.
 
-h5. resources.groovy
+==== `resources.groovy`
 
-{code}
+[source,groovy]
+----
 import org.apache.activemq.ActiveMQConnectionFactory
 import org.springframework.jms.connection.SingleConnectionFactory
 
@@ -20,12 +24,13 @@ beans = {
         }
     }
 }
-{code}
+----
 
-h5. Config.groovy
+==== `application.groovy`
 
-{code}
-jms {
+[source,groovy]
+----
+grails.plugin.jms {
     templates {
         other {
             meta {
@@ -35,12 +40,13 @@ jms {
         }
     }
 }
-{code}
+----
 
-h5. Sending messages
+==== Sending messages
 
-{code}
+[source,groovy]
+----
 jmsService.send(topic: "stuffHappened", message, "other")
-{code}
+----
 
-The third argument of "other" to the send() method specifies to use the "other" template.
+The third argument of "other" to the `send()` method specifies to use the "other" template.
