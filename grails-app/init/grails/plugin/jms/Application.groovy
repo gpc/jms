@@ -1,4 +1,4 @@
-package jms
+package grails.plugin.jms
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration

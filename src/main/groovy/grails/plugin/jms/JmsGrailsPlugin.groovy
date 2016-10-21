@@ -1,10 +1,3 @@
-package jms
-
-import grails.plugins.Plugin
-import grails.plugins.jms.DefaultJmsBeans
-import grails.plugins.jms.bean.JmsBeanDefinitionsBuilder
-import grails.plugins.jms.listener.ListenerConfigFactory
-
 /*
  * Copyright 2010 Grails Plugin Collective
  *
@@ -20,17 +13,18 @@ import grails.plugins.jms.listener.ListenerConfigFactory
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package grails.plugin.jms
+
+import grails.plugins.Plugin
+import grails.plugins.jms.bean.JmsBeanDefinitionsBuilder
+import grails.plugins.jms.listener.ListenerConfigFactory
 import grails.plugins.jms.listener.ServiceInspector
 import grails.util.Environment
 import groovy.util.logging.Commons
-import groovy.util.logging.Slf4j
-import org.apache.commons.logging.LogFactory
 import org.grails.core.artefact.ServiceArtefactHandler
 
 @Commons
 class JmsGrailsPlugin extends Plugin {
-
-    static LOG = LogFactory.getLog('grails.plugins.jms.JmsGrailsPlugin')
 
     def author = "Grails Plugin Collective"
     def authorEmail = "grails.plugin.collective@gmail.com"

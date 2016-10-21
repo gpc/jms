@@ -16,7 +16,7 @@
 package grails.plugins.jms.listener
 
 import grails.plugins.jms.Queue
-import grails.plugins.jms.Subscriber
+import grails.plugin.jms.Subscriber
 import grails.util.GrailsClassUtils
 import groovy.util.logging.Commons
 

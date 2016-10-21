@@ -2,7 +2,7 @@
 grails:
     profile: web-plugin
     codegen:
-        defaultPackage: jms
+        defaultPackage: grails.plugin.jms
 info:
     app:
         name: '@info.app.name@'
