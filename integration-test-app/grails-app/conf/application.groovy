@@ -1,3 +1,5 @@
+grails.codegen.defaultPackage = 'grails.plugin.jms.test'
+
 appName = 'grails-jms'
 
 jms {

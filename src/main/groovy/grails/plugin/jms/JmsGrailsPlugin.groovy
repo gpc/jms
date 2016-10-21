@@ -31,36 +31,33 @@ class JmsGrailsPlugin extends Plugin {
     def title = "JMS integration for Grails"
     def grailsVersion = "3.0 > *"
 
-    def documentation = "http://grails.org/grails3-plugins/jms"
+    def documentation = "http://grails.org/gpc/jms"
 
-    def issueManagement = [system: "GitHub", url: "https://github.com/grails3-plugins/jms/issues"]
-    def scm = [url: "https://github.com/grails3-plugins/jms"]
+    def issueManagement = [system: "GitHub", url: "https://github.com/gpc/jms/issues"]
+    def scm = [url: "https://github.com/gpc/jms"]
 
     def loadAfter = ['services', 'controllers', 'dataSource', 'hibernate', 'hibernate4']
     def observe = ['services', 'controllers']
-
-    def pluginExcludes = [
-            "grails-app/views/*.gsp"
-    ]
 
     def listenerConfigs = [:]
     def serviceInspector = new ServiceInspector()
     def listenerConfigFactory = new ListenerConfigFactory()
     def jmsConfigHash
     def jmsConfig
+    boolean isDisabled = false
 
     def getDefaultConfig() {
         new ConfigSlurper(Environment.current.name).parse(DefaultJmsBeans)
     }
 
     def getListenerConfigs(serviceClass, grailsApplication) {
-        LOG.debug("inspecting '${serviceClass.name}' for JMS listeners")
+        log.debug("inspecting '${serviceClass.name}' for JMS listeners")
         serviceInspector.getListenerConfigs(serviceClass, listenerConfigFactory, grailsApplication)
     }
 
     def registerListenerConfig(listenerConfig, beanBuilder) {
         def queueOrTopic = (listenerConfig.topic) ? "TOPIC" : "QUEUE"
-        LOG.info "registering listener for '${listenerConfig.listenerMethodName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
+        log.info "registering listener for '${listenerConfig.listenerMethodName}' of service '${listenerConfig.serviceBeanPrefix}' to ${queueOrTopic} '${listenerConfig.destinationName}'"
         listenerConfig.register(beanBuilder)
     }
 
@@ -72,10 +69,10 @@ class JmsGrailsPlugin extends Plugin {
             // will dynamically create nested maps as needed
             jmsConfigHash = jmsConfig.hashCode()
 
-            LOG.debug("merged config: $jmsConfig")
+            log.debug("merged config: $jmsConfig")
             if (jmsConfig.disabled) {
                 isDisabled = true
-                LOG.warn("not registering listeners because JMS is disabled")
+                log.warn("not registering listeners because JMS is disabled")
                 return
             }
 
@@ -104,12 +101,12 @@ class JmsGrailsPlugin extends Plugin {
         try {
             def asyncReceiverExecutor = applicationContext.getBean('jmsAsyncReceiverExecutor')
             if (asyncReceiverExecutor) {
-                LOG.info "A jmsAsyncReceiverExecutor was detected in the grailsApplication Context and therefore will be set in the JmsService."
+                log.info "A jmsAsyncReceiverExecutor was detected in the grailsApplication Context and therefore will be set in the JmsService."
                 applicationContext.getBean('jmsService').asyncReceiverExecutor = asyncReceiverExecutor
             }
         }
         catch (e) {
-            LOG.debug "No jmsAsyncReceiverExecutor was detected in the grailsApplication Context."
+            log.debug "No jmsAsyncReceiverExecutor was detected in the grailsApplication Context."
         }
     }
 
@@ -222,7 +219,7 @@ class JmsGrailsPlugin extends Plugin {
         }
 
         if (jmsConfig.disabled) {
-            LOG.warn("not inspecting $event.source for listener changes because JMS is disabled in config")
+            log.warn("not inspecting $event.source for listener changes because JMS is disabled in config")
         } else {
             boolean isNew = event.grailsApplication.getServiceClass(event.source?.name) == null
             def serviceClass = grailsApplication.addArtefact(ServiceArtefactHandler.TYPE, event.source).clazz
@@ -262,7 +259,7 @@ class JmsGrailsPlugin extends Plugin {
         def previousJmsConfig = jmsConfig
         jmsConfig = newJmsConfig
         jmsConfigHash = newJmsConfigHash
-        LOG.warn("tearing down all JMS listeners/templates due to config change")
+        log.warn("tearing down all JMS listeners/templates due to config change")
 
         // Remove the listeners
         listenerConfigs.keySet().toList().each {
@@ -273,9 +270,9 @@ class JmsGrailsPlugin extends Plugin {
         new JmsBeanDefinitionsBuilder(previousJmsConfig).removeFrom(event.ctx)
 
         if (jmsConfig.disabled) {
-            LOG.warn("NOT re-registering listeners/templates because JMS is disabled after config change")
+            log.warn("NOT re-registering listeners/templates because JMS is disabled after config change")
         } else {
-            LOG.warn("re-registering listeners/templates after config change")
+            log.warn("re-registering listeners/templates after config change")
 
             // Find all of the listeners
             grailsApplication.serviceClasses.each { serviceClassClass ->
@@ -329,7 +326,7 @@ class JmsGrailsPlugin extends Plugin {
     }
 
     def unregisterListener(listenerConfig, appCtx) {
-        LOG.info("removing JMS listener beans for ${listenerConfig.serviceBeanName}.${listenerConfig.listenerMethodName}")
+        log.info("removing JMS listener beans for ${listenerConfig.serviceBeanName}.${listenerConfig.listenerMethodName}")
         listenerConfig.removeBeansFromContext(appCtx)
     }
 
