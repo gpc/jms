@@ -17,7 +17,6 @@ package grails.plugins.jms.listener
 
 import grails.plugins.jms.bean.JmsListenerAdapterAbstractBeanDefinitionBuilder
 import grails.plugins.jms.bean.JmsListenerContainerAbstractBeanDefinitionBuilder
-
 import org.apache.commons.lang.StringUtils
 
 class ListenerConfig {
@@ -44,8 +43,7 @@ class ListenerConfig {
     def getBeanPrefix() {
         if (serviceListener) {
             serviceBeanPrefix
-        }
-        else {
+        } else {
             serviceBeanPrefix + StringUtils.capitalize(listenerMethodName)
         }
     }
@@ -61,15 +59,12 @@ class ListenerConfig {
     def getDestinationName() {
         if (explicitDestinationName) {
             explicitDestinationName
-        }
-        else {
+        } else {
             if (serviceListener) {
                 appName + "." + serviceBeanPrefix
-            }
-            else if (topic) {
+            } else if (topic) {
                 listenerMethodName
-            }
-            else {
+            } else {
                 appName + "." + serviceBeanPrefix + "." + listenerMethodName
             }
         }
@@ -115,8 +110,9 @@ class ListenerConfig {
     }
 
     def removeBeansFromContext(ctx) {
-        [listenerAdapterBeanName,listenerContainerBeanName].each {
+        [listenerAdapterBeanName, listenerContainerBeanName].each {
             ctx.removeBeanDefinition(it)
         }
     }
+
 }

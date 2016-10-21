@@ -21,8 +21,9 @@ class ListenerConfigFactory {
 
     def getListenerConfig(Class serviceClass, grailsApplication) {
         new ListenerConfig(
-            serviceBeanName: GrailsNameUtils.getPropertyName(serviceClass),
-            grailsApplication: grailsApplication
+                serviceBeanName: GrailsNameUtils.getPropertyName(serviceClass),
+                grailsApplication: grailsApplication
         )
     }
+
 }

@@ -18,17 +18,15 @@ package grails.plugins.jms.listener
 import grails.plugins.jms.Queue
 import grails.plugins.jms.Subscriber
 import grails.util.GrailsClassUtils
-import org.apache.commons.logging.Log
-import org.apache.commons.logging.LogFactory
+import groovy.util.logging.Commons
 
+@Commons
 class ServiceInspector {
 
     static final String SERVICE_LISTENER_METHOD = "onMessage"
     static final String EXPOSES_SPECIFIER = "exposes"
     static final String EXPOSE_SPECIFIER = "expose"
     static final String EXPOSES_JMS_SPECIFIER = "jms"
-
-    static final Log LOG = LogFactory.getLog(this)
 
     def getListenerConfigs(service, listenerConfigFactory, grailsApplication) {
         if (!exposesJms(service)) return []
@@ -66,9 +64,9 @@ class ServiceInspector {
 
     def exposesJms(service) {
         GrailsClassUtils.getStaticPropertyValue(service, EXPOSES_SPECIFIER)?.
-            contains(EXPOSES_JMS_SPECIFIER) ||
+                contains(EXPOSES_JMS_SPECIFIER) ||
                 GrailsClassUtils.getStaticPropertyValue(service, EXPOSE_SPECIFIER)?.
-                    contains(EXPOSES_JMS_SPECIFIER)
+                        contains(EXPOSES_JMS_SPECIFIER)
     }
 
     def isSingleton(service) {
@@ -82,8 +80,7 @@ class ServiceInspector {
 
         if (subscriberAnnotation) {
             getServiceMethodSubscriberListenerConfig(service, method, subscriberAnnotation, listenerConfigFactory, grailsApplication)
-        }
-        else if (queueAnnotation) {
+        } else if (queueAnnotation) {
             getServiceMethodQueueListenerConfig(service, method, queueAnnotation, listenerConfigFactory, grailsApplication)
         }
     }
@@ -116,23 +113,23 @@ class ServiceInspector {
 
     String resolveDestinationName(final String name, grailsApplication) {
         String resolvedName = name
-        if ( resolvedName =~ /^\$/ ) {
+        if (resolvedName =~ /^\$/) {
             final List<String> pathTokens = resolvedName.substring(1).tokenize('.').reverse()
             def node = grailsApplication.config?.jms?.destinations
-            while( node && node instanceof Map && pathTokens.size() ) {
+            while (node && node instanceof Map && pathTokens.size()) {
                 node = node[pathTokens.pop()]
             }
-            if ( node && pathTokens.empty ) {
+            if (node && pathTokens.empty) {
                 resolvedName = node
-                LOG.info "key '$name' resolved to destination '$resolvedName'." +
-                    "The name '$resolvedName' will be used as the destination."
-            }
-            else {
+                log.info "key '$name' resolved to destination '$resolvedName'." +
+                        "The name '$resolvedName' will be used as the destination."
+            } else {
                 throw new IllegalArgumentException(
-                    "The destination key '$name' is not available in the 'jms.destinations' configuration space." +
-                    "Please define such key or remove the prefix '\$' from the name.")
+                        "The destination key '$name' is not available in the 'jms.destinations' configuration space." +
+                                "Please define such key or remove the prefix '\$' from the name.")
             }
         }
         resolvedName
     }
+
 }

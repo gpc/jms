@@ -1,7 +1,9 @@
 package jms
 
+import grails.plugins.Plugin
 import grails.plugins.jms.DefaultJmsBeans
 import grails.plugins.jms.bean.JmsBeanDefinitionsBuilder
+import grails.plugins.jms.listener.ListenerConfigFactory
 
 /*
  * Copyright 2010 Grails Plugin Collective
@@ -18,19 +20,15 @@ import grails.plugins.jms.bean.JmsBeanDefinitionsBuilder
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import grails.plugins.jms.listener.ListenerConfigFactory
 import grails.plugins.jms.listener.ServiceInspector
-import grails.plugins.Plugin
 import grails.util.Environment
+import groovy.util.logging.Commons
 import groovy.util.logging.Slf4j
 import org.apache.commons.logging.LogFactory
-import org.grails.config.NavigableMapPropertySource
-import org.grails.config.PropertySourcesConfig
 import org.grails.core.artefact.ServiceArtefactHandler
-import org.springframework.core.env.MutablePropertySources
 
-@Slf4j
-class JmsGrailsPlugin extends Plugin{
+@Commons
+class JmsGrailsPlugin extends Plugin {
 
     static LOG = LogFactory.getLog('grails.plugins.jms.JmsGrailsPlugin')
 
@@ -44,11 +42,11 @@ class JmsGrailsPlugin extends Plugin{
     def issueManagement = [system: "GitHub", url: "https://github.com/grails3-plugins/jms/issues"]
     def scm = [url: "https://github.com/grails3-plugins/jms"]
 
-    def loadAfter = ['services', 'controllers','dataSource','hibernate', 'hibernate4']
+    def loadAfter = ['services', 'controllers', 'dataSource', 'hibernate', 'hibernate4']
     def observe = ['services', 'controllers']
 
     def pluginExcludes = [
-        "grails-app/views/*.gsp"
+            "grails-app/views/*.gsp"
     ]
 
     def listenerConfigs = [:]
@@ -72,7 +70,7 @@ class JmsGrailsPlugin extends Plugin{
         listenerConfig.register(beanBuilder)
     }
 
-    Closure doWithSpring () {
+    Closure doWithSpring() {
         { ->
             jmsConfig = defaultConfig.merge(grailsApplication.config.jms as ConfigObject)
 
@@ -151,9 +149,9 @@ class JmsGrailsPlugin extends Plugin{
     }
 
     def addSendMethodsToClass(jmsService, clazz) {
-        [sendJMSMessage: "sendJMSMessage",
-         sendQueueJMSMessage: "sendQueueJMSMessage",
-         sendTopicJMSMessage: "sendTopicJMSMessage",
+        [sendJMSMessage      : "sendJMSMessage",
+         sendQueueJMSMessage : "sendQueueJMSMessage",
+         sendTopicJMSMessage : "sendTopicJMSMessage",
          sendPubSubJMSMessage: "sendTopicJMSMessage"
         ].each { m, i ->
             2.upto(4) { n ->
@@ -190,7 +188,7 @@ class JmsGrailsPlugin extends Plugin{
     }
 
     def addReceiveSelectedToClass(jmsService, clazz) {
-        [receiveSelectedJMSMessage: "receiveSelectedJMSMessage",
+        [receiveSelectedJMSMessage     : "receiveSelectedJMSMessage",
          receiveSelectedAsyncJMSMessage: "receiveSelectedAsyncJMSMessage"
         ].each { m, i ->
             1.upto(4) { n ->
@@ -205,7 +203,7 @@ class JmsGrailsPlugin extends Plugin{
     }
 
     @Override
-    void doWithDynamicMethods(){
+    void doWithDynamicMethods() {
         addServiceMethods(grailsApplication)
     }
 
@@ -231,8 +229,7 @@ class JmsGrailsPlugin extends Plugin{
 
         if (jmsConfig.disabled) {
             LOG.warn("not inspecting $event.source for listener changes because JMS is disabled in config")
-        }
-        else {
+        } else {
             boolean isNew = event.grailsApplication.getServiceClass(event.source?.name) == null
             def serviceClass = grailsApplication.addArtefact(ServiceArtefactHandler.TYPE, event.source).clazz
 
@@ -283,8 +280,7 @@ class JmsGrailsPlugin extends Plugin{
 
         if (jmsConfig.disabled) {
             LOG.warn("NOT re-registering listeners/templates because JMS is disabled after config change")
-        }
-        else {
+        } else {
             LOG.warn("re-registering listeners/templates after config change")
 
             // Find all of the listeners

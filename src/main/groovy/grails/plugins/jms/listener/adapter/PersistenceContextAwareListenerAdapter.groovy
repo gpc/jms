@@ -42,8 +42,7 @@ class PersistenceContextAwareListenerAdapter extends LoggingListenerAdapter {
             if (persistenceInterceptor) {
                 log.debug("opening persistence context for listener $methodName of $delegate")
                 persistenceInterceptor.init()
-            }
-            else {
+            } else {
                 log.debug("no persistence interceptor for listener $methodName of $delegate")
             }
             super.invokeListenerMethod(methodName, *arguments)
@@ -56,4 +55,5 @@ class PersistenceContextAwareListenerAdapter extends LoggingListenerAdapter {
             }
         }
     }
+
 }

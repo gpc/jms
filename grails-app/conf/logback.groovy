@@ -14,9 +14,9 @@ root(ERROR, ['STDOUT'])
 logger('grails.plugins.jms', INFO)
 logger('grails.app.service', INFO)
 
-if(Environment.current == Environment.DEVELOPMENT) {
+if (Environment.current == Environment.DEVELOPMENT) {
     def targetDir = BuildSettings.TARGET_DIR
-    if(targetDir) {
+    if (targetDir) {
 
         appender("FULL_STACKTRACE", FileAppender) {
 
@@ -26,6 +26,6 @@ if(Environment.current == Environment.DEVELOPMENT) {
                 pattern = "%level %logger - %msg%n"
             }
         }
-        logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false )
+        logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
     }
 }

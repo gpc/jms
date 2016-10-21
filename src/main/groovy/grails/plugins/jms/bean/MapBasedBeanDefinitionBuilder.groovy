@@ -80,8 +80,7 @@ class MapBasedBeanDefinitionBuilder {
     protected set(name, value, recipient, beanBuilder) {
         if (name.endsWith(BEAN_QUALIFIER)) {
             recipient."${name.substring(0, name.size() - BEAN_QUALIFIER.size())}" = value ? beanBuilder.ref(value) : null
-        }
-        else {
+        } else {
             recipient."$name" = value
         }
     }

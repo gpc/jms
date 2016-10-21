@@ -18,10 +18,10 @@ package grails.plugins.jms.bean
 class JmsBeanDefinitionsBuilder {
 
     static mappings = [
-        templates: JmsTemplateBeanDefinitionBuilder,
-        containers: JmsListenerContainerAbstractBeanDefinitionBuilder,
-        adapters: JmsListenerAdapterAbstractBeanDefinitionBuilder,
-        converters: JmsMessageConverterBeanDefinitionBuilder
+            templates : JmsTemplateBeanDefinitionBuilder,
+            containers: JmsListenerContainerAbstractBeanDefinitionBuilder,
+            adapters  : JmsListenerAdapterAbstractBeanDefinitionBuilder,
+            converters: JmsMessageConverterBeanDefinitionBuilder
     ]
 
     final beans

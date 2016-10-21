@@ -1,8 +1,10 @@
 package grails.plugins.jms.bean
 
 import grails.spring.BeanBuilder
-import org.junit.*
-import static org.junit.Assert.*
+import org.junit.Test
+
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
 
 class MapBasedBeanDefinitionBuilderTests {
 
@@ -23,12 +25,12 @@ class MapBasedBeanDefinitionBuilderTests {
         bb.s1(String, s1Value)
 
         def definition = [
-            meta: [
-                parentBean: "parent"
-            ],
-            clazz: MapBasedBeanDefinitionBuilderTestsTestBean,
-            s1Bean: "s1",
-            i1: i1Value
+                meta  : [
+                        parentBean: "parent"
+                ],
+                clazz : MapBasedBeanDefinitionBuilderTestsTestBean,
+                s1Bean: "s1",
+                i1    : i1Value
         ]
 
         def jbd = new MapBasedBeanDefinitionBuilder("test", definition)

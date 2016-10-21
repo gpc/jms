@@ -1,7 +1,8 @@
 package grails.plugins.jms.listener
 
 import org.grails.support.MockApplicationContext
-import spock.lang.*
+import spock.lang.Specification
+import spock.lang.Unroll
 import spock.util.mop.ConfineMetaClassChanges
 
 class ServiceInspectorSpec extends Specification {
@@ -59,7 +60,7 @@ class ServiceInspectorSpec extends Specification {
         thrown(IllegalArgumentException)
     }
 
-    def getApplicationContext(String configuration){
+    def getApplicationContext(String configuration) {
         def applicationContext = new MockApplicationContext()
         applicationContext.metaClass.config = new ConfigSlurper().parse(configuration)
         applicationContext
@@ -70,6 +71,7 @@ class ServiceInspectorSpec extends Specification {
 class DoesExposeJms {
     static exposes = ["blah", "jms"]
 }
+
 class DoesntExposeJms {}
 
 class ImplicitSingleton {}
@@ -77,12 +79,15 @@ class ImplicitSingleton {}
 class ExplicitSingleton {
     static scope = "singleton"
 }
+
 class NonSingleton {
     static scope = "session"
 }
+
 class DefaultServiceListenerName {}
 
 class HasServiceListenerMethod {
     def onMessage(msg) {}
 }
+
 class HasNoServiceListener {}

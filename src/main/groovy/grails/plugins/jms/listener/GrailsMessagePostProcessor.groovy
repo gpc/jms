@@ -15,9 +15,9 @@
  */
 package grails.plugins.jms.listener
 
-import javax.jms.Message
-
 import org.springframework.jms.core.MessagePostProcessor
+
+import javax.jms.Message
 
 class GrailsMessagePostProcessor implements MessagePostProcessor {
 
@@ -39,4 +39,5 @@ class GrailsMessagePostProcessor implements MessagePostProcessor {
         processor.resolveStrategy = Closure.DELEGATE_ONLY
         processor.call(message) ?: message
     }
+
 }

@@ -16,15 +16,14 @@
 package grails.plugins.jms.listener.adapter
 
 import groovy.transform.CompileStatic
+import org.apache.commons.lang.StringUtils
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.LogFactory
+import org.springframework.beans.factory.InitializingBean
+import org.springframework.jms.listener.adapter.MessageListenerAdapter
 
 import javax.jms.Message
 import javax.jms.Session
-
-import org.apache.commons.lang.StringUtils
-import org.apache.commons.logging.LogFactory
-import org.apache.commons.logging.Log
-import org.springframework.beans.factory.InitializingBean
-import org.springframework.jms.listener.adapter.MessageListenerAdapter
 
 @CompileStatic
 class LoggingListenerAdapter extends MessageListenerAdapter implements InitializingBean {
@@ -70,4 +69,5 @@ class LoggingListenerAdapter extends MessageListenerAdapter implements Initializ
     protected Log createLog() {
         LogFactory.getLog("${getClass().name}.${StringUtils.uncapitalize(delegate.getClass().name - 'Service')}.${defaultListenerMethod}".toString())
     }
+
 }

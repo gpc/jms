@@ -1,10 +1,9 @@
 package grails.plugins.jms
 
-import grails.plugins.jms.JmsService
+import spock.lang.AutoCleanup
+import spock.lang.Specification
 
 import java.util.concurrent.Executors
-
-import spock.lang.*
 
 class JmsServiceAsyncExecutorSpec extends Specification {
 
@@ -59,7 +58,7 @@ class JmsServiceAsyncExecutorSpec extends Specification {
         given: "a service"
         assert jmsService
 
-        when:"we get the default executor"
+        when: "we get the default executor"
         def _executor = jmsService.asyncReceiverExecutor
 
         and: "we destroy the service"

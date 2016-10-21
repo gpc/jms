@@ -62,8 +62,7 @@ class JmsService {
             if (this.@asyncReceiverExecutor) {
                 if (asyncReceiverExecutorShutdown) {
                     shutdownAsyncReceiverExecutorNow()
-                }
-                else {
+                } else {
                     log.info "The flag to shutdown the Async. Executor is turned off. The executor will not be terminated"
                 }
             }
@@ -168,8 +167,7 @@ class JmsService {
         ctx.with {
             if (callback) {
                 jmsTemplate.convertAndSend(ndestination, message, toMessagePostProcessor(jmsTemplate, callback))
-            }
-            else {
+            } else {
                 jmsTemplate.convertAndSend(ndestination, message)
             }
         }
@@ -247,8 +245,7 @@ class JmsService {
         if (disabled) {
             if (selector) {
                 log.warn "not browsing [$queue] with selector [$selector] because JMS is disabled in config"
-            }
-            else {
+            } else {
                 log.warn "not browsing [$queue] because JMS is disabled in config"
             }
             return
@@ -261,8 +258,7 @@ class JmsService {
 
         if (selector) {
             logAction "Browsing messages with selector [$selector] ", ctx
-        }
-          else {
+        } else {
             logAction "Browsing messages ", ctx
         }
 
@@ -277,8 +273,7 @@ class JmsService {
                         if (val != null) {
                             messages << val
                         }
-                    }
-                    else {
+                    } else {
                         messages << (processedMessage)
                     }
                 }
@@ -393,7 +388,7 @@ class JmsService {
      * </ul>
      */
     private normalizeServiceCtx(destination, final String jmsTemplateBeanName) {
-        final String _jmsTemplateBeanName = "${ jmsTemplateBeanName ?: DEFAULT_JMS_TEMPLATE_BEAN_NAME }JmsTemplate"
+        final String _jmsTemplateBeanName = "${jmsTemplateBeanName ?: DEFAULT_JMS_TEMPLATE_BEAN_NAME}JmsTemplate"
         boolean defaultTemplate = _jmsTemplateBeanName == "${DEFAULT_JMS_TEMPLATE_BEAN_NAME}JmsTemplate"
 
         def jmsTemplate = grailsApplication.mainContext.getBean(_jmsTemplateBeanName)
@@ -404,19 +399,19 @@ class JmsService {
         def isTopic
         if (destination instanceof Destination) {
             isTopic = destination instanceof Topic
-        }
-        else {
+        } else {
             def destinationMap = convertToDestinationMap(destination)
             isTopic = destinationMap.containsKey("topic")
             jmsTemplate.pubSubDomain = isTopic
             destination = (isTopic) ? destinationMap.topic : destinationMap.queue
         }
 
-        [jmsTemplate: jmsTemplate,                    // org.springframework.jms.core.JmsTemplate
-         ndestination: destination,                   // Normalized Destination
-         type: (isTopic ? 'topic' : 'queue'),         // Type of Destination [topic|queue]
+        [jmsTemplate        : jmsTemplate,                    // org.springframework.jms.core.JmsTemplate
+         ndestination       : destination,                   // Normalized Destination
+         type               : (isTopic ? 'topic' : 'queue'),         // Type of Destination [topic|queue]
          jmsTemplateBeanName: _jmsTemplateBeanName,   // Name of the bean used to retrieve the JmsTemplate.
-         defaultTemplate: defaultTemplate]            // Boolean value that tells us if the JmsTemplate is the Default Template.
+         defaultTemplate    : defaultTemplate]
+        // Boolean value that tells us if the JmsTemplate is the Default Template.
     }
 
     /**
@@ -442,23 +437,18 @@ class JmsService {
     def convertToDestinationMap(destination) {
         if (destination == null) {
             [queue: null]
-        }
-        else if (destination instanceof String) {
+        } else if (destination instanceof String) {
             [queue: destination]
-        }
-        else if (destination instanceof Map) {
+        } else if (destination instanceof Map) {
             if (destination.queue) {
                 [queue: destination.queue]
-            }
-            else if (destination.topic) {
+            } else if (destination.topic) {
                 [topic: destination.topic]
-            }
-            else {
+            } else {
                 def parts = []
                 if (destination.app) {
                     parts << destination.app
-                }
-                else {
+                } else {
                     parts << grailsApplication.config.getProperty('appName')
                 }
                 if (destination.service) {
@@ -469,8 +459,7 @@ class JmsService {
                 }
                 [queue: (parts) ? parts.join('.') : null]
             }
-        }
-        else {
+        } else {
             [queue: destination.toString()]
         }
     }
