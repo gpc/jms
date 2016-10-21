@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugins.jms.bean
+package grails.plugin.jms.bean
 
-import grails.plugins.jms.listener.adapter.PersistenceContextAwareListenerAdapter
+import grails.plugin.jms.listener.adapter.PersistenceContextAwareListenerAdapter
 
 class JmsListenerAdapterAbstractBeanDefinitionBuilder extends JmsBeanDefinitionBuilder {
 

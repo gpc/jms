@@ -15,7 +15,7 @@
  */
 package grails.plugin.jms
 
-import grails.plugins.jms.listener.GrailsMessagePostProcessor
+import grails.plugin.jms.listener.GrailsMessagePostProcessor
 
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService

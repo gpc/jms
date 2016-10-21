@@ -1,6 +1,5 @@
 package grails.plugin.jms
 
-import grails.plugin.jms.JmsService
 import grails.util.Holders
 import org.grails.config.PropertySourcesConfig
 import spock.lang.Specification

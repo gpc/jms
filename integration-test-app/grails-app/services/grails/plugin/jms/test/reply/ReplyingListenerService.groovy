@@ -15,7 +15,7 @@
  */
 package grails.plugin.jms.test.reply
 
-import grails.plugins.jms.Queue
+import grails.plugin.jms.Queue
 import grails.plugin.jms.test.TestListeningServiceSupport
 
 class ReplyingListenerService extends TestListeningServiceSupport {

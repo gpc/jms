@@ -1,4 +1,4 @@
-package grails.plugins.jms.listener
+package grails.plugin.jms.listener
 
 import org.grails.support.MockApplicationContext
 import spock.lang.Specification

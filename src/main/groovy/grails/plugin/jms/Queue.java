@@ -1,4 +1,4 @@
-package grails.plugins.jms;
+package grails.plugin.jms;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

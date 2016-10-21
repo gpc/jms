@@ -1,4 +1,4 @@
-package grails.plugins.jms.bean
+package grails.plugin.jms.bean
 
 import grails.spring.BeanBuilder
 import org.junit.Test

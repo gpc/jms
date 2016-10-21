@@ -10,9 +10,9 @@ appender('STDOUT', ConsoleAppender) {
 
 root(ERROR, ['STDOUT'])
 
-logger('grails.plugins.jms', INFO)
+logger('grails.plugin.jms', INFO)
 logger('grails.app.service', INFO)
-logger('grails.plugins.jms.test', INFO)
+logger('grails.plugin.jms.test', INFO)
 
 if (Environment.current == Environment.DEVELOPMENT) {
     def targetDir = BuildSettings.TARGET_DIR

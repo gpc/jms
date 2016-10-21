@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugins.jms.listener
+package grails.plugin.jms.listener
 
-import grails.plugins.jms.Queue
+import grails.plugin.jms.Queue
 import grails.plugin.jms.Subscriber
 import grails.util.GrailsClassUtils
 import groovy.util.logging.Commons
@@ -115,7 +115,14 @@ class ServiceInspector {
         String resolvedName = name
         if (resolvedName =~ /^\$/) {
             final List<String> pathTokens = resolvedName.substring(1).tokenize('.').reverse()
-            def node = grailsApplication.config?.jms?.destinations
+            def node = null
+            if (grailsApplication.config?.jms?.destinations) {
+                node = grailsApplication.config?.jms?.destinations
+            } else if (grailsApplication.config?.grails?.plugins?.jms?.destinations) {
+                node = grailsApplication.config?.grails?.plugins?.jms?.destinations
+            } else {
+                node = grailsApplication.config?.grails?.plugin?.jms?.destinations
+            }
             while (node && node instanceof Map && pathTokens.size()) {
                 node = node[pathTokens.pop()]
             }

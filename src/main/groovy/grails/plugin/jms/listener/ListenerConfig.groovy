@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugins.jms.listener
+package grails.plugin.jms.listener
 
-import grails.plugins.jms.bean.JmsListenerAdapterAbstractBeanDefinitionBuilder
-import grails.plugins.jms.bean.JmsListenerContainerAbstractBeanDefinitionBuilder
+import grails.plugin.jms.bean.JmsListenerAdapterAbstractBeanDefinitionBuilder
+import grails.plugin.jms.bean.JmsListenerContainerAbstractBeanDefinitionBuilder
 import org.apache.commons.lang.StringUtils
 
 class ListenerConfig {

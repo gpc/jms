@@ -1,10 +1,6 @@
-package grails.plugins.jms.bean
-
-import grails.spring.BeanBuilder
+package grails.plugin.jms.bean
 
 class JmsBeanDefinitionBuilderTests extends GroovyTestCase {
-
-    private bb = new BeanBuilder()
 
     void testCreate() {
         def nameBase = "example"

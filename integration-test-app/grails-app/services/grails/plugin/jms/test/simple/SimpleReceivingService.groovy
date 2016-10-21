@@ -16,7 +16,7 @@
 package grails.plugin.jms.test.simple
 
 import grails.plugin.jms.Subscriber
-import grails.plugins.jms.Queue
+import grails.plugin.jms.Queue
 import grails.plugin.jms.test.TestListeningServiceSupport
 
 class SimpleReceivingService extends TestListeningServiceSupport {

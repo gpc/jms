@@ -15,10 +15,10 @@
  */
 package grails.plugin.jms
 
+import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
+import grails.plugin.jms.listener.ListenerConfigFactory
+import grails.plugin.jms.listener.ServiceInspector
 import grails.plugins.Plugin
-import grails.plugins.jms.bean.JmsBeanDefinitionsBuilder
-import grails.plugins.jms.listener.ListenerConfigFactory
-import grails.plugins.jms.listener.ServiceInspector
 import grails.util.Environment
 import groovy.util.logging.Commons
 import org.grails.core.artefact.ServiceArtefactHandler
@@ -63,7 +63,18 @@ class JmsGrailsPlugin extends Plugin {
 
     Closure doWithSpring() {
         { ->
-            jmsConfig = defaultConfig.merge(grailsApplication.config.jms as ConfigObject)
+            def tempJmsConfig
+            if (grailsApplication.config.jms) {
+                println 'jms {} config if deprecated, please use grails.plugin.jms'
+                tempJmsConfig = grailsApplication.config.jms
+            } else if (grailsApplication.config.grails.plugins.jms) {
+                println 'grails.plugins.jms {} config if deprecated, please use grails.plugin.jms'
+                tempJmsConfig = grailsApplication.config.grails.plugins.jms
+            } else {
+                tempJmsConfig = grailsApplication.config.grails.plugin.jms
+            }
+
+            jmsConfig = defaultConfig.merge(tempJmsConfig as ConfigObject)
 
             // We have to take a hash now because a config object
             // will dynamically create nested maps as needed

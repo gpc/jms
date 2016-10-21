@@ -2,60 +2,64 @@ grails.codegen.defaultPackage = 'grails.plugin.jms.test'
 
 appName = 'grails-jms'
 
-jms {
-    disabled = false
+grails {
+    plugin {
+        jms {
+            disabled = false
 
-    templates {
-        other {
-            meta {
-                parentBean = 'standardJmsTemplate'
+            templates {
+                other {
+                    meta {
+                        parentBean = 'standardJmsTemplate'
+                    }
+                    connectionFactoryBean = "otherJmsConnectionFactory"
+                }
+                transacted {
+                    meta {
+                        parentBean = 'standardJmsTemplate'
+                    }
+                    sessionTransacted = true
+                }
             }
-            connectionFactoryBean = "otherJmsConnectionFactory"
-        }
-        transacted {
-            meta {
-                parentBean = 'standardJmsTemplate'
+            containers {
+                other {
+                    meta {
+                        parentBean = 'standardJmsListenerContainer'
+                    }
+                    connectionFactoryBean = "otherJmsConnectionFactory"
+                }
+                other {
+                    meta {
+                        parentBean = 'standardJmsListenerContainer'
+                    }
+                    connectionFactoryBean = "otherJmsConnectionFactory"
+                }
+                transacted {
+                    meta {
+                        parentBean = 'standardJmsListenerContainer'
+                    }
+                    transactionManagerBean = "transactionManager"
+                    sessionTransacted = true
+                }
             }
-            sessionTransacted = true
-        }
-    }
-    containers {
-        other {
-            meta {
-                parentBean = 'standardJmsListenerContainer'
+            adapters {
+                other {
+                    meta {
+                        parentBean = 'standardJmsListenerAdapter'
+                    }
+                    messageConverter = null
+                }
             }
-            connectionFactoryBean = "otherJmsConnectionFactory"
-        }
-        other {
-            meta {
-                parentBean = 'standardJmsListenerContainer'
-            }
-            connectionFactoryBean = "otherJmsConnectionFactory"
-        }
-        transacted {
-            meta {
-                parentBean = 'standardJmsListenerContainer'
-            }
-            transactionManagerBean = "transactionManager"
-            sessionTransacted = true
-        }
-    }
-    adapters {
-        other {
-            meta {
-                parentBean = 'standardJmsListenerAdapter'
-            }
-            messageConverter = null
-        }
-    }
-    destinations {
-        /**
-         * You can override the destination name specified by the annotations Queue and Subscriber
-         * e.g @Subscriber(topic='$named.topic.key') and @Queue(name='$named.queue.key')
-         */
-        named.topic.key = 'conf.named.topic'
+            destinations {
+                /**
+                 * You can override the destination name specified by the annotations Queue and Subscriber
+                 * e.g @Subscriber(topic='$named.topic.key') and @Queue(name='$named.queue.key')
+                 */
+                named.topic.key = 'conf.named.topic'
 
-        named.queue.key = 'conf.named.queue'
+                named.queue.key = 'conf.named.queue'
+            }
+        }
     }
 }
 

@@ -1,6 +1,5 @@
 package grails.plugin.jms
 
-import grails.plugin.jms.JmsService
 import spock.lang.AutoCleanup
 import spock.lang.Specification
 
