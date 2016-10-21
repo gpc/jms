@@ -1,4 +1,4 @@
-package grails.plugins.jms.connection;
+package grails.plugin.jms.connection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,14 +13,12 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * A connection factory that falls back to another connection factory if the primary
  * connection factory fails.
- * <p></p>
  * If you do not assign a fallback JMS queue, it will try to use a
  * local (i.e.: JVM-resident in-memory)
  * ActiveMQ connection, assuming that {@code org.apache.activemq.ActiveMQConnectionFactory} is
  * a class on the class path. (See
  * <a href="https://activemq.apache.org/activemq-551-release.html#ActiveMQ5.5.1Release-GettingtheBinariesusingMaven2">
  * the ActiveMQ download page's Maven config area</a> for the information necessary to pull it down.)
- * <p></p>
  * This class is thread-safe, in that it is safe to change the parent no matter what other
  * activity may be going on.
  */
