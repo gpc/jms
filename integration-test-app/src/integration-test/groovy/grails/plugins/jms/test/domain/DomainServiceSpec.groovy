@@ -3,7 +3,6 @@ package grails.plugins.jms.test.domain
 import grails.plugins.jms.test.Person
 import grails.plugins.jms.test.Thing
 import grails.test.mixin.integration.Integration
-import grails.transaction.Rollback
 import grails.transaction.Transactional
 import spock.lang.Specification
 

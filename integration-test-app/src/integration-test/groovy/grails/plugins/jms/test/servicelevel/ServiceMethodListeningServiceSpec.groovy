@@ -1,7 +1,7 @@
 package grails.plugins.jms.test.servicelevel
 
 import grails.test.mixin.integration.Integration
-import spock.lang.*
+import spock.lang.Specification
 
 @Integration
 class ServiceMethodListeningServiceSpec extends Specification {

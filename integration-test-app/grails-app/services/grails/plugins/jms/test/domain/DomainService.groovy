@@ -17,7 +17,6 @@ package grails.plugins.jms.test.domain
 
 import grails.plugins.jms.test.Person
 import grails.plugins.jms.test.TestListeningServiceSupport
-import grails.transaction.Transactional
 
 class DomainService extends TestListeningServiceSupport {
 

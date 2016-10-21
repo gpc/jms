@@ -1,17 +1,18 @@
 package grails.plugins.jms.test.simple
 
 import grails.test.mixin.integration.Integration
-
-import static grails.plugins.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_QUEUE
-import static grails.plugins.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_TOPIC
-
+import spock.lang.AutoCleanup
+import spock.lang.Ignore
+import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.util.concurrent.Callable
 import java.util.concurrent.CyclicBarrier
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
-import spock.lang.*
+import static grails.plugins.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_QUEUE
+import static grails.plugins.jms.test.simple.SimpleReceivingSelectedService.RECEIVING_TOPIC
 
 @Integration
 class SimpleSendingAndReceivingWithSelectorSpec extends Specification {
@@ -52,8 +53,8 @@ class SimpleSendingAndReceivingWithSelectorSpec extends Specification {
     @Ignore
     def "sync"() {
         given: "a receiver on another thread"
-        def receiver = execAsync { 
-            simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT) 
+        def receiver = execAsync {
+            simpleReceivingSelectedService."receiveSelectedFrom${destination}"("aproperty='$propertyValueToMatch'", TIMEOUT)
         }
 
         when: "we send some messages"
@@ -78,7 +79,9 @@ class SimpleSendingAndReceivingWithSelectorSpec extends Specification {
         def barrier = new CyclicBarrier(2)
 
         and: "an asynchronous receiver on another thread, who will wait on the barrier"
-        def receiver = execAsync { simpleReceivingSelectedService."receiveSelectedAsyncFrom${destination}"(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT) }
+        def receiver = execAsync {
+            simpleReceivingSelectedService."receiveSelectedAsyncFrom${destination}"(barrier, "aproperty='$propertyValueToMatch'", TIMEOUT)
+        }
 
         and: "an asyncrhounous sender that will wait on the barrier so it doesn't send without the receivers"
         def sender = execAsync {

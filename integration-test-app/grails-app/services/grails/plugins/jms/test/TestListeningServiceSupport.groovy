@@ -35,9 +35,9 @@ abstract class TestListeningServiceSupport {
     }
 
     protected void putMessage(msg, queueName = DEFAULT_QUEUE) {
-        if(msg != null) {
-            getMessageQueue(queueName) << msg    
-        }        
+        if (msg != null) {
+            getMessageQueue(queueName) << msg
+        }
     }
 
     def getMessage(waitSeconds = DEFAULT_WAIT_SECONDS, queueName = DEFAULT_QUEUE) {

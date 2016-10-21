@@ -2,10 +2,11 @@ package grails.plugins.jms.test.transactions
 
 import grails.plugins.jms.test.Person
 import grails.test.mixin.integration.Integration
+import spock.lang.Ignore
+import spock.lang.Specification
+import spock.lang.Timeout
 
 import java.util.concurrent.CountDownLatch
-
-import spock.lang.*
 
 @Integration
 @Ignore("This is not yet working, may need to create a listener container subclass")
@@ -91,7 +92,7 @@ class TransactionalReceivingSpec extends Specification {
         i < loops
     }
 
-   def cleanup() {
-       simpleReceivingService.callback = null
-   }
+    def cleanup() {
+        simpleReceivingService.callback = null
+    }
 }

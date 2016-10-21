@@ -21,48 +21,48 @@ import java.util.concurrent.CyclicBarrier
 
 class SimpleReceivingSelectedService extends TestListeningServiceSupport {
 
-   public static final String RECEIVING_QUEUE = "simpleReceivingSelectedQueue"
+    public static final String RECEIVING_QUEUE = "simpleReceivingSelectedQueue"
 
-   public static final String RECEIVING_TOPIC = "simpleReceivingSelectedTopic"
+    public static final String RECEIVING_TOPIC = "simpleReceivingSelectedTopic"
 
-   static final long DEFAULT_TIMEOUT = 100
+    static final long DEFAULT_TIMEOUT = 100
 
-   def callback
+    def callback
 
-   def receiveSelectedFromQueue(selector, timeout = DEFAULT_TIMEOUT, template = null) {
-      def msg = receiveSelectedJMSMessage(queue: RECEIVING_QUEUE, selector, timeout, template)
-      log.info "queue messaged received with selector ${selector} : $msg"
-      putMessage(msg)
-      callback?.call(msg)
-   }
+    def receiveSelectedFromQueue(selector, timeout = DEFAULT_TIMEOUT, template = null) {
+        def msg = receiveSelectedJMSMessage(queue: RECEIVING_QUEUE, selector, timeout, template)
+        log.info "queue messaged received with selector ${selector} : $msg"
+        putMessage(msg)
+        callback?.call(msg)
+    }
 
-   def receiveSelectedFromTopic(selector, timeout = DEFAULT_TIMEOUT, template = null) {
-      def msg = receiveSelectedJMSMessage(topic: RECEIVING_TOPIC, selector, timeout, template)
-      log.info "topic messaged received with selector ${selector} : $msg"
-      putMessage(msg)
-      callback?.call(msg)
-   }
+    def receiveSelectedFromTopic(selector, timeout = DEFAULT_TIMEOUT, template = null) {
+        def msg = receiveSelectedJMSMessage(topic: RECEIVING_TOPIC, selector, timeout, template)
+        log.info "topic messaged received with selector ${selector} : $msg"
+        putMessage(msg)
+        callback?.call(msg)
+    }
 
-   def receiveSelectedAsyncFromQueue(CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
-      def future = receiveSelectedAsyncJMSMessage(queue: RECEIVING_QUEUE, selector, timeout, template)
-      log.info "future obtained from queue with selector ${selector} : $future"
-      log.debug "awaiting for barrier..."
-      int index = barrier.await()
-      log.debug "barrier triggered $index proceeding..."
-      def msg = future.get()
-      log.info "queue messaged received with selector ${selector} : $msg"
-      putMessage(msg)
-      callback?.call(msg)
-   }
+    def receiveSelectedAsyncFromQueue(CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
+        def future = receiveSelectedAsyncJMSMessage(queue: RECEIVING_QUEUE, selector, timeout, template)
+        log.info "future obtained from queue with selector ${selector} : $future"
+        log.debug "awaiting for barrier..."
+        int index = barrier.await()
+        log.debug "barrier triggered $index proceeding..."
+        def msg = future.get()
+        log.info "queue messaged received with selector ${selector} : $msg"
+        putMessage(msg)
+        callback?.call(msg)
+    }
 
-   def receiveSelectedAsyncFromTopic(CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
-      def future = receiveSelectedAsyncJMSMessage(topic: RECEIVING_TOPIC, selector, timeout, template)
-      log.info "future obtained from topic with selector ${selector} : $future"
-      log.debug "awaiting for barrier..."
-      barrier.await()
-      def msg = future.get()
-      log.info "topic messaged received with selector ${selector} : $msg"
-      putMessage(msg)
-      callback?.call(msg)
-   }
+    def receiveSelectedAsyncFromTopic(CyclicBarrier barrier, selector, timeout = DEFAULT_TIMEOUT, template = null) {
+        def future = receiveSelectedAsyncJMSMessage(topic: RECEIVING_TOPIC, selector, timeout, template)
+        log.info "future obtained from topic with selector ${selector} : $future"
+        log.debug "awaiting for barrier..."
+        barrier.await()
+        def msg = future.get()
+        log.info "topic messaged received with selector ${selector} : $msg"
+        putMessage(msg)
+        callback?.call(msg)
+    }
 }

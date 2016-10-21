@@ -15,8 +15,8 @@
  */
 package grails.plugins.jms.test.simple
 
-import grails.plugins.jms.Queue
 import grails.plugin.jms.Subscriber
+import grails.plugins.jms.Queue
 import grails.plugins.jms.test.TestListeningServiceSupport
 
 class SimpleReceivingService extends TestListeningServiceSupport {
@@ -46,28 +46,28 @@ class SimpleReceivingService extends TestListeningServiceSupport {
         callback?.call(msg)
     }
 
-    @Subscriber(topic='namedTopic')
+    @Subscriber(topic = 'namedTopic')
     def namedTopic(msg) {
         log.info "namedTopic received: $msg"
         putMessage(msg)
         callback?.call(msg)
     }
 
-    @Queue(name='namedQueue')
+    @Queue(name = 'namedQueue')
     def namedQueue(msg) {
         log.info "namedQueue received: $msg"
         putMessage(msg)
         callback?.call(msg)
     }
 
-    @Subscriber(topic='$named.topic.key')
+    @Subscriber(topic = '$named.topic.key')
     def namedTopicByConfigurationKey(msg) {
         log.info "conf.named.topic received: $msg"
         putMessage(msg)
         callback?.call(msg)
     }
 
-    @Queue(name='$named.queue.key')
+    @Queue(name = '$named.queue.key')
     def namedQueueByConfigurationKey(msg) {
         log.info "conf.named.queue received: $msg"
         putMessage(msg)

@@ -1,7 +1,8 @@
 package grails.plugins.jms.test.simple
 
 import grails.test.mixin.integration.Integration
-import spock.lang.*
+import spock.lang.Specification
+import spock.lang.Unroll
 
 @Integration
 class SimpleSendingAndReceivingSpec extends Specification {
@@ -28,7 +29,7 @@ class SimpleSendingAndReceivingSpec extends Specification {
         given:
         String message = 'A message'
         when:
-        simpleSendingService."sendToGiven$type"(name, message )
+        simpleSendingService."sendToGiven$type"(name, message)
         then:
         simpleReceivingService.message == message
         where:

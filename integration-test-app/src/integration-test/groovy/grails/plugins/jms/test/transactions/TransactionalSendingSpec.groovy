@@ -2,10 +2,11 @@ package grails.plugins.jms.test.transactions
 
 import grails.plugins.jms.test.Person
 import grails.test.mixin.integration.Integration
+import spock.lang.Specification
+import spock.lang.Timeout
 
 import java.util.concurrent.CountDownLatch
 
-import spock.lang.*
 @Integration
 class TransactionalSendingSpec extends Specification {
 
@@ -67,13 +68,14 @@ class TransactionalSendingSpec extends Specification {
         def payload = "payload"
 
         Thread.start {
-          try {
-            Person.withTransaction {
-                simpleSendingService.sendToQueue(PAYLOAD, 'transacted')
-                latch.await()
-                throw new RuntimeException("Error that we intentionally throw to fail the transaction.")
+            try {
+                Person.withTransaction {
+                    simpleSendingService.sendToQueue(PAYLOAD, 'transacted')
+                    latch.await()
+                    throw new RuntimeException("Error that we intentionally throw to fail the transaction.")
+                }
+            } catch (e) {
             }
-          } catch (e) { }
         }
 
         expect: "that the receiver shouldn't get the message"

@@ -1,9 +1,9 @@
 package grails.plugins.jms.test.simple
 
 import grails.test.mixin.integration.Integration
+import spock.lang.Specification
 
 import static grails.plugins.jms.test.simple.SimpleQueueBrowserService.BROWSER_QUEUE
-import spock.lang.*
 
 @Integration
 class SimpleQueueBrowsingSpec extends Specification {
@@ -94,7 +94,7 @@ class SimpleQueueBrowsingSpec extends Specification {
         int cx = 0
         simpleQueueBrowserService.browseNoConvert() { msg ->
             cx++
-            ['fromCallback' : msg.getStringProperty('aproperty') ]
+            ['fromCallback': msg.getStringProperty('aproperty')]
         }
 
         then:
@@ -120,7 +120,7 @@ class SimpleQueueBrowsingSpec extends Specification {
         when:
         send()
         simpleQueueBrowserService.browseSelectedNotConvert("aproperty='2'") { javax.jms.Message msg ->
-            ['fromCallback' : msg.getStringProperty('aproperty') ]
+            ['fromCallback': msg.getStringProperty('aproperty')]
         }
 
         then:

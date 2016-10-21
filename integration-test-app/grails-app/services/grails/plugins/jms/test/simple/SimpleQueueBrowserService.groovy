@@ -59,7 +59,9 @@ class SimpleQueueBrowserService extends TestListeningServiceSupport {
     def purge() {
         log.info "purging.."
         int cx = 0
-        while (receiveSelectedJMSMessage(queue: BROWSER_QUEUE, null, 100l)) { cx++ }
+        while (receiveSelectedJMSMessage(queue: BROWSER_QUEUE, null, 100l)) {
+            cx++
+        }
 
         log.info "purging done $cx."
 

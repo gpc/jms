@@ -2,7 +2,7 @@ package grails.plugins.jms.test.config
 
 import grails.test.mixin.TestMixin
 import grails.test.mixin.integration.IntegrationTestMixin
-import spock.lang.*
+import spock.lang.Specification
 
 @TestMixin(IntegrationTestMixin)
 class OtherListenerServiceSpec extends Specification {

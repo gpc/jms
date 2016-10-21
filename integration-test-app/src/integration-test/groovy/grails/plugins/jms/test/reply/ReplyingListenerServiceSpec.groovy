@@ -1,9 +1,7 @@
 package grails.plugins.jms.test.reply
 
 import grails.test.mixin.integration.Integration
-import spock.lang.*
-import grails.test.mixin.integration.IntegrationTestMixin
-import grails.test.mixin.*
+import spock.lang.Specification
 
 @Integration
 class ReplyingListenerServiceSpec extends Specification {
