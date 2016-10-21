@@ -10,7 +10,7 @@ appender('STDOUT', ConsoleAppender) {
 
 root(ERROR, ['STDOUT'])
 
-logger('grails.plugins.jms', INFO)
+logger('grails.plugin.jms', INFO)
 logger('grails.app.service', INFO)
 
 if (Environment.current == Environment.DEVELOPMENT) {

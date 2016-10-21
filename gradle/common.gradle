@@ -3,8 +3,10 @@ apply plugin: 'war'
 
 def versionTxt = file('version.txt')
 version = versionTxt.exists() ? versionTxt.text.trim() : '0.1'
+
 ext {
-    gradleWrapperVersion = '2.10'
+    grailsVersion = project.grailsVersion
+    gradleWrapperVersion = project.gradleWrapperVersion
 }
 
 repositories {
