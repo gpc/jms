@@ -1,0 +1,24 @@
+buildscript {
+	repositories {
+		maven { url 'https://repo.grails.org/grails/core' }
+	}
+	dependencies {
+		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+	}
+}
+
+plugins {
+	id 'io.spring.dependency-management' version '0.5.4.RELEASE'
+	id 'com.jfrog.bintray' version '1.2'
+}
+
+apply from: 'gradle/plugin.gradle'
+
+dependencies {
+    compile 'org.springframework:spring-jms:3.2.8.RELEASE', {
+        ['spring-aop', 'spring-beans', 'spring-context', 'spring-core'].each { exclude module: it }
+    }
+    compile 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
+}
+

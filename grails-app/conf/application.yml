@@ -1,0 +1,20 @@
+---
+grails:
+    profile: web-plugin
+    codegen:
+        defaultPackage: jms
+info:
+    app:
+        name: '@info.app.name@'
+        version: '@info.app.version@'
+        grailsVersion: '@info.app.grailsVersion@'
+
+grails:
+    doc:
+        title: "Grails JMS Plugin"
+        subtitle: "JMS integration for Grails"
+        authors: "Grails Plugin Collective"
+        copyright: "Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically."
+        footer: "Developed by the <a href='http://gpc.github.com'>Grails Plugin Collective</a>"
+        license: "Apache License 2.0"
+---
