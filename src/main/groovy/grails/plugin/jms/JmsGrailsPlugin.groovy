@@ -47,7 +47,9 @@ class JmsGrailsPlugin extends Plugin {
     boolean isDisabled = false
 
     def getDefaultConfig() {
-        new ConfigSlurper(Environment.current.name).parse(DefaultJmsBeans)
+        String env = Environment.current.name
+        ConfigSlurper configSlurper = new ConfigSlurper(env)
+        return configSlurper.parse(DefaultJmsBeans)
     }
 
     def getListenerConfigs(serviceClass, grailsApplication) {
@@ -74,7 +76,13 @@ class JmsGrailsPlugin extends Plugin {
                 tempJmsConfig = grailsApplication.config.grails.plugin.jms
             }
 
-            jmsConfig = defaultConfig.merge(tempJmsConfig as ConfigObject)
+            def defaultConfig = getDefaultConfig()
+
+            if (tempJmsConfig) {
+                jmsConfig = defaultConfig.merge(tempJmsConfig as ConfigObject)
+            } else {
+                jmsConfig = defaultConfig
+            }
 
             // We have to take a hash now because a config object
             // will dynamically create nested maps as needed
