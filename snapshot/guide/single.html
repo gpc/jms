@@ -17,46 +17,46 @@ function addJsClass(el) {
 
     <body class="body" onload="addJsClass();">
         <div id="navigation">
-            <ul>
-                <li>
-                    <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
-                        <a href="../guide/index.html" class="button">Table of contents</a>
-                        <div id="nav-summary-childs" style="display:none;">
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#jmsProvider"><strong>2</strong><span>Plugging In A JMS Provider</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#configuration"><strong>3</strong><span>The Configuration Mechanism</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#sendingMessages"><strong>4</strong><span>Sending Messages</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#receivingMessages"><strong>5</strong><span>Receiving Messages</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#receivingMessagesWithSelectors"><strong>6</strong><span>Receiving Messages With Selectors</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#browsingMessagesInQueue"><strong>7</strong><span>Browsing Messages In A Queue</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#messageConversion"><strong>8</strong><span>Message Conversion</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#logging"><strong>9</strong><span>Logging</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#disablingAndReloading"><strong>10</strong><span>Disabling And Reloading</span></a></div>
-                            
-                        </div>
-                    </div>
-                </li>
-                <li class="separator selected">
-                    <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
-                </li>
-            </ul>
-        </div>
-        <div id="header">
-            <div class="images clearfix">
+            <div class="navTitle">
                 
-                
+                jms
             </div>
-            <p></p>
+            <div class="navLinks">
+                <ul>
+                    <li>
+                        <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                            <a href="../guide/index.html" class="button">Table of contents</a>
+                            <div id="nav-summary-childs" style="display:none;">
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#jmsProvider"><strong>2</strong><span>Plugging In A JMS Provider</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#configuration"><strong>3</strong><span>The Configuration Mechanism</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#sendingMessages"><strong>4</strong><span>Sending Messages</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#receivingMessages"><strong>5</strong><span>Receiving Messages</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#receivingMessagesWithSelectors"><strong>6</strong><span>Receiving Messages With Selectors</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#browsingMessagesInQueue"><strong>7</strong><span>Browsing Messages In A Queue</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#messageConversion"><strong>8</strong><span>Message Conversion</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#logging"><strong>9</strong><span>Logging</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#disablingAndReloading"><strong>10</strong><span>Disabling And Reloading</span></a></div>
+                                
+                            </div>
+                        </div>
+                    </li>
+                    <li class="separator selected">
+                        <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+                    </li>
+                </ul>
+
+            </div>
         </div>
 
 
@@ -68,7 +68,7 @@ function addJsClass(el) {
                         <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                         <div class="project">
-                            <h1>jms - Reference Documentation</h1>
+                            <h1>jms</h1>
                             <p><strong>Authors:</strong> </p>
                             <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
                             
@@ -126,6 +126,8 @@ function addJsClass(el) {
                         
 
 <h1 id="introduction">1 Introduction</h1>
+
+
 This plugin makes it easy to both send and receive JMS messages inside a Grails application.<p class="paragraph"/><h3>Examples</h3><p class="paragraph"/>The following are some simple examples to give you a feel for the plugin.<p class="paragraph"/><h4>Service Queue Listeners</h4><p class="paragraph"/><div class="code"><pre>class ListeningService &#123;<p class="paragraph"/>    <span class="java&#45;keyword">static</span> exposes = &#91;'jms'&#93;<p class="paragraph"/>    def onMessage(message) &#123;
         assert message == 1
     &#125;
@@ -156,14 +158,20 @@ This plugin makes it easy to both send and receive JMS messages inside a Grails 
 
 
 <h2 id="springJms">1.1 Spring JMS</h2>
+
+
 This plugin is built on top of <a href="http://static.springsource.org/spring/docs/3.0.x/reference/html/jms.html." target="blank">Spring's JMS support</a><p class="paragraph"/>There are some core Spring JMS concepts that you should at least be aware of.<p class="paragraph"/><h2>JmsTemplate</h2><p class="paragraph"/>Spring provides <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/core/JmsTemplate.html" target="blank">JmsTemplate</a> which is what this plugin uses to send messages.<p class="paragraph"/><h2>MessageConverter</h2><p class="paragraph"/>The <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html" target="blank">MessageConverter</a> abstraction conveniently allows pluggable message conversion. By default, this plugin uses Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html" target="blank">SimpleMessageConverter</a> which handles 'standard' message payloads and JMS Message types.<p class="paragraph"/><h2>MessageListenerContainer</h2><p class="paragraph"/>A listener container polls a JMS destination for messages. Each listener (i.e. each service method that receives JMS messages) has it's own listener container.<p class="paragraph"/>This plugin uses the <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/listener/DefaultMessageListenerContainer.html" target="blank">DefaultMessageListenerContainer</a> implementation.<p class="paragraph"/><h2>MessageListenerAdapter</h2><p class="paragraph"/>A listener adapter connects a listener container to the actual destination of the message. It handles message conversion amongst other things.<p class="paragraph"/>By default, this plugin uses a <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/listener/adapter/MessageListenerAdapter.html" target="blank">MessageListenerAdapter</a> subclass that is Grails aware and sets up the necessary Grails environment for listener methods (e.g. Hibernate session).
 
 
 <h1 id="jmsProvider">2 Plugging In A JMS Provider</h1>
+
+
 The plugin does not include a JMS provider so you must install and configure your own.<p class="paragraph"/>All you need to provide is one or more <a href="http://java.sun.com/javaee/5/docs/api/javax/jms/ConnectionFactory.html" target="blank">javax.jms.ConnectionFactory</a> beans and the plugin takes care of the rest.<p class="paragraph"/>The plugin looks for a connection factory bean named <code>jmsConnectionFactory</code>.
 
 
 <h2 id="activeMqExample">2.1 ActiveMQ Example</h2>
+
+
 Getting ActiveMQ up and running as your provider is very simple.  All that is required is adding a runtime dependency on the <code>activemq-spring</code> library in <code>build.gradle</code>.<p class="paragraph"/><div class="code"><pre>// ...<p class="paragraph"/>dependencies &#123;<p class="paragraph"/>    // &#8230;
     compile 'org.grails.plugins:jms:2.0.0.M1'
     runtime 'org.apache.activemq:activemq&#45;spring:5.11.1'
@@ -182,6 +190,8 @@ property names defined under <code>spring.activmeq</code> as shown below.<p clas
 
 
 <h1 id="configuration">3 The Configuration Mechanism</h1>
+
+
 JMS is a complicated topic. There are different consumption and configuration patterns. While this plugin does set some reasonable defaults, it's very likely that you are going to need to customise these settings either globally or for specific senders or listeners.<p class="paragraph"/>To support this, the plugin makes configuration options available to you should you need to set it. This is achieved through the use of Spring's abstract beans and Grails' configuration mechanism.<p class="paragraph"/><h3>How it works</h3><p class="paragraph"/>The configuration is controlled by the Grails application configuration under the key <code>jms</code>. This is merged against plugin provided defaults.<p class="paragraph"/>Here is what the defaults look like...<p class="paragraph"/><div class="code"><pre>templates:
     standard:
         connectionFactoryBean: jmsConnectionFactory
@@ -190,6 +200,8 @@ JMS is a complicated topic. There are different consumption and configuration pa
 
 
 <h2 id="changingDefaults">3.1 Changing Defaults</h2>
+
+
 You can override the configuration defaults very easily.<p class="paragraph"/>Let's suppose you do not want any message conversion on listeners. If a listener container has no <code>messageConverter</code> listeners will receive raw messages. So we want to override the standard listener container definition to set the <code>messageConverter</code> property to <code>null</code>.<p class="paragraph"/>In your application's <code>application.yml</code><p class="paragraph"/><div class="code"><pre>jms:
     containers:
         standard:
@@ -205,6 +217,8 @@ in the <code>application.yml</code> the <code>jms.adapters.standard.persistenceI
 
 
 <h2 id="syntaxNotes">3.2 Syntax Notes</h2>
+
+
 There are some noteworthy things about this config syntax.<p class="paragraph"/><h4>Bean names</h4><p class="paragraph"/>The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
     standard &#123;
         connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>
@@ -226,11 +240,15 @@ There are some noteworthy things about this config syntax.<p class="paragraph"/>
 
 
 <h1 id="sendingMessages">4 Sending Messages</h1>
+
+
 This plugin adds a service called <code> jmsService </code> to your application that can be used to send JMS messages.<p class="paragraph"/><h4>The send(destination, message, jmsTemplateName, postProcessor) method.</h4><p class="paragraph"/><strong class="bold">destination</strong><p class="paragraph"/>An instance of <code> javax.jms.Destination </code> , <code> javax.jms.Topic </code> , a <code> String </code> or a <code> Map </code> .<p class="paragraph"/>A <code> String </code> destination argument will be interpreted as the name of a destination  <em class="italic">queue</em>  .<p class="paragraph"/>A <code> Map </code> destination argument can be used in the following ways:<p class="paragraph"/><div class="code"><pre>jmsService.send(queue: <span class="java&#45;quote">"aQueue"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to a literal queue<p class="paragraph"/>jmsService.send(topic: <span class="java&#45;quote">"aTopic"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to a literal topic<p class="paragraph"/>jmsService.send(service: <span class="java&#45;quote">"person"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to the queue '«appname».person'<p class="paragraph"/>jmsService.send(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to the queue '«appname».person.doIt'<p class="paragraph"/>jmsService.send(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to the queue 'remote.person.doIt'</pre></div><p class="paragraph"/>The app/service/method convention makes a lot more sense if you read the section below on service method listener queue subscribers.<p class="paragraph"/><strong class="bold">message</strong><p class="paragraph"/>This is the message payload. By default this can be any Java/Groovy object or a javax.jms.Message. How it gets converted into a message is handled by the underlying jms template's message converter.<p class="paragraph"/><strong class="bold">jmsTemplateName</strong><p class="paragraph"/>The name of the template that should be used to send the message. If this value is <code> null </code> , the standard template will be used (called "standard").<p class="paragraph"/><strong class="bold">postProcessor</strong><p class="paragraph"/>An optional closure that can be used to "post process" the message after it has been converted into a message but before it has been sent. This closure acts as the implementation of the <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html#postProcessMessage(javax.jms.Message)" target="blank">postProcessMessage()</a> method of the <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html" target="blank">MessagePostProcessor</a> class.<p class="paragraph"/><h4>send() method variants</h4><p class="paragraph"/>There are variations of the send() method for convenience...<p class="paragraph"/><div class="code"><pre>jmsService.send(destination, message) // use the standard template and no post processor
 jmsService.send(destination, message, postProcessor) // use the standard template</pre></div>
 
 
 <h2 id="postProcessing">4.1 Post Processing Messages</h2>
+
+
 Message post processors can either augment the passed Message object, or create a new one. Because of this, the post processor must return the message object that is to be sent.<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> javax.jms.Message<p class="paragraph"/>jmsService.send(topic: 'somethingHappened', 1) &#123; Message msg &#45;&#62;
     msg.JMSCorrelationID = <span class="java&#45;quote">"correlate"</span>
     msg
@@ -241,6 +259,8 @@ Message post processors can either augment the passed Message object, or create 
 
 
 <h2 id="usingOtherTemplates">4.2 Using Other Templates</h2>
+
+
 Here is an example of using a custom template that uses a different connection factory.<p class="paragraph"/><h5>resources.groovy</h5><p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory
 <span class="java&#45;keyword">import</span> org.springframework.jms.connection.SingleConnectionFactory<p class="paragraph"/>beans = &#123;
     // used by the standard template by convention
@@ -266,7 +286,11 @@ Here is an example of using a custom template that uses a different connection f
 
 
 
+
+
 <h2 id="serviceListeners">5.1 Service Listeners</h2>
+
+
 <h3>Service Listeners</h3><p class="paragraph"/>Service listeners are a convenient way to define one handler for JMS messages. The simplest service listener looks like…<p class="paragraph"/><div class="code"><pre>class PersonService &#123;
     <span class="java&#45;keyword">static</span> exposes = &#91;<span class="java&#45;quote">"jms"</span>&#93;
     def onMessage(msg) &#123;
@@ -285,6 +309,8 @@ Here is an example of using a custom template that uses a different connection f
 
 
 <h2 id="serviceMethodListeners">5.2 Service Method Listeners</h2>
+
+
 <h3>Service Method Listeners</h3><p class="paragraph"/>Another avenue is to expose specific methods as message listeners via annotations. This looks like…<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> grails.plugin.jms.&#42;<p class="paragraph"/>class PersonService &#123;
    <span class="java&#45;keyword">static</span> exposes = &#91;<span class="java&#45;quote">"jms"</span>&#93;<p class="paragraph"/>   @Queue
    def addPerson(msg) &#123;
@@ -324,11 +350,15 @@ available through the <code>Config.groovy</code> file in the <code>jms.destinati
 
 
 <h2 id="listenerReturnValues">5.3 Listener Return Values</h2>
+
+
 Spring's <a href="http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/jms/listener/adapter/MessageListenerAdapter.html" target="blank">MessageListenerAdapter</a> adds some special handling of listener method return values.<p class="paragraph"/>From MessageListenerAdapter's JavaDoc: "If a target listener method returns a non-null object (typically of a message content type such as String or byte array), it will get wrapped in a JMS Message and sent to the response destination (either the JMS "reply-to" destination or a specified default destination)."<p class="paragraph"/>Be careful with Groovy's implicit return mechanism; ensure that you return null explicitly if you want nothing to be sent to the reply destination. If you accidentally return a value that cannot be sent to the reply destination, you may have odd side effects like messages never being removed from the queue (due to implicit rollbacks!).
 
 
 
 <h2 id="usingOtherContainersOrAdapters">5.4 Using Other Containers Or Adapters</h2>
+
+
 Here is an example of using a container and adapter other than standard.<p class="paragraph"/><h5>resources.groovy</h5><p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory
 <span class="java&#45;keyword">import</span> org.springframework.jms.connection.SingleConnectionFactory<p class="paragraph"/>beans = &#123;
     // used by the standard template by convention
@@ -375,6 +405,8 @@ Here is an example of using a container and adapter other than standard.<p class
 
 
 <h1 id="receivingMessagesWithSelectors">6 Receiving Messages With Selectors</h1>
+
+
 As mentioned in chapter <strong class="bold">4</strong> this plugin adds a service called <code> jmsService </code> to your application. In addition to the
 methods already described in other chapters the <code> jmsService </code> has the following methods that can be used to receive a
 selected message as a single operation without a <strong class="bold">Service Listener</strong>.<p class="paragraph"/><h4>The receiveSelected(destination, selector, timeout, jmsTemplateBeanName)</h4><p class="paragraph"/><strong class="bold">destination</strong><p class="paragraph"/>An instance of <code> javax.jms.Destination </code> , <code> javax.jms.Topic </code> , a <code> String </code> or a <code> Map </code> .<p class="paragraph"/>A <code> String </code> destination argument will be interpreted as the name of a destination  <em class="italic">queue</em>  .<p class="paragraph"/>A <code> Map </code> destination argument can be used in the following ways:<p class="paragraph"/><div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
@@ -412,6 +444,8 @@ java.util.concurrent.Future afuture = jmsService.receiveSelectedAsync(topic: <sp
 
 
 <h2 id="receivingMethodsAddedToControllersAndServices">6.1 Receiving Methods Added To Controllers And Services</h2>
+
+
 <blockquote class="note">The methods described below are not supported in the current 2.0.0 milestone but will be added soon.</blockquote><p class="paragraph"/>The plugin will inject the following methods to <code> Conrollers </code> and <code> Services </code>.<p class="paragraph"/><h4>Synchronous calls.</h4><p class="paragraph"/><div class="code"><pre>// Expect/Receive a message with a &#42;selector&#42; on a literal queue waiting up to the given &#42;timeout&#42;.
 // Will <span class="java&#45;keyword">return</span> the converted message or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> the message was not available.
 def msg =receiveSelectedJMSMessage(queue: <span class="java&#45;quote">"aQueue"</span>, selector, timeout, <span class="java&#45;quote">"standard"</span>)<p class="paragraph"/>
@@ -451,6 +485,8 @@ def afuture = receiveSelectedAsyncJMSMessage(app: <span class="java&#45;quote">"
 
 
 <h1 id="browsingMessagesInQueue">7 Browsing Messages In A Queue</h1>
+
+
 If you are looking on ways to obtain the contents of a given <code> javax.jms.Queue </code> without changing its state the
 <code> JmsService </code> offers a set of methods designed for this task.<p class="paragraph"/><h4>The browse(destination, jmsTemplateName, browserCallback) method.</h4>
 Will retrieve all messages inside the given  <em class="italic">queue</em>  at that time without changing its state i.e messages will not be consumed.
@@ -496,6 +532,8 @@ messages.each &#123;
 
 
 <h1 id="messageConversion">8 Message Conversion</h1>
+
+
 Both templates and adapters use a <a href="http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/MessageConverter.html" target="blank">MessageConverter</a> to convert objects into messages. By default, this plugin configures templates and adapters to use a <a href="http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/jms/support/converter/SimpleMessageConverter.html." target="blank">SimpleMessageConverter</a><p class="paragraph"/>This can be changed via the config mechanism…<p class="paragraph"/><div class="code"><pre>jms &#123;
     converters &#123;
         other &#123;
@@ -524,10 +562,14 @@ Both templates and adapters use a <a href="http://static.springsource.org/spring
 
 
 <h1 id="logging">9 Logging</h1>
+
+
 All logging is done under the namespace 'grails.plugin.jms'.
 
 
 <h1 id="disablingAndReloading">10 Disabling And Reloading</h1>
+
+
 <h3>Disabling</h3><p class="paragraph"/>You can globally disable all JMS functionality by setting <code>jms.disabled</code> to true in your application config.<p class="paragraph"/>For example you could turn JMS for testing with…<p class="paragraph"/><div class="code"><pre>environments &#123;
     test &#123;
         jms.disabled = <span class="java&#45;keyword">true</span>

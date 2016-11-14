@@ -17,59 +17,59 @@ function addJsClass() {
 
 <body class="body" onload="addJsClass();">
 <div id="navigation">
-    <ul>
-        <li>
-            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
-                <a href="../../guide/index.html" class="button">Table of contents</a>
-
-                <div id="nav-summary-childs" style="display:none;">
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/logging.html"><strong>9</strong><span>Logging</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
-                    </div>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="separator selected">
-            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
-        </li>
-    </ul>
-</div>
-<div id="header">
-    <div class="images clearfix">
+    <div class="navTitle">
         
-        
+        jms
     </div>
-    <p></p>
-</div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../../guide/index.html" class="button">Table of contents</a>
 
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/logging.html"><strong>9</strong><span>Logging</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
 
 <table id="colset" border="0" cellpadding="0" cellspacing="0">
     <tr>
@@ -88,13 +88,9 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>5.4 Using Other Containers Or Adapters - Reference Documentation</h1>
-
-                    <p><strong>Authors:</strong> </p>
+                    <h1>5.4 Using Other Containers Or Adapters</h1>
 
                     <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
-
-                    
                 </div>
 
                 
@@ -102,6 +98,8 @@ function addJsClass() {
                 
 
 <h2 id="usingOtherContainersOrAdapters">5.4 Using Other Containers Or Adapters</h2>
+
+
 Here is an example of using a container and adapter other than standard.<p class="paragraph"/><h5>resources.groovy</h5><p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory
 <span class="java&#45;keyword">import</span> org.springframework.jms.connection.SingleConnectionFactory<p class="paragraph"/>beans = &#123;
     // used by the standard template by convention

@@ -17,59 +17,59 @@ function addJsClass() {
 
 <body class="body" onload="addJsClass();">
 <div id="navigation">
-    <ul>
-        <li>
-            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
-                <a href="../../guide/index.html" class="button">Table of contents</a>
-
-                <div id="nav-summary-childs" style="display:none;">
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/logging.html"><strong>9</strong><span>Logging</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
-                    </div>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="separator selected">
-            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
-        </li>
-    </ul>
-</div>
-<div id="header">
-    <div class="images clearfix">
+    <div class="navTitle">
         
-        
+        jms
     </div>
-    <p></p>
-</div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../../guide/index.html" class="button">Table of contents</a>
 
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/logging.html"><strong>9</strong><span>Logging</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
 
 <table id="colset" border="0" cellpadding="0" cellspacing="0">
     <tr>
@@ -88,13 +88,9 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>3.2 Syntax Notes - Reference Documentation</h1>
-
-                    <p><strong>Authors:</strong> </p>
+                    <h1>3.2 Syntax Notes</h1>
 
                     <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
-
-                    
                 </div>
 
                 
@@ -102,6 +98,8 @@ function addJsClass() {
                 
 
 <h2 id="syntaxNotes">3.2 Syntax Notes</h2>
+
+
 There are some noteworthy things about this config syntax.<p class="paragraph"/><h4>Bean names</h4><p class="paragraph"/>The beans created automatically get suffixes applied to them. Template bean names get suffixed with 'JmsTemplate', container beans get suffixed with 'JmsListenerContainer' and adapter beans get suffixed with 'JmsListenerAdapter'.<p class="paragraph"/><h4>Setting Beans</h4><p class="paragraph"/>To set a property to another Spring bean, simply append <code>Bean</code> to the property name and set the property to the name of the bean.<p class="paragraph"/>Here is how the standard template is defined to use the bean named <code>jmsConnectionFactory</code> as it's connection factory...<p class="paragraph"/><div class="code"><pre>templates &#123;
     standard &#123;
         connectionFactoryBean = <span class="java&#45;quote">"jmsConnectionFactory"</span>

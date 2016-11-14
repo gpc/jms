@@ -17,59 +17,59 @@ function addJsClass() {
 
 <body class="body" onload="addJsClass();">
 <div id="navigation">
-    <ul>
-        <li>
-            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
-                <a href="../guide/index.html" class="button">Table of contents</a>
-
-                <div id="nav-summary-childs" style="display:none;">
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/logging.html"><strong>9</strong><span>Logging</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
-                    </div>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="separator selected">
-            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
-        </li>
-    </ul>
-</div>
-<div id="header">
-    <div class="images clearfix">
+    <div class="navTitle">
         
-        
+        jms
     </div>
-    <p></p>
-</div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../guide/index.html" class="button">Table of contents</a>
 
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/jmsProvider.html"><strong>2</strong><span>Plugging In A JMS Provider</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>3</strong><span>The Configuration Mechanism</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/sendingMessages.html"><strong>4</strong><span>Sending Messages</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessages.html"><strong>5</strong><span>Receiving Messages</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/receivingMessagesWithSelectors.html"><strong>6</strong><span>Receiving Messages With Selectors</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/browsingMessagesInQueue.html"><strong>7</strong><span>Browsing Messages In A Queue</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/messageConversion.html"><strong>8</strong><span>Message Conversion</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/logging.html"><strong>9</strong><span>Logging</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/disablingAndReloading.html"><strong>10</strong><span>Disabling And Reloading</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
 
 <table id="colset" border="0" cellpadding="0" cellspacing="0">
     <tr>
@@ -88,13 +88,9 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>4 Sending Messages - Reference Documentation</h1>
-
-                    <p><strong>Authors:</strong> </p>
+                    <h1>4 Sending Messages</h1>
 
                     <p><strong>Version:</strong> 2.0.0-SNAPSHOT</p>
-
-                    
                 </div>
 
                 
@@ -113,11 +109,15 @@ function addJsClass() {
                 
 
 <h1 id="sendingMessages">4 Sending Messages</h1>
+
+
 This plugin adds a service called <code> jmsService </code> to your application that can be used to send JMS messages.<p class="paragraph"/><h4>The send(destination, message, jmsTemplateName, postProcessor) method.</h4><p class="paragraph"/><strong class="bold">destination</strong><p class="paragraph"/>An instance of <code> javax.jms.Destination </code> , <code> javax.jms.Topic </code> , a <code> String </code> or a <code> Map </code> .<p class="paragraph"/>A <code> String </code> destination argument will be interpreted as the name of a destination  <em class="italic">queue</em>  .<p class="paragraph"/>A <code> Map </code> destination argument can be used in the following ways:<p class="paragraph"/><div class="code"><pre>jmsService.send(queue: <span class="java&#45;quote">"aQueue"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to a literal queue<p class="paragraph"/>jmsService.send(topic: <span class="java&#45;quote">"aTopic"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to a literal topic<p class="paragraph"/>jmsService.send(service: <span class="java&#45;quote">"person"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to the queue '«appname».person'<p class="paragraph"/>jmsService.send(service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to the queue '«appname».person.doIt'<p class="paragraph"/>jmsService.send(app: <span class="java&#45;quote">"remote"</span>, service: <span class="java&#45;quote">"person"</span>, method: <span class="java&#45;quote">"doIt"</span>, msg, <span class="java&#45;quote">"standard"</span>, <span class="java&#45;keyword">null</span>) // send to the queue 'remote.person.doIt'</pre></div><p class="paragraph"/>The app/service/method convention makes a lot more sense if you read the section below on service method listener queue subscribers.<p class="paragraph"/><strong class="bold">message</strong><p class="paragraph"/>This is the message payload. By default this can be any Java/Groovy object or a javax.jms.Message. How it gets converted into a message is handled by the underlying jms template's message converter.<p class="paragraph"/><strong class="bold">jmsTemplateName</strong><p class="paragraph"/>The name of the template that should be used to send the message. If this value is <code> null </code> , the standard template will be used (called "standard").<p class="paragraph"/><strong class="bold">postProcessor</strong><p class="paragraph"/>An optional closure that can be used to "post process" the message after it has been converted into a message but before it has been sent. This closure acts as the implementation of the <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html#postProcessMessage(javax.jms.Message)" target="blank">postProcessMessage()</a> method of the <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/core/MessagePostProcessor.html" target="blank">MessagePostProcessor</a> class.<p class="paragraph"/><h4>send() method variants</h4><p class="paragraph"/>There are variations of the send() method for convenience...<p class="paragraph"/><div class="code"><pre>jmsService.send(destination, message) // use the standard template and no post processor
 jmsService.send(destination, message, postProcessor) // use the standard template</pre></div>
 
 
 <h2 id="postProcessing">4.1 Post Processing Messages</h2>
+
+
 Message post processors can either augment the passed Message object, or create a new one. Because of this, the post processor must return the message object that is to be sent.<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> javax.jms.Message<p class="paragraph"/>jmsService.send(topic: 'somethingHappened', 1) &#123; Message msg &#45;&#62;
     msg.JMSCorrelationID = <span class="java&#45;quote">"correlate"</span>
     msg
@@ -128,6 +128,8 @@ Message post processors can either augment the passed Message object, or create 
 
 
 <h2 id="usingOtherTemplates">4.2 Using Other Templates</h2>
+
+
 Here is an example of using a custom template that uses a different connection factory.<p class="paragraph"/><h5>resources.groovy</h5><p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory
 <span class="java&#45;keyword">import</span> org.springframework.jms.connection.SingleConnectionFactory<p class="paragraph"/>beans = &#123;
     // used by the standard template by convention
