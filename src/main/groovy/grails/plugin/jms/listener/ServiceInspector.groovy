@@ -20,7 +20,7 @@ import grails.plugin.jms.Subscriber
 
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
-import org.codehaus.groovy.grails.commons.GrailsClassUtils
+import grails.util.GrailsClassUtils
 
 class ServiceInspector {
 
