@@ -1,8 +1,7 @@
 package grails.plugin.jms.listener
 
-import org.grails.support.MockApplicationContext
-import spock.lang.*
-import spock.util.mop.ConfineMetaClassChanges
+import spock.lang.Specification
+import spock.lang.Unroll
 
 class ServiceInspectorSpec extends Specification {
 
@@ -28,7 +27,6 @@ class ServiceInspectorSpec extends Specification {
         !serviceInspector.hasServiceListenerMethod(HasNoServiceListener)
     }
 
-    @ConfineMetaClassChanges([MockApplicationContext])
     @Unroll("key [#key] resolves to expected value [#expected] with conf [#configuration]")
     def 'able to resolve destination names through configuration'() {
         given:
@@ -48,7 +46,6 @@ class ServiceInspectorSpec extends Specification {
         '$.a.queue.key.' | 'my.service.queue' | "jms.destinations.a.queue.key='my.service.queue'"
     }
 
-    @ConfineMetaClassChanges([MockApplicationContext])
     def 'fail if we are unable to resolve destination names'() {
         given:
         def applicationContext = getApplicationContext("just.another.entry='something'")
@@ -61,8 +58,8 @@ class ServiceInspectorSpec extends Specification {
     }
 
     def getApplicationContext(String configuration){
-        def applicationContext = new MockApplicationContext()
-        applicationContext.metaClass.config = new ConfigSlurper().parse(configuration)
+        def applicationContext = new ConfigObject()
+        applicationContext.config = new ConfigSlurper().parse(configuration)
         applicationContext
     }
 
