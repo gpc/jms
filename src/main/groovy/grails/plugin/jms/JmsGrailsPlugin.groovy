@@ -1,9 +1,11 @@
 package grails.plugin.jms
 
+import grails.plugin.jms.bean.DefaultJmsBeans
 import grails.plugin.jms.bean.JmsBeanDefinitionsBuilder
 import grails.plugin.jms.listener.ListenerConfigFactory
 import grails.plugin.jms.listener.ServiceInspector
 import grails.plugins.Plugin
+import grails.util.Environment
 import groovy.util.logging.Commons
 import org.springframework.jms.support.converter.SimpleMessageConverter
 
@@ -42,7 +44,13 @@ JMS integration for Grails.
 
     Closure doWithSpring() {
         { ->
-            new JmsBeanDefinitionsBuilder(config.jms).build(delegate)
+
+            def jmsConfig = config.jms
+            jmsConfig.merge(defaultConfig)
+
+            log.debug("merged config: $jmsConfig")
+            
+            new JmsBeanDefinitionsBuilder(jmsConfig).build(delegate)
 
             // TODO
             standardJmsMessageConverter SimpleMessageConverter
@@ -58,6 +66,10 @@ JMS integration for Grails.
                 }
             }
         }
+    }
+
+    def getDefaultConfig() {
+        new ConfigSlurper(Environment.current.name).parse(DefaultJmsBeans)
     }
 
     def getListenerConfigs(serviceClass, application) {
