@@ -45,8 +45,8 @@ JMS integration for Grails.
     Closure doWithSpring() {
         { ->
 
-            def jmsConfig = config.jms
-            jmsConfig.merge(defaultConfig)
+            def jmsConfig = defaultConfig
+            jmsConfig.putAll(config.jms)
 
             log.debug("merged config: $jmsConfig")
             if (jmsConfig.disabled) {
