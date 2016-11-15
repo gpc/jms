@@ -49,7 +49,11 @@ JMS integration for Grails.
             jmsConfig.merge(defaultConfig)
 
             log.debug("merged config: $jmsConfig")
-            
+            if (jmsConfig.disabled) {
+                log.warn("not registering listeners because JMS is disabled")
+                return
+            }
+
             new JmsBeanDefinitionsBuilder(jmsConfig).build(delegate)
 
             // TODO
