@@ -36,6 +36,8 @@ JMS integration for Grails.
 
     def scm = [url: "https://github.com/gpc/jms"]
 
+    def loadAfter = ['services', 'controllers', 'domainClass', 'dataSource', 'hibernate', 'hibernate4', 'hibernate5']
+
     def serviceInspector = new ServiceInspector()
     def listenerConfigs = [:]
     def listenerConfigFactory = new ListenerConfigFactory()
