@@ -1,5 +1,15 @@
-build
+*.log
+/target
+/docs
+grails-jms-*.zip
+grails-jms-*.zip.sha1
+plugin.xml
+web-app
+activemq-data
+.DS_Store
+docs
+*~
 .gradle
+build
 *.iml
 .idea
-/target
