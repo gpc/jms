@@ -1,3 +1,4 @@
+package grails.plugin.jms
 /*
  * Copyright 2010 Grails Plugin Collective
  *
