@@ -133,6 +133,7 @@ class ServiceInspector {
                     "The destination key '$name' is not available in the 'jms.destinations' configuration space." +
                     "Please define such key or remove the prefix '\$' from the name.")
             }
+			//TODO: Warn if annotation is on onMessage method, because its listenerconfig is already added.
         }
         resolvedName
     }

@@ -18,6 +18,7 @@ import grails.plugin.jms.listener.ListenerConfigFactory
 import grails.plugin.jms.listener.ServiceInspector
 import grails.util.Environment;
 import grails.util.GrailsUtil
+import grails.util.Holders
 
 import org.apache.commons.logging.LogFactory
 import org.codehaus.groovy.grails.commons.ServiceArtefactHandler
@@ -40,7 +41,7 @@ class JmsGrailsPlugin {
         "**/grails/plugin/jms/test/**"
     ]
 
-    def listenerConfigs = [:]
+    def static listenerConfigs = [:]
     def serviceInspector = new ServiceInspector()
     def listenerConfigFactory = new ListenerConfigFactory()
     def jmsConfigHash
@@ -79,21 +80,30 @@ class JmsGrailsPlugin {
 
         application.serviceClasses?.each { service ->
             def serviceClass = service.getClazz()
-            def serviceClassListenerConfigs = getListenerConfigs(serviceClass, application)
-            if (serviceClassListenerConfigs) {
-                serviceClassListenerConfigs.each {
-                    registerListenerConfig(it, delegate)
+            if(!serviceClass.name.contains(".test.")){
+            	def serviceClassListenerConfigs = getListenerConfigs(serviceClass, application)
+                if (serviceClassListenerConfigs) {
+                    serviceClassListenerConfigs.each {
+                        registerListenerConfig(it, delegate)
+                    }
+                    listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
                 }
-                listenerConfigs[serviceClass.name] = serviceClassListenerConfigs
+            }else{
+            	log.debug "Skipping test service: ${serviceClass.name}"
             }
         }
     }
 
     def doWithApplicationContext = { applicationContext ->
-        listenerConfigs.each { serviceClassName, serviceClassListenerConfigs ->
-            serviceClassListenerConfigs.each {
-                startListenerContainer(it, applicationContext)
-            }
+        if(!jmsConfig.manualStart){
+        	LOG.info "Starting JMS Listeners."
+        	listenerConfigs.each { serviceClassName, serviceClassListenerConfigs ->
+        		serviceClassListenerConfigs.each {
+        			startListenerContainer(it, applicationContext)
+        		}
+        	}
+        }else{
+        	LOG.info "Manual starting mode for JMS Listeners."
         }
         //Fetch and set the asyncReceiverExecutor
         try {
@@ -106,6 +116,17 @@ class JmsGrailsPlugin {
         catch (e) {
             LOG.debug "No jmsAsyncReceiverExecutor was detected in the Application Context."
         }
+    }
+    /**
+     * Use when config.jms.manualStart=true. In bootstrap add JmsGrailsPlugin.startListeners()
+     */
+    static void startListeners(){
+    	LOG.info "Starting JMS listeners manually."
+    	listenerConfigs.each { serviceClassName, serviceClassListenerConfigs ->
+    		serviceClassListenerConfigs.each { listenerConfig->
+    			 Holders.applicationContext.getBean(listenerConfig.listenerContainerBeanName).start()
+    		}
+    	}
     }
 
     //Send*
