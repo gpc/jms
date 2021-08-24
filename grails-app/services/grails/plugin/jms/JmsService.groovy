@@ -1,7 +1,8 @@
 package grails.plugin.jms
 
-
+import grails.core.GrailsApplication
 import grails.plugin.jms.listener.GrailsMessagePostProcessor
+import groovy.util.logging.Slf4j
 
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
@@ -23,6 +24,8 @@ import org.springframework.jms.core.BrowserCallback
 import org.springframework.jms.core.JmsTemplate
 import org.springframework.jms.core.MessagePostProcessor
 import org.springframework.jms.support.JmsUtils
+
+@Slf4j
 class JmsService {
 
     static transactional = false
@@ -30,7 +33,7 @@ class JmsService {
     public static final String DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
     public static final long DEFAULT_RECEIVER_TIMEOUT_MILLIS = 500
 
-    def grailsApplication
+    GrailsApplication grailsApplication
 
     ExecutorService asyncReceiverExecutor
     boolean asyncReceiverExecutorShutdown = true

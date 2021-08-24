@@ -13,7 +13,7 @@ import org.springframework.jms.support.converter.SimpleMessageConverter
 class JmsGrailsPlugin extends Plugin {
 
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = "3.0.2 > *"
+    def grailsVersion = "4.0.11 > *"
 
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
@@ -32,7 +32,8 @@ JMS integration for Grails.
 
     def license = "APACHE"
 
-    def developers = [[name: "Weiqi Gao", email: "gaow@ociweb.com"]]
+    def developers = [[name: "Weiqi Gao", email: "gaow@ociweb.com"],
+                      [name: "Søren Berg Glasius", email: "soeren+jmsplugin@glasius.dk"]    ]
 
     def issueManagement = [system: "GitHub", url: "https://github.com/gpc/jms/issues"]
 

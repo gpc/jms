@@ -1,11 +1,12 @@
 package grails.plugin.jms.listener
 
+import org.grails.testing.GrailsUnitTest
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class ServiceInspectorSpec extends Specification {
+class ServiceInspectorSpec extends Specification implements GrailsUnitTest {
 
-    def serviceInspector = new ServiceInspector()
+    ServiceInspector serviceInspector = new ServiceInspector()
 
     def 'know if a service is exposes through Jms'() {
         expect:
@@ -30,28 +31,28 @@ class ServiceInspectorSpec extends Specification {
     @Unroll("key [#key] resolves to expected value [#expected] with conf [#configuration]")
     def 'able to resolve destination names through configuration'() {
         given:
-        def applicationContext = getApplicationContext(configuration)
+        config.merge(configuration)
 
         when:
-        String obtained = serviceInspector.resolveDestinationName(key, applicationContext)
+        String obtained = serviceInspector.resolveDestinationName(key, grailsApplication)
 
         then:
         expected == obtained
 
         where:
         key              | expected           | configuration
-        'baseCase'       | 'baseCase'         | ""
-        '$queueKey'      | 'my.service.queue' | "jms.destinations.queueKey='my.service.queue'"
-        '$a.queue.key'   | 'my.service.queue' | "jms.destinations.a.queue.key='my.service.queue'"
-        '$.a.queue.key.' | 'my.service.queue' | "jms.destinations.a.queue.key='my.service.queue'"
+        'baseCase'       | 'baseCase'         | [:]
+        '$queueKey'      | 'my.service.queue' | ['jms.destinations.queueKey':'my.service.queue']
+        '$a.queue.key'   | 'my.service.queue' | ['jms.destinations.a.queue.key':'my.service.queue']
+        '$.a.queue.key.' | 'my.service.queue' | ['jms.destinations.a.queue.key':'my.service.queue']
     }
 
     def 'fail if we are unable to resolve destination names'() {
         given:
-        def applicationContext = getApplicationContext("just.another.entry='something'")
+        config.merge(['just.another.entry':'something'])
 
         when:
-        serviceInspector.resolveDestinationName('$no.match', applicationContext)
+        serviceInspector.resolveDestinationName('$no.match', grailsApplication)
 
         then:
         thrown(IllegalArgumentException)

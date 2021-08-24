@@ -1,7 +1,4 @@
 buildscript {
-    ext {
-        grailsVersion = project.grailsVersion
-    }
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
@@ -11,33 +8,19 @@ buildscript {
     }
 }
 
-plugins {
-    id "io.spring.dependency-management" version "0.5.1.RELEASE"
-    id "com.jfrog.bintray" version "1.1"
-}
 
-version "2.0.0.RC2"
+version "3.0.0.RC1"
 group "org.grails.plugins"
 
-apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: "spring-boot"
 apply plugin: "org.grails.grails-plugin"
-apply plugin: "org.grails.grails-gsp"
 apply plugin: "org.grails.grails-doc"
+apply plugin: 'maven-publish'
 
-// Used for publishing to central repository, remove if not needed
-apply from:'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
-apply from:'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
 
-ext {
-    grailsVersion = project.grailsVersion
-    gradleWrapperVersion = project.gradleWrapperVersion
-}
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 
 repositories {
@@ -46,12 +29,6 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.grails:grails-bom:$grailsVersion"
-    }
-    applyMavenExclusions false
-}
 
 dependencies {
     provided 'org.springframework.boot:spring-boot-starter-logging'
@@ -61,19 +38,53 @@ dependencies {
 
     provided "org.grails:grails-web-boot"
     provided "org.grails:grails-dependencies"
-    provided 'javax.servlet:javax.servlet-api:3.1.0'
+    provided 'javax.servlet:javax.servlet-api:4.0.1'
 
     provided "org.grails:grails-core"
     provided "org.grails:grails-dependencies"
 
-    testCompile "org.grails:grails-plugin-testing"
+    testCompile "org.grails:grails-testing-support"
 
     console "org.grails:grails-console"
 
-    compile 'org.springframework:spring-jms:4.1.6.RELEASE'
+    compile 'org.springframework:spring-jms'
     compile 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleWrapperVersion
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = 'jms'
+            version = project.version
+
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = 'Jms'
+                description = 'Jeff Brown'
+                url = 'https://github.com/gpc/jms'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'brownj'
+                        name = 'Jeff Scott Brown'
+                        email = 'brownj@objectcomputing.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/gpc/jms.git'
+                    developerConnection = 'scm:git:https://github.com/gpc/jms.git'
+                    url = 'https://github.com/gpc/jms'
+                }
+            }
+        }
+    }
 }

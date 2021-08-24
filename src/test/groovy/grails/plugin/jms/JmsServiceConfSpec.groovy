@@ -1,22 +1,22 @@
 package grails.plugin.jms
 
+import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class JmsServiceConfSpec extends Specification {
-
-    def jmsService = new JmsService()
+class JmsServiceConfSpec extends Specification implements ServiceUnitTest<JmsService>  {
 
     @Unroll("the calculated receiver timeout should follow rule [#rule]")
     def "receiveTimeout"() {
+
         given: "a configuration"
-            jmsService.grailsApplication = [config: [jms: [receiveTimeout: configReceiveTimeout]]]
+            config.jms = [receiveTimeout: configReceiveTimeout]
 
         and: "a given jmsTemplate that has a timeout"
             def jmsTemplate = [receiveTimeout: aJmsTemplateTimeout]
 
         when: "ask which timeout we should use"
-            long timeout = jmsService.calculatedReceiverTimeout(aCallReceiveTimeout, jmsTemplate)
+            long timeout = service.calculatedReceiverTimeout(aCallReceiveTimeout, jmsTemplate)
 
         then:
             timeout == expected
@@ -33,10 +33,10 @@ class JmsServiceConfSpec extends Specification {
     @Unroll("the JmsService should #action if the jms config is set to [#config]")
     def "enable-disable"() {
         when:
-            jmsService.grailsApplication = [config: [jms: [disabled: disabledConfig]]]
+            config.jms = [disabled: disabledConfig]
 
         then:
-            jmsService.disabled == expected
+            service.disabled == expected
 
         where:
             action              | disabledConfig | expected
