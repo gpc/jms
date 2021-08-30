@@ -1,21 +1,15 @@
 language: groovy
 jdk:
 - openjdk7
-before_install:
-  - cat /etc/hosts # optionally check the content *before*
-  - sudo hostname "$(hostname | cut -c1-63)"
-  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
-  - cat /etc/hosts # optionally check the content *after*
 before_script:
-- rm -rf target
+- rm -rf build
 script: ./travis-build.sh
 env:
   global:
-  - GIT_NAME="Graeme Rocher"
-  - GIT_EMAIL="graeme.rocher@gmail.com"
-  - secure: dji/n8hNPzuvssTFzFJhU1BB43uju4+Iaz31X3aIsZ6KEGgTmn8lxXloKOBoJi6z/ohHQNBt3XhG8MH87EGB9IEX4QkUVoHqgY9ygZubcOvMWtc/wXBbMH13omWCwOfoLwxEFMmcINXJtvHJp146BahFskDK6lftbXu6coG4LoI=
-  - secure: rJ8c9Z8z53hwAsDIilfNJ6R0h2XwsTCyavgO8sWaEwYxjFH3/SY/idzTgCSDnT5uA01tqgoSd4bvAmsO8H7//NvpG4F9eUS087DzB0rcCC2KE45mTwK/+10ZD52aayU2weTC0zV1S2Il53CEVKyHwkgV1RhqXSVvFxR580beqZg=
-  - secure: LIhIwAYoyylATIC4JJt60vsz8PJBq2Q+1RJXtquDLtlv9n/lZNeZGhtZcwoabD5cz0cSRfEHUsX1oDuG3supfkgUncoTjDDGj3jqnB9kVVyFY6GHpnN2qaWDbhy26UNNBUitldB9V7K+IQPNuuaI28rGpErHvORwjbyaPYyPRWE=
-  - secure: yJJuVxwgdlv0vrb06nvL2EGOAFl6Lez0EU/RrEwfcQLcftSQgcrMCquDVms4l28DuHt/ZuCt3EtXPGygJUmwoFIEJhOmc6pgM740PVLmOrra1naR+AMBkrVKDdANWxIqVyDtvzuRgmqG/F2PU39EpN1wEZGym4ZcFJjMgTXy/bA=
-  - secure: d7tvZ6Jl/JvpGuH7pPzeP16M3MlLhdImglvi5d0igI/IUjkbGW8hCdPQyF8YPKypMRIrnKKNS0h0ZQNVfcvynCpWWQ0w/lgaU9mn70Zo67e5nMqdvRLEghENaXrWg+cOezvvkrJmYixHcsTszBmovWJfn1Fzc9OMx9deRyhkBl4=
-  - secure: U1OtCXIzx+nxqSI7mLuafj3uyKuzq5vj1CsC7haJWG/Ko1sF9QM+YmkCtfgp3lImsSyQqNlZhNqgG6EE++C9FOLbsYzAsaEc7KGBxN/apChSaEGtmrax2OUE3lWCLNHNp0pbHyoVrfAzxBPqw6v/x96VPEswUA5ALdJSqB7Q+V8=
+  - GIT_NAME="Jeff Scott Brown"
+  - GIT_EMAIL="brownj@ociweb.com"
+  - secure: ehN+A/gd+onszRjErPcnX1VDI5HuDoUFHJZb8ZQSPexu3qKANox8L00eY13EA5tv29+XaPxP+LeLgMtSdCW2W8GT8qo4Z8SxKSZBqyiNeupVI+8EkZ/kn/S4f7yjpkfILOBWRsZ2BrRSVCi9YNWOloWciP0iOS3N4H7q5VJCzXg=
+  - secure: epe75QFSRz2xlLDiFPgUwuPVQl/doD8+rYSaXX55u7spN9z6NCKyMjASqOWOdTBdUGZIp8HKK7UnIW37VHPGlQgk+xAFR4jNIYK9N7w5kgiqqFhkTqdn6ezPpKV/XorLDQE9EF/dT26OH/E0LfhNXgEKZzyS+koDi4my7qfVcIQ=
+  - secure: HvlNdBhfMmZvPGU7RBABFTPMNi6Gr7PEWviG+sXLd4HZZfke6G0aoPkEoDbfOSWVokzn9HzctnH9o+DJTOVmoGKz0RQjCGppV00SpMmuU5qDLWTTvVrpyPT20KWW4cvERe+L0v8a4uq2sD1NC7kpe1HhMCvg8M5yQC5o8AlpH3Q=
+  - secure: rSxj3vvRCRjN0tjeDhdabZuVoa7XJNCwYHuIEP4dkjOmGaroa1e9OGYcdhqkSVw/xZUttz/NcqxwO3bmGhM/ppvqQZXXMMzRp6YpF6+hVDYWL4Jk3/Jr6UJKo7bEg4RZiUSUdw5kRQZvL6lRJVCeA62g0bc8b7s+XA6+3XEv5tE=
+  - secure: yeCLEviZOjCBSDhTnahyrie4iGqWkr7mFyjs6YczV0tgN/GDsdLIFN3nKMkqBm69Fb4iRFaFIQ22WMtors3Kkkgx25hsMzglXQk5qx3pY/AKfuOoI+UYvZ0exPRuDKnTTFEZyF3Wpx3F9OpxAS5QQU0rDqXhxRaDPol0xad+r9o=
