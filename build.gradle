@@ -88,6 +88,9 @@ ext."signing.secretKeyRingFile" = project.findProperty('signing.secretKeyRingFil
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
+println "IS RELEASE VERSION: ${ext.isReleaseVersion}"
+println "TASK GRAPH HAS PUBLISH: ${gradle.taskGraph.hasTask('publish')}"
+
 afterEvaluate {
     signing {
         required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
