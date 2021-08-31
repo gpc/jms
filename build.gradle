@@ -86,7 +86,7 @@ ext."signing.keyId" = project.findProperty('signing.keyId') ?: System.getenv('SI
 ext."signing.password" = project.findProperty('signing.password') ?: System.getenv('SIGNING_PASSPHRASE')
 ext."signing.secretKeyRingFile" = project.findProperty('signing.secretKeyRingFile') ?: (System.getenv('SIGNING_PASSPHRASE') ?: "${System.getProperty('user.home')}/.gnupg/secring.gpg")
 
-ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+ext.isReleaseVersion = !(version.endsWith("SNAPSHOT") || version.contains(".RC") || version.contains(".M"))
 
 afterEvaluate {
     signing {

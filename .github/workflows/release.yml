@@ -9,8 +9,8 @@ jobs:
             matrix:
                 java: [ '8' ]
         env:
-            GIT_USER_NAME: sbglasius
-            GIT_USER_EMAIL: soeren@glasius.dk
+            GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+            GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v2
