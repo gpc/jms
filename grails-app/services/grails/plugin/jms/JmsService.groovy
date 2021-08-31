@@ -3,14 +3,10 @@ package grails.plugin.jms
 import grails.core.GrailsApplication
 import grails.plugin.jms.listener.GrailsMessagePostProcessor
 import groovy.util.logging.Slf4j
-
-import java.util.concurrent.Callable
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
+import org.springframework.jms.core.BrowserCallback
+import org.springframework.jms.core.JmsTemplate
+import org.springframework.jms.core.MessagePostProcessor
+import org.springframework.jms.support.JmsUtils
 
 import javax.annotation.PreDestroy
 import javax.jms.Destination
@@ -19,16 +15,16 @@ import javax.jms.Message
 import javax.jms.QueueBrowser
 import javax.jms.Session
 import javax.jms.Topic
-
-import org.springframework.jms.core.BrowserCallback
-import org.springframework.jms.core.JmsTemplate
-import org.springframework.jms.core.MessagePostProcessor
-import org.springframework.jms.support.JmsUtils
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 
 @Slf4j
 class JmsService {
-
-    static transactional = false
 
     public static final String DEFAULT_JMS_TEMPLATE_BEAN_NAME = "standard"
     public static final long DEFAULT_RECEIVER_TIMEOUT_MILLIS = 500
@@ -55,7 +51,7 @@ class JmsService {
         }
     }
 
-    private shutdownAsyncReceiverExecutorNow() {
+    private void shutdownAsyncReceiverExecutorNow() {
         log.info "Shutting down current Async. Executor..."
         try {
             def runnables = asyncReceiverExecutor.shutdownNow()
@@ -410,18 +406,9 @@ class JmsService {
      * @param ctx Context of the action as provided by the {@link JmsService#normalizeServiceCtx(Object, String)} method.
      */
     private void logAction(final String action, final ctx) {
-        if (!log.infoEnabled) {
-            return
-        }
-
-        def logMsg = ''
-        ctx.with {
-            logMsg = "$action $type '$ndestination'"
-            if (!defaultTemplate) {
-                logMsg += " using template '$jmsTemplateBeanName'"
-            }
-        }
-        log.info(logMsg)
+        log.info(ctx.with {
+            "$action $type '$destination'${defaultTemplate ? '' : " using template '$jmsTemplateBeanName'"}"
+        })
     }
 
     def convertToDestinationMap(destination) {
