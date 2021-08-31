@@ -1,4 +1,4 @@
-Getting ActiveMQ up and running as your provider is very simple.  All that is required is adding a runtime dependency on the @activemq-spring@ library in @build.gradle@.
+Getting ActiveMQ up and running as your provider is very simple.  All that is required is adding compile dependencies on the @spring-boot-starter-activemq@ library and @pooled-jms@ library in @build.gradle@.
 
 {code}
 
@@ -7,8 +7,9 @@ Getting ActiveMQ up and running as your provider is very simple.  All that is re
 dependencies {
 
     // ...
-    compile 'org.grails.plugins:jms:2.0.0.M1'
-    runtime 'org.apache.activemq:activemq-spring:5.11.1'
+    compile 'org.grails.plugins:jms:2.0.0.RC2'
+    compile 'org.springframework.boot:spring-boot-starter-activemq'
+    compile 'org.messaginghub:pooled-jms'
 }
 {code}
 
@@ -26,5 +27,20 @@ property names defined under @spring.activmeq@ as shown below.
 spring:
     activemq:
         brokerUrl: vm://localhost
-        pooled: true
+        pool:
+            enabled: true
+    jms:
+        cache:
+            enabled: false
+{code}
+
+Note for those who want to use connection pooling: when @spring.activemq.pool.enabled@ is true then SpringBoot will create a @pooledJmsConnectionFactory@ bean rather than @jmsConnectionFactory@.
+You can add the following line in @resources.groovy@ to use a spring bean alias in order to get around this.
+
+{code}
+beans = {
+
+    // ...
+    springConfig.addAlias('jmsConnectionFactory', 'pooledJmsConnectionFactory')
+}
 {code}
