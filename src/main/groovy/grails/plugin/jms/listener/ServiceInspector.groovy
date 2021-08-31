@@ -15,13 +15,16 @@
  */
 package grails.plugin.jms.listener
 
+import grails.boot.GrailsApp
+import grails.core.GrailsApplication
 import grails.plugin.jms.Queue
 import grails.plugin.jms.Subscriber
-
+import groovy.util.logging.Slf4j
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import grails.util.GrailsClassUtils
 
+@Slf4j
 class ServiceInspector {
 
     static final String SERVICE_LISTENER_METHOD = "onMessage"
@@ -29,9 +32,7 @@ class ServiceInspector {
     static final String EXPOSE_SPECIFIER = "expose"
     static final String EXPOSES_JMS_SPECIFIER = "jms"
 
-    static final Log LOG = LogFactory.getLog(this)
-
-    def getListenerConfigs(service, listenerConfigFactory, grailsApplication) {
+    def getListenerConfigs(service, listenerConfigFactory, GrailsApplication grailsApplication) {
         if (!exposesJms(service)) return []
 
         def listenerConfigs = []
@@ -44,7 +45,7 @@ class ServiceInspector {
         listenerConfigs.findAll { it != null }
     }
 
-    def getServiceListenerConfig(service, listenerConfigFactory, grailsApplication) {
+    def getServiceListenerConfig(service, listenerConfigFactory, GrailsApplication grailsApplication) {
         def hasServiceListenerMethod = hasServiceListenerMethod(service)
         if (hasServiceListenerMethod) {
             def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
@@ -89,7 +90,7 @@ class ServiceInspector {
         }
     }
 
-    def getServiceMethodSubscriberListenerConfig(service, method, annotation, listenerConfigFactory, grailsApplication) {
+    def getServiceMethodSubscriberListenerConfig(service, method, annotation, listenerConfigFactory, GrailsApplication grailsApplication) {
         def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
         listenerConfig.with {
             topic = true
@@ -102,7 +103,7 @@ class ServiceInspector {
         listenerConfig
     }
 
-    def getServiceMethodQueueListenerConfig(service, method, annotation, listenerConfigFactory, grailsApplication) {
+    def getServiceMethodQueueListenerConfig(service, method, annotation, listenerConfigFactory, GrailsApplication grailsApplication) {
         def listenerConfig = listenerConfigFactory.getListenerConfig(service, grailsApplication)
         listenerConfig.with {
             topic = false
@@ -115,17 +116,13 @@ class ServiceInspector {
         listenerConfig
     }
 
-    String resolveDestinationName(final String name, grailsApplication) {
+    String resolveDestinationName(final String name, GrailsApplication grailsApplication) {
         String resolvedName = name
         if ( resolvedName =~ /^\$/ ) {
-            final List<String> pathTokens = resolvedName.substring(1).tokenize('.').reverse()
-            def node = grailsApplication.config?.jms?.destinations
-            while( node && node instanceof Map && pathTokens.size() ) {
-                node = node[pathTokens.pop()]
-            }
-            if ( node && pathTokens.empty ) {
-                resolvedName = node
-                LOG.info "key '$name' resolved to destination '$resolvedName'." +
+            final String pathTokens = resolvedName.substring(1).tokenize('.').join('.')
+            resolvedName = grailsApplication.config.getProperty('jms.destinations.'+pathTokens, String)
+            if ( resolvedName ) {
+                log.info "key '$name' resolved to destination '$resolvedName'." +
                     "The name '$resolvedName' will be used as the destination."
             }
             else {
