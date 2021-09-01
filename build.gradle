@@ -10,7 +10,7 @@ buildscript {
 }
 
 
-version "3.0.0.M3"
+version "3.0.0.M4"
 group "io.github.gpc"
 
 apply plugin: "org.grails.grails-plugin"
@@ -90,7 +90,7 @@ ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 afterEvaluate {
     signing {
-        required { isReleaseVersion } //  && gradle.taskGraph.hasTask("publish") }
+        required { isReleaseVersion }
         sign publishing.publications.maven
     }
 }
