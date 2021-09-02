@@ -1,0 +1,18 @@
+==== sendQueueJMSMessage
+
+==== Purpose
+
+==== Examples
+
+[source,java]
+----
+foo.sendQueueJMSMessage(object,object)
+----
+
+==== Description
+
+Arguments:
+
+[* `object`
+, * `object`
+]

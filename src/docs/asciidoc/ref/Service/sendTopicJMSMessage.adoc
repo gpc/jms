@@ -1,0 +1,18 @@
+==== sendTopicJMSMessage
+
+==== Purpose
+
+==== Examples
+
+[source,java]
+----
+foo.sendTopicJMSMessage(object,object)
+----
+
+==== Description
+
+Arguments:
+
+[* `object`
+, * `object`
+]

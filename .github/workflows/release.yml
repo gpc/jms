@@ -41,7 +41,7 @@ jobs:
                     echo "Publishing Artifacts"
                     (set -x; ./gradlew --info -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
                     echo "Publishing Documentation"
-                    ./gradlew docs:docs
+                    ./gradlew asciidoctor
             -   name: Export Gradle Properties
                 uses: micronaut-projects/github-actions/export-gradle-properties@master
             -   name: Publish to Github Pages
@@ -53,7 +53,7 @@ jobs:
                     GH_TOKEN: ${{ secrets.GH_TOKEN }}
                     BRANCH: gh-pages
                     FOLDER: build/docs
-                    DOC_FOLDER: gh-pages
+                    DOC_FOLDER: latest
                     COMMIT_EMAIL: soeren@glasius.dk
                     COMMIT_NAME: Søren Berg Glasius
                     VERSION: ${{ steps.release_version.outputs.release_version }}

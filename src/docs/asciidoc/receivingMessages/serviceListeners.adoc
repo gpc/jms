@@ -1,0 +1,42 @@
+== Service Listeners
+
+Service listeners are a convenient way to define one handler for JMS messages.
+The simplest service listener looks like…
+
+[source,java]
+----
+class PersonService {
+    static exposes = ["jms"]
+    def onMessage(msg) {
+        // handle message
+    }
+}
+----
+
+This will register the `onMessage` method as a listener for the JMS _queue_ named `«application name».person` , where «application name» is the `app.name` key from the `application.properties` file.
+
+
+
+=== Configuration
+
+The following configuration parameters can be set as static variables on the service class…
+
+[format="csv",options="header"]
+|==
+
+Property Name,Type,Default,Description *destination*,String,«app name».«service name»,The named destination of the listener *isTopic*,boolean,false,is the destination a topic ( `true` ) or a queue ( `false` ) *selector*,String,null,See the “Message Selector” section of http://java.sun.com/j2ee/1.4/docs/api/javax/jms/Message.html
+*adapter*,String,"standard",The adapter to use for this listener *container*,String,"standard",The container to use for this listener |==
+
+[source,java]
+----
+class PersonService {
+    static exposes = ["jms"]
+    static destination = "somethingHappened"
+    static isTopic = true
+    static adapter = "custom"
+
+    def onMessage(msg) {
+        // handle message
+    }
+}
+----

@@ -1,0 +1,18 @@
+==== receiveSelectedAsyncJMSMessage
+
+==== Purpose
+
+==== Examples
+
+[source,java]
+----
+foo.receiveSelectedAsyncJMSMessage(object,object)
+----
+
+==== Description
+
+Arguments:
+
+[* `object`
+, * `object`
+]

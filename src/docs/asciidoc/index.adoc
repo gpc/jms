@@ -1,0 +1,146 @@
+= JMS Plugin
+:version: 3.0.0.M4
+:source-highlighter: coderay
+:imagesdir: ./images
+
+[[introduction]]
+== Introduction
+
+include::introduction.adoc[]
+
+[[springJms]]
+== Spring JMS
+
+include::introduction/springJms.adoc[]
+
+[[jmsProvider]]
+== Plugging In A JMS Provider
+
+include::jmsProvider.adoc[]
+
+[[activeMqExample]]
+== ActiveMQ Example
+
+include::jmsProvider/activeMqExample.adoc[]
+
+[[configuration]]
+== The Configuration Mechanism
+
+include::configuration.adoc[]
+
+[[changingDefaults]]
+== Changing Defaults
+
+include::configuration/changingDefaults.adoc[]
+
+[[syntaxNotes]]
+== Syntax Notes
+
+include::configuration/syntaxNotes.adoc[]
+
+[[sendingMessages]]
+== Sending Messages
+
+include::sendingMessages.adoc[]
+
+[[postProcessing]]
+== Post Processing Messages
+
+include::sendingMessages/postProcessing.adoc[]
+
+[[usingOtherTemplates]]
+== Using Other Templates
+
+include::sendingMessages/usingOtherTemplates.adoc[]
+
+[[receivingMessages]]
+== Receiving Messages
+
+include::receivingMessages.adoc[]
+
+[[serviceListeners]]
+== Service Listeners
+
+include::receivingMessages/serviceListeners.adoc[]
+
+[[serviceMethodListeners]]
+== Service Method Listeners
+
+include::receivingMessages/serviceMethodListeners.adoc[]
+
+[[listenerReturnValues]]
+== Listener Return Values
+
+include::receivingMessages/listenerReturnValues.adoc[]
+
+[[usingOtherContainersOrAdapters]]
+== Using Other Containers Or Adapters
+
+include::receivingMessages/usingOtherContainersOrAdapters.adoc[]
+
+[[receivingMessagesWithSelectors]]
+== Receiving Messages With Selectors
+
+include::receivingMessagesWithSelectors.adoc[]
+
+[[receivingMethodsAddedToControllersAndServices]]
+== Receiving Methods Added To Controllers And Services
+
+include::receivingMessagesWithSelectors/receivingMethodsAddedToControllersAndServices.adoc[]
+
+[[browsingMessagesInQueue]]
+== Browsing Messages In A Queue
+
+include::browsingMessagesInQueue.adoc[]
+
+[[messageConversion]]
+== Message Conversion
+
+include::messageConversion.adoc[]
+
+[[logging]]
+== Logging
+
+include::logging.adoc[]
+
+[[disablingAndReloading]]
+== Disabling And Reloading
+
+include::disablingAndReloading.adoc[]
+
+[[reference]]
+== Reference
+
+[[ref-service]]
+== Service
+
+[[ref-service-sendJMSMessage]]
+=== sendJMSMessage
+
+include::ref/Service/sendJMSMessage.adoc[]
+
+[[ref-service-sendTopicJMSMessage]]
+=== sendTopicJMSMessage
+
+include::ref/Service/sendTopicJMSMessage.adoc[]
+
+[[ref-service-receiveSelectedAsyncJMSMessage]]
+=== receiveSelectedAsyncJMSMessage
+
+include::ref/Service/receiveSelectedAsyncJMSMessage.adoc[]
+
+[[ref-service-receiveSelectedJMSMessage]]
+=== receiveSelectedJMSMessage
+
+include::ref/Service/receiveSelectedJMSMessage.adoc[]
+
+[[ref-service-sendPubSubJMSMessage]]
+=== sendPubSubJMSMessage
+
+include::ref/Service/sendPubSubJMSMessage.adoc[]
+
+[[ref-service-sendQueueJMSMessage]]
+=== sendQueueJMSMessage
+
+include::ref/Service/sendQueueJMSMessage.adoc[]
+

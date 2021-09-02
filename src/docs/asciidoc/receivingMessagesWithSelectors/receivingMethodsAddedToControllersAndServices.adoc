@@ -1,0 +1,74 @@
+NOTE: The methods described below are not supported in the current 2.0.0 milestone but will be added soon.
+
+The plugin will inject the following methods to ` Conrollers ` and ` Services `.
+
+
+=== Synchronous calls.
+
+[source,groovy]
+----
+// Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+def msg =receiveSelectedJMSMessage(queue: "aQueue", selector, timeout, "standard")
+
+
+// Expect/Receive a message with a *selector* on a literal topic waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+def msg =receiveSelectedJMSMessage(topic: "aTopic", selector, timeout, "standard")
+
+
+// Expect/Receive a message with a *selector* on the queue '«appname».person' waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+def msg =receiveSelectedJMSMessage(service: "person", selector, timeout, "standard")
+
+// Expect/Receive a message with a *selector* on the queue '«appname».person.doIt' waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+def msg =receiveSelectedJMSMessage(service: "person", method: "doIt", selector, timeout, "standard")
+
+
+// Expect/Receive a message with a *selector* on the queue 'remote.person.doIt' waiting up to the given *timeout*.
+// Will return the converted message or null if the message was not available.
+def msg = receiveSelectedJMSMessage(app: "remote", service: "person", method: "doIt", selector, timeout, "standard")
+----
+
+=== Asynchronous calls.
+
+[source,groovy]
+----
+// Expect/Receive a message with a *selector* on a literal queue waiting up to the given *timeout*.
+// Will return a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(queue: "aQueue", selector, timeout, "standard")
+
+
+// Expect/Receive a message with a *selector* on a literal topic waiting up to the given *timeout*.
+// Will return a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(topic: "aTopic", selector, timeout, "standard")
+
+
+// Expect/Receive a message with a *selector* on the queue '«appname».person' waiting up to the given *timeout*.
+// Will return a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(service: "person", selector, timeout, "standard")
+
+// Expect/Receive a message with a *selector* on the queue '«appname».person.doIt' waiting up to the given *timeout*.
+// Will return a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(service: "person", method: "doIt", selector, timeout, "standard")
+
+
+// Expect/Receive a message with a *selector* on the queue 'remote.person.doIt' waiting up to the given *timeout*.
+// Will return a java.util.concurrent.Future wrapping the result the task.
+def afuture = receiveSelectedAsyncJMSMessage(app: "remote", service: "person", method: "doIt", selector, timeout, "standard")
+----
+
+**Note: a afuture.get() will return the *message*.
+
+=== Specifying your own **Executor** for Async. Receivers using *Spring IoC*.
+
+[source,groovy]
+----
+beans = {
+     jmsAsyncReceiverExecutor( java.util.concurrent.Executors ) { executors ->
+        executors.factoryMethod = "newFixedThreadPool"
+        executors.constructorArgs = << 5 >>
+    }
+}
+----

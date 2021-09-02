@@ -1,0 +1,34 @@
+JMS is a complicated topic.
+There are different consumption and configuration patterns.
+While this plugin does set some reasonable defaults, it's very likely that you are going to need to customise these settings either globally or for specific senders or listeners.
+
+To support this, the plugin makes configuration options available to you should you need to set it.
+This is achieved through the use of Spring's abstract beans and Grails' configuration mechanism.
+
+
+== How it works
+
+The configuration is controlled by the Grails application configuration under the key `jms`.
+This is merged against plugin provided defaults.
+
+Here is what the defaults look like...
+
+[source,groovy]
+----
+templates:
+    standard:
+        connectionFactoryBean: jmsConnectionFactory
+        messageConverterBean: standardJmsMessageConverter
+
+...
+----
+
+That creates a map of "bean definitions" that get processed into real bean definitions.
+
+The default config creates our standard (i.e. default) converters, jms templates for sending, and listener containers and adapters for receiving.
+
+When sending messages with the `jmsService` you can specify which template to use to send the message.
+If none is specified, "standard" is used.
+
+Likewise, listeners can specify which container and/or adapter bean definition to base themselves on.
+If none are specified, "standard" is used in both cases.

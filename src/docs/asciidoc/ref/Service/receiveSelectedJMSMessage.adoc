@@ -1,0 +1,18 @@
+==== receiveSelectedJMSMessage
+
+==== Purpose
+
+==== Examples
+
+[source,java]
+----
+foo.receiveSelectedJMSMessage(object,object)
+----
+
+==== Description
+
+Arguments:
+
+[* `object`
+, * `object`
+]

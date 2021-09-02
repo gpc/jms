@@ -1,0 +1,18 @@
+=== sendPubSubJMSMessage
+
+==== Purpose
+
+==== Examples
+
+[source,java]
+----
+foo.sendPubSubJMSMessage(object,object)
+----
+
+==== Description
+
+Arguments:
+
+[* `object`
+, * `object`
+]

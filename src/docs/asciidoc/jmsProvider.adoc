@@ -1,0 +1,30 @@
+The plugin does not include a JMS provider so you must install and configure your own.
+
+All you need to provide is one or more http://java.sun.com/javaee/5/docs/api/javax/jms/ConnectionFactory.html[javax.jms.ConnectionFactory] beans and the plugin takes care of the rest.
+
+The plugin looks for a connection factory bean named `jmsConnectionFactory`.
+
+The default SpringBoot configuration has caching enabled, which results in a bean named `cachingJmsConnectionFactory` being defined rather than `jmsConnectionFactory`.
+
+To turn caching off, set the configuration property `spring.jms.cache.enabled` in `application.yml` like so.
+
+[source,groovy]
+----
+spring:
+    jms:
+        cache:
+            enabled: false
+----
+
+With caching disabled, there will be a `jmsConnectionFactory` bean defined.
+
+If you wish to use this plugin with caching enabled, you can add the following line in `resources.groovy` to use a spring bean alias.
+
+[source,groovy]
+----
+beans = {
+
+    // ...
+    springConfig.addAlias('jmsConnectionFactory', 'cachingJmsConnectionFactory')
+}
+----
