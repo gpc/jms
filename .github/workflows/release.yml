@@ -39,7 +39,7 @@ jobs:
                 run: |
                     echo "${SECRING_FILE}" | base64 -d > "${GITHUB_WORKSPACE}/secring.gpg"
                     echo "Publishing Artifacts"
-                    (set -x; ./gradlew --info -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
+                    (set -x; ./gradlew -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
                     echo "Publishing Documentation"
                     ./gradlew asciidoctor
             -   name: Export Gradle Properties
