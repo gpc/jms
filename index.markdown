@@ -7,3 +7,4 @@ title: Grails JMS Plugin Documentation
 
 ---
 - [2.0.0.M1](http://gpc.github.io/jms/2.0.0.M1/)
+- [3.0.0.M6](http://gpc.github.io/jms/2.0.0.M6/)
