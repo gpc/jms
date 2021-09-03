@@ -2,7 +2,7 @@
 
 You can globally disable all JMS functionality by setting `jms.disabled` to true in your application config.
 
-For example you could turn JMS for testing with…
+For example, you could turn JMS for testing with:
 
 [source,groovy]
 ----

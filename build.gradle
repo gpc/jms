@@ -19,7 +19,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 apply plugin: "io.github.gradle-nexus.publish-plugin"
 
-version "3.0.0-RC1"
+version "3.0.0-RC2"
 group "io.github.gpc"
 
 sourceCompatibility = 1.8
@@ -137,11 +137,12 @@ asciidoctor {
             'version': project.version,
             'sourcedir': 'src/main/groovy'
     baseDirFollowsSourceDir()
+    outputDir = "${buildDir}/asciidoc"
 }
 
 task apiDocs(type: Copy) {
     from groovydoc.outputs.files
-    into file("${buildDir}/asciidoc/html5/api")
+    into file("${buildDir}/asciidoc/api")
 }
 
 asciidoctor.dependsOn(apiDocs)

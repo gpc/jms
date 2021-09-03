@@ -1,6 +1,6 @@
 NOTE: The methods described below are not supported in the current 2.0.0 milestone but will be added soon.
 
-The plugin will inject the following methods to ` Conrollers ` and ` Services `.
+The plugin will inject the following methods to `Controllers` and `Services`.
 
 
 === Synchronous calls.

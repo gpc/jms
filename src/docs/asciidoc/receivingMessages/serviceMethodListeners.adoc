@@ -22,7 +22,7 @@ class PersonService {
 
 The above configuration binds the `personService.addPerson()` method to a queue named `«app name».person.addPerson` and binds the method `personService.somethingHappened()` as a listener to the topic named `somethingHappened` .
 
-Note that you still need to expose the class via ' ` static exposes = \["jms"] ` .
+Note that you still need to expose the class via `static exposes = \["jms"]` .
 
 
 === @Queue Configuration

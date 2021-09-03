@@ -1,15 +1,15 @@
-This plugin adds a service called ` jmsService ` to your application that can be used to send JMS messages.
+This plugin adds a service called `jmsService` to your application that can be used to send JMS messages.
 
 
 == The send(destination, message, jmsTemplateName, postProcessor) method.
 
 *destination*
 
-An instance of ` javax.jms.Destination ` , ` javax.jms.Topic ` , a ` String ` or a ` Map ` .
+An instance of `javax.jms.Destination`, `javax.jms.Topic` , a `String` or a `Map` .
 
-A ` String ` destination argument will be interpreted as the name of a destination _queue_ .
+A `String` destination argument will be interpreted as the name of a destination _queue_ .
 
-A ` Map ` destination argument can be used in the following ways:
+A `Map` destination argument can be used in the following ways:
 
 [source,groovy]
 ----
@@ -35,7 +35,7 @@ How it gets converted into a message is handled by the underlying jms template's
 *jmsTemplateName*
 
 The name of the template that should be used to send the message.
-If this value is ` null ` , the standard template will be used (called "standard").
+If this value is `null` , the standard template will be used (called "standard").
 
 *postProcessor*
 

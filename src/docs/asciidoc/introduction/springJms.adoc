@@ -1,4 +1,4 @@
-This plugin is built on top of http://static.springsource.org/spring/docs/3.0.x/reference/html/jms.html.[Spring's JMS support]
+This plugin is built on top of http://static.springsource.org/spring/docs/3.0.x/reference/html/jms.html[Spring's JMS support]
 There are some core Spring JMS concepts that you should at least be aware of.
 
 
@@ -14,7 +14,7 @@ By default, this plugin uses Spring's http://static.springsource.org/spring/docs
 == MessageListenerContainer
 
 A listener container polls a JMS destination for messages.
-Each listener (i.e. each service method that receives JMS messages) has it's own listener container.
+Each listener (i.e. each service method that receives JMS messages) has its own listener container.
 
 This plugin uses the http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jms/listener/DefaultMessageListenerContainer.html[DefaultMessageListenerContainer] implementation.
 

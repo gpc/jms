@@ -1,19 +1,19 @@
-If you are looking on ways to obtain the contents of a given ` javax.jms.Queue ` without changing its state the ` JmsService ` offers a set of methods designed for this task.
+If you are looking on ways to obtain the contents of a given `javax.jms.Queue` without changing its state the `JmsService` offers a set of methods designed for this task.
 
 
 === The browse(destination, jmsTemplateName, browserCallback) method.
 
 Will retrieve all messages inside the given _queue_ at that time without changing its state i.e messages will not be consumed.
-This method will convert the ` javax.jms.Message ` using the ` JmsTemplate `.
-If you need the ` javax.jms.Message ` you should use the ` browseNoConvert() ` method and its variants as described further on.
+This method will convert the `javax.jms.Message` using the `JmsTemplate`.
+If you need the `javax.jms.Message` you should use the `browseNoConvert()` method and its variants as described further on.
 
 *destination*
 
-An instance of ` javax.jms.Queue ` , a ` String ` or a ` Map ` . *Needs* to be a _queue_ .
+An instance of `javax.jms.Queue` , a `String` or a `Map` . *Needs* to be a _queue_ .
 
-A ` String ` destination argument will be interpreted as the name of a destination _queue_ .
+A `String` destination argument will be interpreted as the name of a destination _queue_ .
 
-A ` Map ` destination argument can be used in the following ways:
+A `Map` destination argument can be used in the following ways:
 
 [source,groovy]
 ----
@@ -33,7 +33,7 @@ List messages = jmsService.browse(app: "remote", service: "person", method: "doI
 *jmsTemplateName*
 
 The name of the template that should be used to send the message.
-If this value is ` null ` , the standard template will be used (called "standard").
+If this value is `null` , the standard template will be used (called "standard").
 
 *browserCallback*
 
@@ -55,9 +55,9 @@ List messages = jmsService.browse(queue, jmsTemplateBeanName)
 
 === The browseNoConvert(destination, jmsTemplateName, browserCallback) method.
 
-This method will not convert the ` javax.jms.Message `.
-In other words the ` browserCallback:Closure ` will receive a ` javax.jms.Message ` or if no _callback_ is defined a _list_ containing ` javax.jms.Message ` instances will be returned.
-*You can't* update the returned ` javax.jms.Message ` objects, they are *read-only* instances.
+This method will not convert the `javax.jms.Message`.
+In other words the `browserCallback:Closure` will receive a `javax.jms.Message` or if no _callback_ is defined a _list_ containing `javax.jms.Message` instances will be returned.
+*You can't* update the returned `javax.jms.Message` objects, they are *read-only* instances.
 
 [source,java]
 ----
@@ -77,8 +77,8 @@ messages.each {
 === The browseSelected(destination, selector, jmsTemplateName, browserCallback) method.
 
 Will retrieve messages that match the *selector* inside the given _queue_ at the time of the call without changing its state i.e messages will not be consumed.
-This method will convert the ` javax.jms.Message ` using the ` JmsTemplate `.
-If you need the ` javax.jms.Message ` you should use the ` browseSelectedNotConvert() ` method and its variants as described further on.
+This method will convert the `javax.jms.Message` using the `JmsTemplate`.
+If you need the `javax.jms.Message` you should use the `browseSelectedNotConvert()` method and its variants as described further on.
 
 *selector*
 
@@ -103,7 +103,7 @@ List messages = jmsService.browseSelected(queue, " anIntProperty > 0 AND another
 === The browseSelectedNotConvert(destination, selector, jmsTemplateName, browserCallback) method.
 
 Will retrieve messages that match the *selector* inside the given _queue_ at the time of the call without changing its state i.e messages will not be consumed.
-As the ` browseNoConvert ` this method will not convert the ` javax.jms.Message `.
+As the `browseNoConvert` this method will not convert the `javax.jms.Message`.
 
 [source,java]
 ----

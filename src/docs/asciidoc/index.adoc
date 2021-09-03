@@ -111,6 +111,8 @@ include::disablingAndReloading.adoc[]
 [[reference]]
 == Reference
 
+link:./api[API Documentation]
+
 [[ref-service]]
 == Service
 
