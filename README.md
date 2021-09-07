@@ -2,6 +2,6 @@
 
 JMS for Grails
 ==============
-This branch is for Grails 3.x
+This branch is for Grails 4.x
 
 JMS integration for Grails. See [documentation](http://gpc.github.io/jms/latest/) for more information.
