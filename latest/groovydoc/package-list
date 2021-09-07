@@ -1,6 +1,0 @@
-grails.plugin.jms
-grails.plugin.jms.bean
-grails.plugin.jms.connection
-grails.plugin.jms.listener
-grails.plugin.jms.listener.adapter
-jms
