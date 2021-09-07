@@ -4,3 +4,4 @@ plugin.xml
 src
 *.zip
 activemq-data
+build/

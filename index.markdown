@@ -6,5 +6,5 @@ title: Grails JMS Plugin Documentation
 - [Latest Snapshot](http://gpc.github.io/jms/snapshot/)
 
 ---
-- [2.0.0.M1](http://gpc.github.io/jms/2.0.0.M1/)
-- [3.0.0.M6](http://gpc.github.io/jms/2.0.0.M6/)
+- [2.0.x](http://gpc.github.io/jms/2.0.x/)
+- [3.0.0](http://gpc.github.io/jms/3.0.0/)
