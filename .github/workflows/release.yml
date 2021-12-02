@@ -39,8 +39,8 @@ jobs:
                     echo "Publishing Artifacts for $RELEASE_VERSION"
                     (set -x; ./gradlew -Pversion="${RELEASE_VERSION}" -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
                     echo "Publishing Documentation"
-                    ./gradlew asciidoctor
-            -   name: Bump patch versioin by one
+                    ./gradlew asciidoctor -Pversion="${RELEASE_VERSION}"
+            -   name: Bump patch version by one
                 uses: actions-ecosystem/action-bump-semver@v1
                 id: bump_semver
                 with:
@@ -52,12 +52,11 @@ jobs:
                 run: |
                     echo "Preparing next snapshot"
                     ./gradlew snapshotVersion -Pversion="${NEXT_VERSION}"
-            -   name: Push next version snapshot
-                run: |
-                    git config user.name "$GIT_USER_NAME"
-                    git config user.email "$GIT_USER_EMAIL"
-                    git commit -am "Bumped snapshot version"
-                    git push                    
+            -   name: Commit & Push changes
+                uses: actions-js/push@master
+                with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    message: 'Set version to next SNAPSHOT'
             -   name: Export Gradle Properties
                 uses: micronaut-projects/github-actions/export-gradle-properties@master
             -   name: Publish to Github Pages
