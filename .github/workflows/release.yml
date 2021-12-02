@@ -46,7 +46,7 @@ jobs:
                   level: patch
             -   name: Set version in gradle.properties
                 env: 
-                    NEXT_VERSION: ${{ steps.bump_semver.new_version }}
+                    NEXT_VERSION: ${{ steps.bump_semver.outputs.new_version }}
                 run: |
                     echo "Preparing next snapshot"
                     ./gradlew snapshotVersion -Pversion="${NEXT_VERSION}"

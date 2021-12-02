@@ -20,7 +20,7 @@ class SomeController {
 
     def jmsService
 
-    def someAction = {
+    def someAction() {
         jmsService.send(service: 'listening', 1)
     }
 }
@@ -49,7 +49,7 @@ class SomeController {
 
     def jmsService
 
-    def someAction = {
+    def someAction() {
         jmsService.send(service: 'listening', method: 'receive', 1)
     }
 }
@@ -78,7 +78,7 @@ class SomeController {
 
     def jmsService
 
-    def someAction = {
+    def someAction() {
         jmsService.send(topic: 'newMessages', 1)
     }
 }
@@ -94,7 +94,7 @@ class SomeController {
 
     def jmsService
 
-    def someAction = {
+    def someAction() {
         jmsService.send(service: 'initial', 1) { Message msg ->
             msg.JMSReplyTo = createDestination(service: 'reply')
             msg
