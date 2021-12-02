@@ -56,7 +56,13 @@ jobs:
                 uses: actions-js/push@master
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
+                    author_name: ${{ secrets.GIT_USER_NAME }}
+                    author_email: $${ secrets.GIT_USER_EMAIL }}
                     message: 'Set version to next SNAPSHOT'
+            -   name: Build documentation
+                env:
+                    RELEASE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
+                run: ./gradlew asciidoctor -Pversion="${RELEASE_VERSION}"
             -   name: Export Gradle Properties
                 uses: micronaut-projects/github-actions/export-gradle-properties@master
             -   name: Publish to Github Pages
