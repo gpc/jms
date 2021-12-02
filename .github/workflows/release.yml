@@ -5,9 +5,6 @@ on:
 jobs:
     release:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                java: [ '8' ]
         env:
             GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
             GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
@@ -20,7 +17,7 @@ jobs:
             -   name: Set up JDK
                 uses: actions/setup-java@v1
                 with:
-                    java-version: ${{ matrix.java }}
+                    java-version: 8
             -   name: Get latest release version number
                 id: get_version
                 uses: battila7/get-version-action@v2
@@ -36,10 +33,10 @@ jobs:
                     SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY }}
                     SIGNING_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
                     SECRING_FILE: ${{ secrets.SECRING_FILE }}
-                    RELEASE_VERSION: ${{ steps.get_version.outputs.versionWithoutV }}
+                    RELEASE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
                 run: |
                     echo "${SECRING_FILE}" | base64 -d > "${GITHUB_WORKSPACE}/secring.gpg"
-                    echo "Publishing Artifacts"
+                    echo "Publishing Artifacts for $RELEASE_VERSION"
                     (set -x; ./gradlew -Pversion="${RELEASE_VERSION}" -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
                     echo "Publishing Documentation"
                     ./gradlew asciidoctor
@@ -47,7 +44,7 @@ jobs:
                 uses: actions-ecosystem/action-bump-semver@v1
                 id: bump_semver
                 with:
-                  current_version: ${{steps.get_version.outputs.versionWithoutV }}
+                  current_version: ${{steps.get_version.outputs.version-without-v }}
                   level: patch
             -   name: Set version in gradle.properties
                 env: 
@@ -75,7 +72,7 @@ jobs:
                     DOC_FOLDER: latest
                     COMMIT_EMAIL: soeren@glasius.dk
                     COMMIT_NAME: Søren Berg Glasius
-                    VERSION: ${{ steps.get_version.outputs.versionWithoutV }}
+                    VERSION: ${{ steps.get_version.outputs.version-without-v }}
             -   name: Run post-release
                 if: success()
                 uses: micronaut-projects/github-actions/post-release@master
