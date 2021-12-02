@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>JMS Plugin</h1>
 <div class="details">
-<span id="revnumber">version 3.0.5</span>
+<span id="revnumber">version 3.0.6</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -580,7 +580,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy">dependencies {
-    implementation 'io.github.gpc:jms:3.0.5'
+    implementation 'io.github.gpc:jms:3.0.6'
 }</code></pre>
 </div>
 </div>
@@ -615,7 +615,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 
     <span class="keyword">def</span> jmsService
 
-    <span class="keyword">def</span> someAction = {
+    <span class="keyword">def</span> <span class="function">someAction</span>() {
         jmsService.send(<span class="key">service</span>: <span class="string"><span class="delimiter">'</span><span class="content">listening</span><span class="delimiter">'</span></span>, <span class="integer">1</span>)
     }
 }</code></pre>
@@ -645,7 +645,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 
     <span class="keyword">def</span> jmsService
 
-    <span class="keyword">def</span> someAction = {
+    <span class="keyword">def</span> <span class="function">someAction</span>() {
         jmsService.send(<span class="key">service</span>: <span class="string"><span class="delimiter">'</span><span class="content">listening</span><span class="delimiter">'</span></span>, <span class="key">method</span>: <span class="string"><span class="delimiter">'</span><span class="content">receive</span><span class="delimiter">'</span></span>, <span class="integer">1</span>)
     }
 }</code></pre>
@@ -675,7 +675,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 
     <span class="keyword">def</span> jmsService
 
-    <span class="keyword">def</span> someAction = {
+    <span class="keyword">def</span> <span class="function">someAction</span>() {
         jmsService.send(<span class="key">topic</span>: <span class="string"><span class="delimiter">'</span><span class="content">newMessages</span><span class="delimiter">'</span></span>, <span class="integer">1</span>)
     }
 }</code></pre>
@@ -692,7 +692,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 
     <span class="keyword">def</span> jmsService
 
-    <span class="keyword">def</span> someAction = {
+    <span class="keyword">def</span> <span class="function">someAction</span>() {
         jmsService.send(<span class="key">service</span>: <span class="string"><span class="delimiter">'</span><span class="content">initial</span><span class="delimiter">'</span></span>, <span class="integer">1</span>) { Message msg -&gt;
             msg.JMSReplyTo = createDestination(<span class="key">service</span>: <span class="string"><span class="delimiter">'</span><span class="content">reply</span><span class="delimiter">'</span></span>)
             msg
@@ -811,7 +811,7 @@ All that is required is adding compile dependencies on the <code>spring-boot-sta
 dependencies {
 
     // ...
-    compile 'io.github.gpc:jms:3.0.5'
+    compile 'io.github.gpc:jms:3.0.6'
     compile 'org.springframework.boot:spring-boot-starter-activemq'
     compile 'org.messaginghub:pooled-jms'
 }</code></pre>
@@ -2189,8 +2189,8 @@ This allows you to change bean definitions (such as container or template option
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.5<br>
-Last updated 2021-12-02 16:06:18 UTC
+Version 3.0.6<br>
+Last updated 2021-12-02 16:15:34 UTC
 </div>
 </div>
 <style>
