@@ -1,5 +1,5 @@
 = JMS Plugin
-:version: 3.0.1-SNAPSHOT
+:version: x.y.z
 :source-highlighter: coderay
 :imagesdir: ./images
 
@@ -7,6 +7,14 @@
 == Introduction
 
 include::introduction.adoc[]
+
+[[installation]]
+== Installation
+include::installation.adoc[]
+
+[[examples]]
+== Examples
+include::examples.adoc[]
 
 [[springJms]]
 == Spring JMS

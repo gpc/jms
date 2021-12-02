@@ -38,8 +38,6 @@ jobs:
                     echo "${SECRING_FILE}" | base64 -d > "${GITHUB_WORKSPACE}/secring.gpg"
                     echo "Publishing Artifacts for $RELEASE_VERSION"
                     (set -x; ./gradlew -Pversion="${RELEASE_VERSION}" -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
-                    echo "Publishing Documentation"
-                    ./gradlew asciidoctor -Pversion="${RELEASE_VERSION}"
             -   name: Bump patch version by one
                 uses: actions-ecosystem/action-bump-semver@v1
                 id: bump_semver
@@ -48,7 +46,7 @@ jobs:
                   level: patch
             -   name: Set version in gradle.properties
                 env: 
-                    NEXT_VERSION: ${{ steps.bump_semver.next_version }}
+                    NEXT_VERSION: ${{ steps.bump_semver.new_version }}
                 run: |
                     echo "Preparing next snapshot"
                     ./gradlew snapshotVersion -Pversion="${NEXT_VERSION}"
@@ -62,7 +60,8 @@ jobs:
             -   name: Build documentation
                 env:
                     RELEASE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
-                run: ./gradlew asciidoctor -Pversion="${RELEASE_VERSION}"
+                run: |
+                    ./gradlew asciidoctor -Pversion="${RELEASE_VERSION}"
             -   name: Export Gradle Properties
                 uses: micronaut-projects/github-actions/export-gradle-properties@master
             -   name: Publish to Github Pages
@@ -73,7 +72,7 @@ jobs:
                     TARGET_REPOSITORY: ${{ github.repository }}
                     GH_TOKEN: ${{ secrets.GH_TOKEN }}
                     BRANCH: gh-pages
-                    FOLDER: build/docs
+                    FOLDER: build/asciidoc
                     DOC_FOLDER: latest
                     COMMIT_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
                     COMMIT_NAME: ${{ secrets.GIT_USER_NAME }}

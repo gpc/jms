@@ -1,0 +1,11 @@
+
+The plugin is available on Maven Central and should be a dependency like this:
+
+[source,groovy,subs="attributes"]
+---- 
+dependencies {
+    implementation 'io.github.gpc:jms:{version}'
+}
+----
+
+In older versions of Gradle, replace `implementation` with `compile`   
