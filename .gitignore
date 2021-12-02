@@ -3,3 +3,5 @@ build
 *.iml
 .idea
 /target
+*.gpg
+
