@@ -1,5 +1,5 @@
 = JMS Plugin
-:version: 3.0.0.M4
+:version: 3.0.1-SNAPSHOT
 :source-highlighter: coderay
 :imagesdir: ./images
 

@@ -1,5 +1,17 @@
-This plugin makes it easy to both send and receive JMS messages inside a Grails application.
 
+This plugin makes it easy to both send and receive JMS messages inside a Grails application.
+== Include in project
+
+The plugin is available on Maven Central and should be a dependency like this:
+
+[source,groovy,subs="attributes"]
+---- 
+dependencies {
+    compile 'io.github.gpc:jms:{version}'
+}
+----
+
+In newer Gradle versions, replace `compile` with `implementation` 
 
 == Examples
 

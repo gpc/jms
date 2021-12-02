@@ -36,12 +36,31 @@ jobs:
                     SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY }}
                     SIGNING_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
                     SECRING_FILE: ${{ secrets.SECRING_FILE }}
+                    RELEASE_VERSION: ${{ steps.get_version.outputs.versionWithoutV }}
                 run: |
                     echo "${SECRING_FILE}" | base64 -d > "${GITHUB_WORKSPACE}/secring.gpg"
                     echo "Publishing Artifacts"
-                    (set -x; ./gradlew -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
+                    (set -x; ./gradlew -Pversion="${RELEASE_VERSION}" -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" publishToSonatype closeAndReleaseSonatypeStagingRepository --no-daemon)
                     echo "Publishing Documentation"
                     ./gradlew asciidoctor
+            -   name: Bump patch versioin by one
+                uses: actions-ecosystem/action-bump-semver@v1
+                id: bump_semver
+                with:
+                  current_version: ${{steps.get_version.outputs.versionWithoutV }}
+                  level: patch
+            -   name: Set version in gradle.properties
+                env: 
+                    NEXT_VERSION: ${{ steps.bump_semver.next_version }}
+                run: |
+                    echo "Preparing next snapshot"
+                    ./gradlew snapshotVersion -Pversion="${NEXT_VERSION}"
+            -   name: Push next version snapshot
+                run: |
+                    git config --global user.name 'Github Action'
+                    git config --global user.email 'github-action@users.noreply.github.com'
+                    git commit -am "Bumped snapshot version"
+                    git push                    
             -   name: Export Gradle Properties
                 uses: micronaut-projects/github-actions/export-gradle-properties@master
             -   name: Publish to Github Pages

@@ -19,7 +19,6 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 apply plugin: "io.github.gradle-nexus.publish-plugin"
 
-version "3.0.0"
 group "io.github.gpc"
 
 sourceCompatibility = 1.8
@@ -91,10 +90,6 @@ ext."signing.secretKeyRingFile" = project.findProperty('signing.secretKeyRingFil
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
-//tasks.withType(Javadoc) {
-//    classpath = project.sourceSets.main.runtimeClasspath
-//}
-
 afterEvaluate {
     signing {
         required { isReleaseVersion }
@@ -147,3 +142,12 @@ task apiDocs(type: Copy) {
 
 asciidoctor.dependsOn(apiDocs)
 
+task snapshotVersion {
+    doLast {
+        if(!project.version.endsWith('-SNAPSHOT')) {
+            ant.propertyfile(file: "gradle.properties") {
+                entry(key: "version", value: "${version}-SNAPSHOT")
+            }
+        }
+    }
+}
