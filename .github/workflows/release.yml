@@ -54,8 +54,8 @@ jobs:
                     ./gradlew snapshotVersion -Pversion="${NEXT_VERSION}"
             -   name: Push next version snapshot
                 run: |
-                    git config --global user.name 'Github Action'
-                    git config --global user.email 'github-action@users.noreply.github.com'
+                    git config user.name "$GIT_USER_NAME"
+                    git config user.email "$GIT_USER_EMAIL"
                     git commit -am "Bumped snapshot version"
                     git push                    
             -   name: Export Gradle Properties
@@ -70,8 +70,8 @@ jobs:
                     BRANCH: gh-pages
                     FOLDER: build/docs
                     DOC_FOLDER: latest
-                    COMMIT_EMAIL: soeren@glasius.dk
-                    COMMIT_NAME: Søren Berg Glasius
+                    COMMIT_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+                    COMMIT_NAME: ${{ secrets.GIT_USER_NAME }}
                     VERSION: ${{ steps.get_version.outputs.version-without-v }}
             -   name: Run post-release
                 if: success()
