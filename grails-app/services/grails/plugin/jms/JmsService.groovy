@@ -274,7 +274,7 @@ class JmsService {
     //-- Util ---------------
 
     boolean isDisabled() {
-        grailsApplication.config.jms.disabled
+        grailsApplication.config.getProperty('jms.disabled', Boolean, true)
     }
 
     private convertMessageWithTemplate(template, Message message) {
