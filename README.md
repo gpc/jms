@@ -1,4 +1,4 @@
-[![Build](https://github.com/gpc/jms/actions/workflows/build.yml/badge.svg)](https://github.com/gpc/jms/actions/workflows/build.yml)
+[![Build](https://github.com/gpc/jms/actions/workflows/build.yml/badge.svg)](https://github.com/gpc/jms/actions/workflows/build.yml) [![Version](https://badgen.net/github/tag/gpc/jms)](https://github.com/gpc/jms/releases)
 
 JMS for Grails
 ==============
