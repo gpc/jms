@@ -407,7 +407,7 @@ class JmsService {
      */
     private void logAction(final String action, final ctx) {
         log.info(ctx.with {
-            "$action $type '$destination'${defaultTemplate ? '' : " using template '$jmsTemplateBeanName'"}"
+            "$action $type '$ndestination'${defaultTemplate ? '' : " using template '$jmsTemplateBeanName'"}"
         })
     }
 
