@@ -2,7 +2,7 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://repo.grails.org/grails/core" }
+        maven { url 'https://repo.grails.org/grails/core' }
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsGradleVersion"
@@ -10,7 +10,7 @@ buildscript {
     }
 }
 plugins {
-    id 'org.asciidoctor.jvm.convert' version '3.2.0'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 apply plugin: 'org.grails.grails-plugin'
