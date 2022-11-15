@@ -1,7 +1,7 @@
 name: Rebuild documentation
 on: workflow_dispatch
 jobs:
-    release:
+    release-docs:
         runs-on: ubuntu-latest
         env:
             GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
@@ -19,10 +19,6 @@ jobs:
             -   name: Get latest release version number
                 id: get_version
                 uses: battila7/get-version-action@v2
-            -   name: Run pre-release
-                uses: micronaut-projects/github-actions/pre-release@master
-                with:
-                    token: ${{ secrets.GITHUB_TOKEN }}
             -   name: Build documentation
                 env:
                     RELEASE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
