@@ -5,21 +5,22 @@ buildscript {
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "io.github.gradle-nexus:publish-plugin:1.0.0"
+        classpath "org.grails:grails-gradle-plugin:$grailsGradleVersion"
+        classpath 'io.github.gradle-nexus:publish-plugin:1.0.0'
     }
 }
 plugins {
     id 'org.asciidoctor.jvm.convert' version '3.2.0'
 }
 
-apply plugin: "org.grails.grails-plugin"
-apply plugin: "org.grails.grails-doc"
+apply plugin: 'org.grails.grails-plugin'
+apply plugin: 'org.grails.grails-doc'
+apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-apply plugin: "io.github.gradle-nexus.publish-plugin"
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
-group "io.github.gpc"
+group 'io.github.gpc'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -31,13 +32,14 @@ repositories {
 }
 
 dependencies {
-    provided "org.grails:grails-core"
-    provided "org.grails:grails-dependencies"
+    api 'org.springframework:spring-jms'
 
-    compile 'org.springframework:spring-jms'
-    compile 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
+    implementation 'org.grails:grails-core'
+    implementation 'org.grails:grails-dependencies'
 
-    testCompile "org.grails:grails-testing-support"
+    implementation 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
+
+    testImplementation 'org.grails:grails-testing-support'
 
 }
 
@@ -104,12 +106,12 @@ tasks.withType(Sign) {
 nexusPublishing {
     repositories {
         sonatype {
-            def ossUser = System.getenv("SONATYPE_USERNAME") ?: project.findProperty('sonatypeOss2Username') ?: ''
-            def ossPass = System.getenv("SONATYPE_PASSWORD") ?: project.findProperty("sonatypeOss2Password") ?: ''
-            def ossStagingProfileId = System.getenv("SONATYPE_STAGING_PROFILE_ID") ?: project.findProperty("sonatypeOssStagingProfileIdJms") ?: ''
+            def ossUser = System.getenv('SONATYPE_USERNAME') ?: project.findProperty('sonatypeOss2Username') ?: ''
+            def ossPass = System.getenv('SONATYPE_PASSWORD') ?: project.findProperty("sonatypeOss2Password") ?: ''
+            def ossStagingProfileId = System.getenv('SONATYPE_STAGING_PROFILE_ID') ?: project.findProperty('sonatypeOssStagingProfileIdJms') ?: ''
 
-            nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
-            snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            nexusUrl = uri('https://s01.oss.sonatype.org/service/local/')
+            snapshotRepositoryUrl = uri('https://s01.oss.sonatype.org/content/repositories/snapshots/')
             username = ossUser
             password = ossPass
             stagingProfileId = ossStagingProfileId
