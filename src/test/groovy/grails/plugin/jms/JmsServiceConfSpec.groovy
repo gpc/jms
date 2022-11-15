@@ -30,7 +30,7 @@ class JmsServiceConfSpec extends Specification implements ServiceUnitTest<JmsSer
             "use default if none provided"              | null                | null                 | 0                   |  JmsService.DEFAULT_RECEIVER_TIMEOUT_MILLIS
     }
 
-    @Unroll("the JmsService should #action if the jms config is set to [#config]")
+    @Unroll("the JmsService should #action if the jms config is set to [#disabledConfig]")
     def "enable-disable"() {
         when:
             config.jms = [disabled: disabledConfig]

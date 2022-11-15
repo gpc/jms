@@ -13,7 +13,7 @@ import org.springframework.jms.support.converter.SimpleMessageConverter
 class JmsGrailsPlugin extends Plugin {
 
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = "4.0.11 > *"
+    def grailsVersion = "5.2.0 > *"
 
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
