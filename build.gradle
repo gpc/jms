@@ -41,7 +41,25 @@ dependencies {
 
     testImplementation 'org.grails:grails-testing-support'
 
+    profile 'org.grails.profiles:plugin'
 }
+
+tasks.withType(GroovyCompile) {
+    configure(groovyOptions) {
+        forkOptions.jvmArgs = ['-Xmx1024m']
+    }
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+bootJar {
+    enabled = false
+    mainClass.set 'jms.Application'
+    exclude('jms/Application.class')
+}
+
+bootJar.enabled = false
 
 publishing {
     publications {
