@@ -123,6 +123,10 @@ JMS integration for Grails.
 
 
     def startListenerContainer(listenerConfig, applicationContext) {
-        applicationContext.getBean(listenerConfig.listenerContainerBeanName).start()
+        def listenerContainer = applicationContext.getBean(listenerConfig.listenerContainerBeanName)
+
+        if (listenerContainer.isAutoStartup()) {
+            listenerContainer.start()
+        }
     }
 }
